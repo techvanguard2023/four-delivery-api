@@ -13,6 +13,7 @@ class CreateCategoriesTable extends Migration
             $table->foreignId('company_id')->constrained('companies');
             $table->string('name');
             $table->string('description');
+            $table->text('image_url')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
