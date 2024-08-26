@@ -16,7 +16,10 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name'
+            'company_id' => 'required|interger',
+            'name' => 'required|string|max:255|unique:categories,name',
+            'description' => 'required|string',
+            'image_url' => 'required|string'
         ]);
 
         $category = Category::create($validatedData);
@@ -32,13 +35,21 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $validatedData = $request->validate([
-            'name' => 'sometimes|string|max:255|unique:categories,name,' . $category->id
+            'name' => 'sometimes|string|max:255|unique:categories,name,' . $category->id,
+            'description' => 'sometimes|string',
+            'image_url' => 'sometimes|string'
         ]);
 
-        $category->update($validatedData);
+        // Filtra os dados validados para remover quaisquer valores nulos
+        $filteredData = array_filter($validatedData, function ($value) {
+            return !is_null($value);
+        });
+
+        $category->update($filteredData);
 
         return response()->json($category, 200);
     }
+
 
     public function destroy(Category $category)
     {

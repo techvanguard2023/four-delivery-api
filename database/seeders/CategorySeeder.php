@@ -78,7 +78,7 @@ class CategorySeeder extends Seeder
 
         Category::create([
             'company_id' => 1,
-            'name' => 'Opções Vegetarianas/Veganas',
+            'name' => 'Vegetarianas/Veganas',
             'description' => 'Hambúrguer vegetariano, sanduíches veganos, saladas veganas.',
             'image_url' => 'https://fornerialuce.com.br/media/magefan_blog/refeicoes-vegetarianas-equilibradas-descubra-opcoes-deliciosas-e-nutritivas.jpg'
         ]);
@@ -106,7 +106,7 @@ class CategorySeeder extends Seeder
 
         Category::create([
             'company_id' => 1,
-            'name' => 'Molhos e Acompanhamentos',
+            'name' => 'Acompanhamentos',
             'description' => 'Ketchup, maionese, mostarda, molhos especiais, maionese temperada.',
             'image_url' => 'https://oimparcial.com.br/app/uploads/2019/10/molhos_para_carne.jpg'
         ]);
