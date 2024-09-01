@@ -6,20 +6,32 @@ use App\Http\Controllers\Controller;
 use App\Models\DeliveryPerson;
 use Illuminate\Http\Request;
 
+use App\Services\UserRoleService;
+
 class DeliveryPersonController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return DeliveryPerson::all();
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+
+        if ($roleId == 1) {
+            return DeliveryPerson::all();
+        } else {
+            return DeliveryPerson::where('company_id', $user->company_id)->get();
+        }
     }
 
     public function store(Request $request)
     {
+        $user = $request->user(); // Obtém o usuário autenticado
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string',
             'vehicle' => 'required|string'
         ]);
+
+        $validatedData['company_id'] = $user->company_id; // Adiciona o company_id do usuário autenticado
 
         $deliveryPerson = DeliveryPerson::create($validatedData);
 

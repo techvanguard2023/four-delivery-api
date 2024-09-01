@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\StockController;
 
 use App\Http\Controllers\Site\BannerController;
 
@@ -75,6 +77,12 @@ Route::prefix('admin-v1')->group(function () {
 
         // Rotas de configuração
         Route::apiResource('settings', SettingController::class);
+
+        // Rotas para Empresas
+        Route::apiResource('companies', CompanyController::class);
+
+        // Rotas para Estoque
+        Route::apiResource('stocks', StockController::class);
     });
 });
 

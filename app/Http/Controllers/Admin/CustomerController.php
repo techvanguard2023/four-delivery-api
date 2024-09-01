@@ -6,21 +6,33 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 
+use App\Services\UserRoleService;
+
 class CustomerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Customer::all();
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+
+        if ($roleId == 1) {
+            return Customer::all();
+        } else {
+            return Customer::where('company_id', $user->company_id)->get();
+        }
     }
 
     public function store(Request $request)
     {
+        $user = $request->user(); // Obtém o usuário autenticado
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:customers,email',
             'phone' => 'required|string',
             'address' => 'required|string'
         ]);
+
+        $validatedData['company_id'] = $user->company_id; // Adiciona o company_id do usuário autenticado
 
         $customer = Customer::create($validatedData);
 

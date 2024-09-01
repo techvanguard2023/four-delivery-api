@@ -9,38 +9,21 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Resources\UserResource;
 
+use App\Services\UserRoleService;
+
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Obter o usuário autenticado
-        $user = auth()->user();
 
-        // Carregar roles e permissões do usuário
-        $user->load('roles.permissions');
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user);
 
-        // Verificar se o usuário tem uma role id igual a 1
-        $isAdmin = $user->roles->contains('id', 1);
-
-        if (!$isAdmin) {
-            if ($user->company_id) {
-                // Se não for admin, apenas liste os usuários com o mesmo company_id
-                $users = User::with('company', 'ticket')
-                    ->where('company_id', $user->company_id)
-                    ->paginate(25);
-            } else {
-                abort(400, 'Company ID is required for non-admin users.');
-            }
+        if ($roleId == 1) {
+            return UserResource::collection(User::all()->load('company', 'roles'));
         } else {
-            // Se for admin, carregue todos os usuários
-            $users = User::with('company', 'ticket')->paginate(25);
+            return UserResource::collection(User::where('company_id', $user->company_id)->get()->load('company', 'roles'));
         }
-
-        if ($users->isEmpty()) {
-            return response()->json(['message' => 'Nenhum usuário encontrado.'], 404);
-        }
-
-        return UserResource::collection($users);
     }
 
 

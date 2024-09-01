@@ -59,5 +59,21 @@ class CompanySeeder extends Seeder
             'whatsapp' => '21981321890',
             'website' => 'https://techvanguard.com.br',
         ]);
+
+        Company::create([
+            'name' => 'Emporio do Sabor',
+            'cnpj' => $this->generateCnpj(),
+            'email' => 'contato@emporiodosabor.com.br',
+            'address' => 'Rua dos Bobos',
+            'number' => '0',
+            'neighborhood' => 'Zero',
+            'city' => 'São Gonçalo',
+            'state' => 'RJ',
+            'zip_code' => '24745290',
+            'country' => 'Brasil',
+            'phone' => '21981321890',
+            'whatsapp' => '21981321890',
+            'website' => 'https://emporiodosabor.com.br',
+        ]);
     }
 }

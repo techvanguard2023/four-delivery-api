@@ -33,5 +33,19 @@ class UserRoleSeeder extends Seeder
             'role_id' => 3,
             'created_at' => now()
         ]);
+
+        //emporio dos sabores gerente
+        UserRole::create([
+            'user_id' => 4,
+            'role_id' => 2,
+            'created_at' => now()
+        ]);
+
+        //emporio dos sabores atendente
+        UserRole::create([
+            'user_id' => 5,
+            'role_id' => 3,
+            'created_at' => now()
+        ]);
     }
 }

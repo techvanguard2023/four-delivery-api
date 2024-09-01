@@ -12,9 +12,9 @@ class ItemsSeeder extends Seeder
     {
         $items = [];
 
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 50; $i++) {
             $items[] = [
-                'company_id' => 1,
+                'company_id' => mt_rand(1, 2),
                 'name' => 'Item ' . $i,
                 'description' => 'Description for item ' . $i,
                 'image_url' => 'https://via.placeholder.com/150',

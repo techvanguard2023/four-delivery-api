@@ -10,7 +10,6 @@ class CreateCategoriesTable extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('companies');
             $table->string('name');
             $table->string('description');
             $table->text('image_url')->nullable();

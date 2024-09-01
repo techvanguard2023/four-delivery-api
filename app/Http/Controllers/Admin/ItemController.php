@@ -5,23 +5,38 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use App\Http\Resources\ItemResource;
+
+use App\Services\UserRoleService;
 
 class ItemController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Item::all();
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+
+        if ($roleId == 1) {
+            return ItemResource::collection(Item::all()->load('stock', 'category'));
+        } else {
+            return ItemResource::collection(Item::where('company_id', $user->company_id)->get()->load('stock', 'category'));
+        }
     }
 
     public function store(Request $request)
     {
+        $user = $request->user(); // Obtém o usuário autenticado
         $validatedData = $request->validate([
+            // 'company_id' => 'required|interger', // Remove a validação de company_id
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image_url' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'available' => 'required|boolean'
         ]);
+
+        $validatedData['company_id'] = $user->company_id; // Adiciona o company_id do usuário autenticado
 
         $item = Item::create($validatedData);
 

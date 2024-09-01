@@ -10,15 +10,15 @@ class DeliveryPerson extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'phone', 'vehicle'];
-
-    public function deliveries()
-    {
-        return $this->hasMany(Order::class); // Considerando que um entregador pode estar vinculado a múltiplos pedidos
-    }
+    protected $fillable = ['company_id', 'name', 'phone', 'vehicle'];
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function deliveries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class); // Considering that a delivery person can be linked to multiple orders
     }
 }

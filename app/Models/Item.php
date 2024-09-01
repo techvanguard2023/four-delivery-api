@@ -10,7 +10,7 @@ class Item extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'description', 'image_url', 'price', 'category_id', 'available'];
+    protected $fillable = ['company_id', 'name', 'description', 'image_url', 'price', 'category_id', 'available'];
 
     public function category()
     {
@@ -25,5 +25,10 @@ class Item extends Model
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function stock()
+    {
+        return $this->hasOne(Stock::class);
     }
 }

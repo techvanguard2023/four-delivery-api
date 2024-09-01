@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
+
 class CategoryController extends Controller
 {
+
+
     public function index()
     {
         return Category::all();
@@ -29,7 +32,15 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        return $category;
+        $category = Category::find($category->id);
+
+        if (!$category) {
+            return response()->json(['message' => 'Categoria não encontrado.'], 404);
+        }
+
+        $category->load('items');
+
+        return response()->json($category);
     }
 
     public function update(Request $request, Category $category)

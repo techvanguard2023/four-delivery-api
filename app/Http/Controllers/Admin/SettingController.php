@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Services\UserRoleService;
 
 class SettingController extends Controller
 {
@@ -33,12 +34,5 @@ class SettingController extends Controller
         );
 
         return response()->json($setting, 200);
-    }
-
-    // Método para listar todas as configurações
-    public function index()
-    {
-        $settings = Setting::all();
-        return response()->json($settings, 200);
     }
 }
