@@ -34,5 +34,8 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'cep' => [
+        'endpoint' => \Gabrielmoura\LaravelCep\EndpointOption::POSTMON, // Example: Change to your preferred provider
+    ],
 
 ];

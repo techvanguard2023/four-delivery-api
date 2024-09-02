@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\StockController;
+use App\Http\Controllers\Admin\ViaCepController;
 
 use App\Http\Controllers\Site\BannerController;
 
@@ -47,7 +48,7 @@ Route::prefix('admin-v1')->group(function () {
 
         // Rotas para Itens
         Route::apiResource('items', ItemController::class);
-
+        Route::get('/items/category/{categoryId}', [ItemController::class, 'showByCategoryId']);
         // Rotas para Categorias
         Route::apiResource('categories', CategoryController::class);
 
@@ -83,6 +84,9 @@ Route::prefix('admin-v1')->group(function () {
 
         // Rotas para Estoque
         Route::apiResource('stocks', StockController::class);
+
+        // Rotas para CEP
+        Route::get('/zip-code/{zipCode}', [ViaCepController::class, 'search']);
     });
 });
 

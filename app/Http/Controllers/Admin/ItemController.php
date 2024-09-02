@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use App\Http\Resources\ItemResource;
+use App\Models\Stock;
 
 use App\Services\UserRoleService;
 
@@ -23,24 +24,43 @@ class ItemController extends Controller
         }
     }
 
+    public function showByCategoryId(Request $request, $categoryId)
+    {
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+
+        if ($roleId == 1) {
+            return ItemResource::collection(Item::where('category_id', $categoryId)->get()->load('stock', 'category'));
+        } else {
+            return ItemResource::collection(Item::where('company_id', $user->company_id)->where('category_id', $categoryId)->get()->load('stock', 'category'));
+        }
+    }
+
     public function store(Request $request)
     {
-        $user = $request->user(); // Obtém o usuário autenticado
+        $user = $request->user();
         $validatedData = $request->validate([
-            // 'company_id' => 'required|interger', // Remove a validação de company_id
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image_url' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
-            'available' => 'required|boolean'
+            'available' => 'required|boolean',
+            'quantity' => 'required|integer|min:0' // Adicionado validação para quantidade
         ]);
 
-        $validatedData['company_id'] = $user->company_id; // Adiciona o company_id do usuário autenticado
+        $validatedData['company_id'] = $user->company_id;
 
         $item = Item::create($validatedData);
 
-        return response()->json($item, 201);
+        $stock = new Stock([
+            'item_id' => $item->id,
+            'quantity' => $validatedData['quantity'],
+        ]);
+
+        $item->stock()->save($stock);
+
+        return response()->json($item->load('stock'), 201);
     }
 
     public function show(Item $item)

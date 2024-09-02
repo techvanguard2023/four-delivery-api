@@ -7,7 +7,9 @@
     "require": {
         "php": "^8.2",
         "darkaonline/l5-swagger": "^8.6",
+        "gabrielmoura/laravel-cep": "^1.0",
         "guzzlehttp/guzzle": "^7.9",
+        "illuminate/redis": "*",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",

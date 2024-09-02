@@ -17,7 +17,7 @@ class ItemsSeeder extends Seeder
                 'company_id' => mt_rand(1, 2),
                 'name' => 'Item ' . $i,
                 'description' => 'Description for item ' . $i,
-                'image_url' => 'https://via.placeholder.com/150',
+                'image_url' => 'https://picsum.photos/150?random=' . $i,
                 'price' => mt_rand(10, 100), // Gera um preço aleatório entre 10 e 100
                 'category_id' => mt_rand(1, 5), // Assumindo que você tem pelo menos 5 categorias
                 'available' => true,

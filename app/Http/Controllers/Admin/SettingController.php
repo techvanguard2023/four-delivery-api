@@ -10,15 +10,34 @@ use App\Services\UserRoleService;
 class SettingController extends Controller
 {
     // Método para obter uma configuração específica por chave
-    public function show($key)
+    public function index(Request $request)
     {
-        $setting = Setting::where('key', $key)->first();
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user);
 
-        if (!$setting) {
-            return response()->json(['error' => 'Configuração não encontrada'], 404);
+        if ($roleId == 1) {
+            return Setting::all();
+        } else {
+            return Setting::where('company_id', $user->company_id)->get();
         }
+    }
 
-        return response()->json($setting, 200);
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'key' => 'required|string|max:255',
+            'value' => 'required|array',
+            'company_id' => 'required|integer',
+        ]);
+
+        $setting = Setting::create($validatedData);
+
+        return response()->json($setting, 201);
+    }
+
+    public function show(Setting $setting)
+    {
+        return $setting;
     }
 
     // Método para atualizar uma configuração específica por chave

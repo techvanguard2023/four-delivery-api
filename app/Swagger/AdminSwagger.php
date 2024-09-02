@@ -554,4 +554,203 @@ trait AdminSwagger
      * )
      */
     public function deleteCompany() {}
+
+    /** CUSTOMERS */
+
+    /**
+     * @OA\Get(
+     *     path="/customers",
+     *     summary="Listar Clientes",
+     *     description="Retorna uma lista de todos os clientes",
+     *     tags={"Customers"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de clientes",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Cliente 1"),
+     *                     @OA\Property(property="email", type="string", example="cliente1@example.com"),
+     *                     @OA\Property(property="phone", type="string", example="1234567890"),
+     *                     @OA\Property(property="address", type="string", example="Rua A, 123"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 )
+     *             )
+     *           )
+     *     )
+     * )
+     */
+    public function listCustomers() {}
+
+    /**
+     * @OA\Post(
+     *     path="/customers",
+     *     summary="Criar Cliente",
+     *     description="Cria um novo cliente",
+     *     tags={"Customers"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="name", type="string", example="Cliente 2"),
+     *             @OA\Property(property="email", type="string", example="cliente2@example.com"),
+     *             @OA\Property(property="phone", type="string", example="1234567890"),
+     *             @OA\Property(property="address", type="string", example="Rua B, 456")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Cliente criado com sucesso",
+     *         @OA\JsonContent(
+     *                type="object",
+     *             @OA\Property(property="status", type="integer", example=201),
+     *             @OA\Property(property="message", type="string", example="Cliente criado com sucesso"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=2),
+     *                 @OA\Property(property="name", type="string", example="Cliente 2"),
+     *                 @OA\Property(property="email", type="string", example="cliente2@example.com"),
+     *                 @OA\Property(property="phone", type="string", example="1234567890"),
+     *                 @OA\Property(property="address", type="string", example="Rua B, 456"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function createCustomer() {}
+
+    /**
+     * @OA\Get(
+     *     path="/customers/{id}",
+     *     summary="Detalhes do Cliente",
+     *     description="Retorna os detalhes de um cliente específico",
+     *     tags={"Customers"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID do cliente",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes do cliente",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Cliente 1"),
+     *                 @OA\Property(property="email", type="string", example="cliente1@example.com"),
+     *                 @OA\Property(property="phone", type="string", example="1234567890"),
+     *                 @OA\Property(property="address", type="string", example="Rua A, 123"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Cliente não encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Cliente não encontrado")
+     *         )
+     *     )
+     * )
+     */
+    public function getCustomer() {}
+
+    /**
+     * @OA\Put(
+     *     path="/customers/{id}",
+     *     summary="Atualizar Cliente",
+     *     description="Atualiza os dados de um cliente existente",
+     *     tags={"Customers"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID do cliente",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="name", type="string", example="Cliente 1 Atualizado"),
+     *             @OA\Property(property="email", type="string", example="cliente1@example.com"),
+     *             @OA\Property(property="phone", type="string", example="1234567890"),
+     *             @OA\Property(property="address", type="string", example="Rua A, 123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Cliente atualizado com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Cliente atualizado com sucesso"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Cliente 1 Atualizado"),
+     *                 @OA\Property(property="email", type="string", example="cliente1@example.com"),
+     *                 @OA\Property(property="phone", type="string", example="1234567890"),
+     *                 @OA\Property(property="address", type="string", example="Rua A, 123"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Cliente não encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Cliente não encontrado")
+     *         )
+     *     )
+     * )
+     */
+    public function updateCustomer() {}
+
+    /**
+     * @OA\Delete(
+     *     path="/customers/{id}",
+     *     summary="Excluir Cliente",
+     *     description="Exclui um cliente existente",
+     *     tags={"Customers"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID do cliente",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Cliente excluído com sucesso",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Cliente excluído com sucesso"   )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Cliente não encontrado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Cliente não encontrado")
+     *         )
+     *     )
+     * )
+     */
+    public function deleteCustomer() {}
+
+    /** ITEMS */
 }

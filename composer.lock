@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a7031a98afdf08940767629af66c045",
+    "content-hash": "09de0d7524957d531d12696576d0286a",
     "packages": [
         {
             "name": "brick/math",
@@ -732,6 +732,67 @@
                 }
             ],
             "time": "2023-10-12T05:21:21+00:00"
+        },
+        {
+            "name": "gabrielmoura/laravel-cep",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gabrielmoura/laravel-cep.git",
+                "reference": "debc185dd1d5541954311f517366e2e269e6a4d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gabrielmoura/laravel-cep/zipball/debc185dd1d5541954311f517366e2e269e6a4d1",
+                "reference": "debc185dd1d5541954311f517366e2e269e6a4d1",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "*",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.13",
+                "orchestra/testbench": "^8.0",
+                "phpstan/phpstan": "^1.10"
+            },
+            "suggest": {
+                "illuminate/redis": "^v10"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Gabrielmoura\\LaravelCep\\LaravelCepServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Gabrielmoura\\LaravelCep\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gabriel Moura",
+                    "email": "gmoura96@icloud.com"
+                }
+            ],
+            "description": "A simple Laravel package to get CEP information",
+            "keywords": [
+                "cep",
+                "laravel",
+                "redis"
+            ],
+            "support": {
+                "issues": "https://github.com/gabrielmoura/laravel-cep/issues",
+                "source": "https://github.com/gabrielmoura/laravel-cep/tree/1.0"
+            },
+            "time": "2023-12-09T17:57:59+00:00"
         },
         {
             "name": "graham-campbell/result-type",
