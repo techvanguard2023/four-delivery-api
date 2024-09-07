@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
-
+use App\Http\Resources\ListOrdersResource;
 use App\Services\UserRoleService;
+use App\Http\Resources\ShowOrderResource;
 
 class OrderController extends Controller
 {
@@ -16,9 +17,9 @@ class OrderController extends Controller
         $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
 
         if ($roleId == 1) {
-            return Order::with(['customer', 'status', 'orderItems'])->get();
+            return ListOrdersResource::collection(Order::with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])->get());
         } else {
-            return Order::where('company_id', $user->company_id)->with(['customer', 'status', 'orderItems'])->get();
+            return ListOrdersResource::collection(Order::where('company_id', $user->company_id)->with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])->get());
         }
     }
 
@@ -39,10 +40,27 @@ class OrderController extends Controller
         return response()->json($order, 201);
     }
 
-    public function show(Order $order)
+    public function show(Request $request, Order $order)
     {
-        return $order->load(['customer', 'status', 'orderItems']);
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+
+        if ($roleId == 1) {
+            // Retorna um único recurso, não uma coleção
+            return new ShowOrderResource($order->load(['customer', 'orderItems', 'customer.deliveryAddresses']));
+        } else {
+            $order = Order::where('company_id', $user->company_id)
+                ->with(['customer', 'orderItems'])
+                ->find($order->id); // Corrigido para usar o ID do pedido
+
+            if ($order) {
+                return new ShowOrderResource($order);
+            } else {
+                return response()->json(['error' => 'Order not found'], 404);
+            }
+        }
     }
+
 
     public function update(Request $request, Order $order)
     {

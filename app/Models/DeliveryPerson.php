@@ -17,7 +17,7 @@ class DeliveryPerson extends Model
         return $this->belongsTo(Company::class, 'company_id');
     }
 
-    public function deliveries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Order::class); // Considering that a delivery person can be linked to multiple orders
     }

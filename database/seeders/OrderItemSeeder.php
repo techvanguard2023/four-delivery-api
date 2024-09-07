@@ -17,7 +17,8 @@ class OrderItemSeeder extends Seeder
             'order_id' => 1,
             'item_id' => 1,
             'quantity' => 1,
-            'price' => 100,
+            'price' => 77.00,
+            'observation' => 'Sem cebola',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -26,7 +27,8 @@ class OrderItemSeeder extends Seeder
             'order_id' => 1,
             'item_id' => 2,
             'quantity' => 1,
-            'price' => 200,
+            'price' => 53.00,
+            'observation' => 'Bem gelado',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -35,7 +37,8 @@ class OrderItemSeeder extends Seeder
             'order_id' => 2,
             'item_id' => 3,
             'quantity' => 1,
-            'price' => 300,
+            'price' => 71.00,
+            'observation' => 'Sem azeitona',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -44,7 +47,8 @@ class OrderItemSeeder extends Seeder
             'order_id' => 2,
             'item_id' => 4,
             'quantity' => 1,
-            'price' => 400,
+            'price' => 61.00,
+            'observation' => 'Com muito bacon',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -53,7 +57,8 @@ class OrderItemSeeder extends Seeder
             'order_id' => 3,
             'item_id' => 5,
             'quantity' => 1,
-            'price' => 500,
+            'price' => 63.00,
+            'observation' => 'Sem cheiro verde',
             'created_at' => now(),
             'updated_at' => now()
         ]);

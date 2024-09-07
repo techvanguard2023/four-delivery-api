@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class ListOrdersResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'customer' => $this->customer->name ?? 'Unknown',
+            'customer_id' => $this->customer->id ?? 'Unknown',
+            'total_price' => $this->total_price,
+            'status' => $this->status->name ?? 'Pending',
+            'payment_status' => $this->payment_status ?? 'Unpaid',
+            'total_items' => $this->orderItems->count(),
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'delivery_person' => $this->deliveryPerson->name ?? 'Not assigned',
+        ];
+    }
+}

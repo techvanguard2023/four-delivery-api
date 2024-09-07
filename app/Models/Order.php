@@ -27,6 +27,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function deliveryPerson()
+    {
+        return $this->belongsTo(DeliveryPerson::class, 'delivery_person_id'); // Ajuste para a tabela correta
+    }
+
     public function payment()
     {
         return $this->hasOne(Payment::class);

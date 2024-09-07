@@ -12,9 +12,13 @@ class CreateDeliveryAddressesTable extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->string('address');
+            $table->string('number');
+            $table->string('complement')->nullable();
+            $table->string('neighborhood');
+            $table->string('reference_point')->nullable();
             $table->string('city');
             $table->string('state');
-            $table->string('postal_code');
+            $table->string('zip_code');
             $table->timestamps();
             $table->softDeletes();
         });

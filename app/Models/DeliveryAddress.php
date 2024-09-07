@@ -10,7 +10,7 @@ class DeliveryAddress extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['customer_id', 'address', 'city', 'state', 'postal_code'];
+    protected $fillable = ['customer_id', 'address', 'number', 'complement', 'neighborhood', 'reference_point', 'city', 'state', 'zip_code'];
 
     public function customer()
     {

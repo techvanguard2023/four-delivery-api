@@ -16,7 +16,7 @@ class OrderSeeder extends Seeder
         Order::create([
             'company_id' => 1,
             'customer_id' => 1,
-            'total_price' => 300,
+            'total_price' => 130.00,
             'status_id' => 1,
             'payment_status' => 'pending',
             'created_at' => now(),
@@ -26,7 +26,7 @@ class OrderSeeder extends Seeder
         Order::create([
             'company_id' => 1,
             'customer_id' => 2,
-            'total_price' => 700,
+            'total_price' => 132.00,
             'status_id' => 2,
             'payment_status' => 'paid',
             'created_at' => now(),
@@ -36,7 +36,7 @@ class OrderSeeder extends Seeder
         Order::create([
             'company_id' => 1,
             'customer_id' => 3,
-            'total_price' => 500,
+            'total_price' => 63.00,
             'status_id' => 3,
             'payment_status' => 'pending',
             'created_at' => now(),
