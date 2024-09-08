@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ListOrdersResource;
 use App\Services\UserRoleService;
 use App\Http\Resources\ShowOrderResource;
+use App\Models\Item;
+use App\Models\OrderItem;
+use App\Models\Stock;
 
 class OrderController extends Controller
 {
@@ -126,5 +129,246 @@ class OrderController extends Controller
         $order->save();
 
         return response()->json($order, 200);
+    }
+
+    public function setDeliveryPerson(Request $request, Order $order)
+    {
+        $validatedData = $request->validate([
+            'delivery_person_id' => 'required|exists:delivery_people,id'
+        ]);
+
+        $order->delivery_person_id = $validatedData['delivery_person_id'];
+        $order->save();
+
+        return response()->json($order, 200);
+    }
+
+
+    public function addItem(Request $request, Order $order)
+    {
+        // Validação dos dados recebidos
+        $validatedData = $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'quantity' => 'required|integer|min:1',
+            'observation' => 'nullable|string'
+        ]);
+
+        // Busca o item pelo id
+        $item = Item::find($validatedData['item_id']);
+
+        // Busca o estoque do item
+        $stock = Stock::where('item_id', $item->id)->first();
+
+        // Verifica se a quantidade em estoque é suficiente
+        if (!$stock || $stock->quantity < $validatedData['quantity']) {
+            return response()->json([
+                'error' => 'Quantidade insuficiente no estoque. Apenas ' . ($stock ? $stock->quantity : 0) . ' unidades disponíveis.'
+            ], 400);
+        }
+
+        // Verifica se o item já existe no pedido
+        $orderItem = $order->orderItems()->where('item_id', $item->id)->first();
+
+        if ($orderItem) {
+            // Se o item já existe no pedido, incrementa a quantidade
+            $newQuantity = $orderItem->quantity + $validatedData['quantity'];
+
+            // Verifica novamente se a quantidade total no pedido excede o estoque
+            if ($newQuantity > $stock->quantity) {
+                return response()->json([
+                    'error' => 'Quantidade insuficiente no estoque. Apenas ' . $stock->quantity . ' unidades disponíveis.'
+                ], 400);
+            }
+
+            // Atualiza a quantidade e a observação
+            $orderItem->quantity = $newQuantity;
+            if (!empty($validatedData['observation'])) {
+                $orderItem->observation = $validatedData['observation'];
+            }
+        } else {
+            // Se não existe, cria um novo registro de OrderItem
+            $orderItem = new OrderItem([
+                'item_id' => $item->id,
+                'quantity' => $validatedData['quantity'],
+                'price' => $item->price,
+                'observation' => $validatedData['observation']
+            ]);
+        }
+
+        // Salva o OrderItem (seja atualização ou criação)
+        $order->orderItems()->save($orderItem);
+
+        // Atualiza o estoque do item subtraindo a quantidade adicionada
+        $stock->quantity -= $validatedData['quantity'];
+        $stock->save();
+
+        // Atualiza a coluna available na tabela items se o estoque chegar a 0
+        if ($stock->quantity === 0) {
+            $item->available = 0;
+            $item->save();
+        }
+
+        // Recalcula o preço total do pedido
+        $order->total_price = $order->orderItems->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
+        $order->save();
+
+        return response()->json($orderItem, 201);
+    }
+
+
+
+    public function removeItem(Request $request, Order $order)
+    {
+        $validatedData = $request->validate([
+            'item_id' => 'required|exists:items,id'
+        ]);
+
+        // Encontrar o item do pedido que será removido
+        $orderItem = OrderItem::where('order_id', $order->id)
+            ->where('item_id', $validatedData['item_id'])
+            ->first();
+
+        if ($orderItem) {
+            // Buscar o estoque do item
+            $stock = Stock::where('item_id', $orderItem->item_id)->first();
+
+            if ($stock) {
+                // Adicionar a quantidade do item removido de volta ao estoque
+                $stock->quantity += $orderItem->quantity;
+
+                // Atualizar a coluna available na tabela items se o estoque for maior que 0
+                if ($stock->quantity > 0) {
+                    $item = Item::find($orderItem->item_id);
+                    $item->available = 1;
+                    $item->save();
+                }
+
+                $stock->save();
+            }
+
+            // Excluir o item do pedido
+            $orderItem->delete();
+
+            // Recalcular o preço total do pedido
+            $order->total_price = $order->orderItems->sum(function ($item) {
+                return $item->price * $item->quantity;
+            });
+            $order->save();
+        }
+
+        return response()->json(null, 204);
+    }
+
+
+
+    public function updateItemQuantity(Request $request, Order $order)
+    {
+        $validatedData = $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        $orderItem = OrderItem::where('order_id', $order->id)
+            ->where('item_id', $validatedData['item_id'])
+            ->first();
+
+        if ($orderItem) {
+            // Busca o estoque do item
+            $stock = Stock::where('item_id', $orderItem->item_id)->first();
+
+            if ($stock) {
+                // Verifica se a nova quantidade é maior ou menor do que a quantidade atual
+                if ($validatedData['quantity'] > $orderItem->quantity) {
+                    // A quantidade está aumentando
+                    $quantityToAdd = $validatedData['quantity'] - $orderItem->quantity;
+
+                    // Verifica se há estoque suficiente
+                    if ($stock->quantity < $quantityToAdd) {
+                        return response()->json([
+                            'error' => 'Quantidade insuficiente no estoque. Apenas ' . $stock->quantity . ' unidades disponíveis.'
+                        ], 400);
+                    }
+
+                    // Atualiza o estoque
+                    $stock->quantity -= $quantityToAdd;
+                } elseif ($validatedData['quantity'] < $orderItem->quantity) {
+                    // A quantidade está diminuindo
+                    $quantityToAdd = $orderItem->quantity - $validatedData['quantity'];
+
+                    // Adiciona a quantidade de volta ao estoque
+                    $stock->quantity += $quantityToAdd;
+                }
+
+                // Salva a alteração no estoque
+                $stock->save();
+
+                // Atualiza a coluna available se o estoque estiver vazio
+                $item = Item::find($orderItem->item_id);
+                if ($stock->quantity <= 0) {
+                    $item->available = 0;
+                } else {
+                    $item->available = 1;
+                }
+                $item->save();
+            }
+
+            // Atualiza a quantidade do item no pedido
+            $orderItem->quantity = $validatedData['quantity'];
+            $orderItem->save();
+
+            // Recalcula o preço total do pedido
+            $order->total_price = $order->orderItems->sum(function ($item) {
+                return $item->price * $item->quantity;
+            });
+            $order->save();
+        }
+
+        return response()->json($orderItem, 200);
+    }
+
+
+
+
+    public function updateItem(Request $request, Order $order)
+    {
+        $validatedData = $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0'
+        ]);
+
+        $orderItem = OrderItem::where('order_id', $order->id)
+            ->where('item_id', $validatedData['item_id'])
+            ->first();
+
+        if ($orderItem) {
+            $orderItem->quantity = $validatedData['quantity'];
+            $orderItem->price = $validatedData['price'];
+            $orderItem->save();
+        }
+
+        return response()->json($orderItem, 200);
+    }
+
+
+    public function updateItemPrice(Request $request, Order $order)
+    {
+        $validatedData = $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'price' => 'required|numeric|min:0'
+        ]);
+
+        $orderItem = OrderItem::where('order_id', $order->id)
+            ->where('item_id', $validatedData['item_id'])
+            ->first();
+
+        if ($orderItem) {
+            $orderItem->price = $validatedData['price'];
+            $orderItem->save();
+        }
+
+        return response()->json($orderItem, 200);
     }
 }

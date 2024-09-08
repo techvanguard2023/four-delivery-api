@@ -62,6 +62,14 @@ Route::prefix('admin-v1')->group(function () {
         Route::apiResource('orders', OrderController::class);
         Route::put('/orders/{order}/update-status', [OrderController::class, 'updateStatus']);
         Route::post('/orders/get-last-status-and-reativate', [OrderController::class, 'getLastStatusAndReativate']);
+        Route::put('/orders/{order}/set-delivery-person', [OrderController::class, 'setDeliveryPerson']);
+        Route::post('/orders/{order}/add-item', [OrderController::class, 'addItem']);
+        Route::post('/orders/{order}/remove-item', [OrderController::class, 'removeItem']);
+        Route::post('/orders/{order}/update-item-quantity', [OrderController::class, 'updateItemQuantity']);
+
+        Route::post('/orders/{order}/update-item', [OrderController::class, 'updateItem']);
+        Route::post('/orders/{order}/update-item-price', [OrderController::class, 'updateItemPrice']);
+
         // Rotas para Avaliações
         Route::apiResource('reviews', ReviewController::class);
 
