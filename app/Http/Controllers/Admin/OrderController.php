@@ -82,4 +82,49 @@ class OrderController extends Controller
 
         return response()->json(null, 204);
     }
+
+
+
+    public function updateStatus(Request $request, Order $order)
+    {
+        $validatedData = $request->validate([
+            'status_id' => 'required|exists:statuses,id'
+        ]);
+
+        // Armazena os valores antigos
+        $order->last_status_id = $order->status_id;
+        $order->last_payment_status = $order->payment_status;
+
+        // Atualiza o status_id com o novo valor
+        $order->status_id = $validatedData['status_id'];
+
+        // Verifica os status de cancelamento
+        if (in_array($validatedData['status_id'], [10, 11, 12, 15, 17])) {
+            $order->payment_status = 'canceled';
+        }
+
+        // Verifica os status de pagamento concluído
+        if (in_array($validatedData['status_id'], [2, 9])) {
+            $order->payment_status = 'paid';
+        }
+
+        // Salva a ordem com as alterações
+        $order->save();
+
+        return response()->json($order, 200);
+    }
+
+    public function getLastStatusAndReativate(Request $request)
+    {
+        $validatedData = $request->validate([
+            'order_id' => 'required|exists:orders,id'
+        ]);
+
+        $order = Order::find($validatedData['order_id']);
+        $order->status_id = $order->last_status_id;
+        $order->payment_status = $order->last_payment_status;
+        $order->save();
+
+        return response()->json($order, 200);
+    }
 }

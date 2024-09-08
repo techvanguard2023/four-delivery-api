@@ -10,7 +10,7 @@ class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['company_id', 'customer_id', 'total_price', 'status_id', 'payment_status'];
+    protected $fillable = ['company_id', 'customer_id', 'delivery_person_id', 'total_price', 'status_id', 'payment_status', 'last_status_id', 'last_payment_status'];
 
     public function customer()
     {
@@ -29,7 +29,7 @@ class Order extends Model
 
     public function deliveryPerson()
     {
-        return $this->belongsTo(DeliveryPerson::class, 'delivery_person_id'); // Ajuste para a tabela correta
+        return $this->belongsTo(DeliveryPerson::class, 'delivery_person_id');
     }
 
     public function payment()

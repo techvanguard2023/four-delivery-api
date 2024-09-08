@@ -60,7 +60,8 @@ Route::prefix('admin-v1')->group(function () {
 
         // Rotas para Pedidos
         Route::apiResource('orders', OrderController::class);
-
+        Route::put('/orders/{order}/update-status', [OrderController::class, 'updateStatus']);
+        Route::post('/orders/get-last-status-and-reativate', [OrderController::class, 'getLastStatusAndReativate']);
         // Rotas para Avaliações
         Route::apiResource('reviews', ReviewController::class);
 

@@ -12,9 +12,12 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
             $table->foreignId('customer_id')->constrained('customers');
+            $table->integer('delivery_person_id')->nullable();
             $table->decimal('total_price', 8, 2);
             $table->foreignId('status_id')->constrained('statuses');
             $table->string('payment_status');
+            $table->string('last_status_id')->nullable();
+            $table->string('last_payment_status')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
