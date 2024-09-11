@@ -117,6 +117,18 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
+    public function updatePaymentStatus(Request $request, Order $order)
+    {
+        $validatedData = $request->validate([
+            'payment_status' => 'required'
+        ]);
+
+        $order->payment_status = $validatedData['payment_status'];
+        $order->save();
+
+        return response()->json($order, 200);
+    }
+
     public function getLastStatusAndReativate(Request $request)
     {
         $validatedData = $request->validate([

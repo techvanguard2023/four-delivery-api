@@ -61,6 +61,7 @@ Route::prefix('admin-v1')->group(function () {
         // Rotas para Pedidos
         Route::apiResource('orders', OrderController::class);
         Route::put('/orders/{order}/update-status', [OrderController::class, 'updateStatus']);
+        Route::put('/orders/{order}/update-payment-status', [OrderController::class, 'updatePaymentStatus']);
         Route::post('/orders/get-last-status-and-reativate', [OrderController::class, 'getLastStatusAndReativate']);
         Route::put('/orders/{order}/set-delivery-person', [OrderController::class, 'setDeliveryPerson']);
         Route::post('/orders/{order}/add-item', [OrderController::class, 'addItem']);
