@@ -32,7 +32,7 @@ class CustomerSeeder extends Seeder
         Customer::create([
             'name' => 'Carlos Pereira',
             'email' => 'carlos.pereira@example.com',
-            'phone' => '5555555555',
+            'phone' => '5555755555',
             'address' => 'Rua das Palmeiras, 789',
             'company_id' => 1,
         ]);
@@ -107,6 +107,14 @@ class CustomerSeeder extends Seeder
             'phone' => '9999999999',
             'address' => 'Rua das Flores, 123',
             'company_id' => 2,
+        ]);
+
+        Customer::create([
+            'name' => 'Mariana Silva',
+            'email' => '',
+            'phone' => '1010101010',
+            'address' => '',
+            'company_id' => 1,
         ]);
     }
 }

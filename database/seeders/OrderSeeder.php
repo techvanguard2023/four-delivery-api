@@ -21,6 +21,7 @@ class OrderSeeder extends Seeder
             'status_id' => 1,
             'payment_status' => 'pending',
             'order_type_id' => 1,
+            'order_origin_id' => 6,
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -32,6 +33,7 @@ class OrderSeeder extends Seeder
             'status_id' => 2,
             'payment_status' => 'paid',
             'order_type_id' => 2,
+            'order_origin_id' => 1,
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -43,6 +45,7 @@ class OrderSeeder extends Seeder
             'status_id' => 3,
             'payment_status' => 'pending',
             'order_type_id' => 3,
+            'order_origin_id' => 4,
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -53,8 +56,10 @@ class OrderSeeder extends Seeder
             'status_id' => 3,
             'payment_status' => 'pending',
             'order_type_id' => 3,
+            'order_origin_id' => 4,
             'created_at' => now(),
-            'updated_at' => now()
+            'updated_at' => now(),
+            'location' => 'Mesa 1'
         ]);
     }
 }

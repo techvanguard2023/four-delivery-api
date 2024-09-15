@@ -16,9 +16,9 @@ class DeliveryPersonController extends Controller
         $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
 
         if ($roleId == 1) {
-            return DeliveryPerson::all();
+            return DeliveryPerson::paginate(25);
         } else {
-            return DeliveryPerson::where('company_id', $user->company_id)->get();
+            return DeliveryPerson::where('company_id', $user->company_id)->paginate(25);
         }
     }
 

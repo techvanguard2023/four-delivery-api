@@ -35,13 +35,19 @@ class CategoryController extends Controller
         $category = Category::find($category->id);
 
         if (!$category) {
-            return response()->json(['message' => 'Categoria não encontrado.'], 404);
+            return response()->json(['message' => 'Categoria não encontrada.'], 404);
         }
 
-        $category->load('items');
+        // Paginação de itens relacionados
+        $itemsPerPage = 25; // Defina o número de itens por página
+        $items = $category->items()->paginate($itemsPerPage);
 
-        return response()->json($category);
+        return response()->json([
+            'category' => $category,
+            'items' => $items, // Inclui a paginação
+        ]);
     }
+
 
     public function update(Request $request, Category $category)
     {

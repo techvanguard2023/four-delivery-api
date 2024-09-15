@@ -16,23 +16,25 @@ class CustomerController extends Controller
         $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
 
         if ($roleId == 1) {
-            return Customer::all();
+            return Customer::paginate(25); // Paginação direta
         } else {
-            return Customer::where('company_id', $user->company_id)->get();
+            return Customer::where('company_id', $user->company_id)->paginate(25); // Paginação após a query
         }
     }
+
 
     public function store(Request $request)
     {
         $user = $request->user(); // Obtém o usuário autenticado
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:customers,email',
-            'phone' => 'required|string',
-            'address' => 'required|string'
+            'email' => 'email|unique:customers,email',
+            'phone' => 'required|unique:customers,phone',
+            'address' => 'string'
         ]);
 
         $validatedData['company_id'] = $user->company_id; // Adiciona o company_id do usuário autenticado
+
 
         $customer = Customer::create($validatedData);
 

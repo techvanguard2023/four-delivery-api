@@ -20,6 +20,7 @@ class CreateOrdersTable extends Migration
             $table->string('last_payment_status')->nullable();
             $table->foreignId('order_type_id')->constrained('order_types');
             $table->string('location')->nullable();
+            $table->foreignId('order_origin_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

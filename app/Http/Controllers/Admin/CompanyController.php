@@ -16,7 +16,7 @@ class CompanyController extends Controller
         $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
 
         if ($roleId == 1) {
-            return Company::all();
+            return Company::paginate(25);
         } else {
             return response()->json(['message' => 'You are not authorized to access this resource'], 403);
         }

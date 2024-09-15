@@ -40,7 +40,8 @@ class OrderController extends Controller
             'status_id' => 'required|exists:statuses,id',
             'payment_status' => 'required|string',
             'order_type_id' => 'required|exists:order_types,id',
-            'location' => 'nullable|string'
+            'location' => 'nullable|string',
+            'order_origin_id' => 'nullable|exists:order_origins,id'
         ]);
 
         // Adiciona o company_id do usuário autenticado

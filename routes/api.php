@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\ViaCepController;
 use App\Http\Controllers\Admin\OrderTypeController;
+use App\Http\Controllers\Admin\OrderOriginController;
 
 use App\Http\Controllers\Site\BannerController;
 
@@ -74,6 +75,9 @@ Route::prefix('admin-v1')->group(function () {
 
         // Rotas de tipo de pedidos
         Route::apiResource('/order-types', OrderTypeController::class);
+
+        // Rotas de origem de pedidos
+        Route::apiResource('/order-origins', OrderOriginController::class);
 
         // Rotas para Avaliações
         Route::apiResource('reviews', ReviewController::class);

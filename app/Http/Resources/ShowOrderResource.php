@@ -55,6 +55,7 @@ class ShowOrderResource extends JsonResource
             'created_at' => $this->created_at->toDateTimeString(),
             'delivery_person' => $this->deliveryPerson->name ?? null,
             'location' => $this->location ?? null,
+            'order_origin' => $this->orderOrigin->name ?? null,
         ];
     }
 }

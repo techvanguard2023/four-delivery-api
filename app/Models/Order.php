@@ -10,7 +10,7 @@ class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['company_id', 'customer_id', 'delivery_person_id', 'total_price', 'status_id', 'payment_status', 'last_status_id', 'last_payment_status', 'order_type_id', 'location'];
+    protected $fillable = ['company_id', 'customer_id', 'delivery_person_id', 'total_price', 'status_id', 'payment_status', 'last_status_id', 'last_payment_status', 'order_type_id', 'location', 'order_origin_id'];
 
     public function customer()
     {
@@ -40,5 +40,10 @@ class Order extends Model
     public function orderType()
     {
         return $this->belongsTo(OrderType::class);
+    }
+
+    public function orderOrigin()
+    {
+        return $this->belongsTo(OrderOrigin::class);
     }
 }

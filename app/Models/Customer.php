@@ -10,7 +10,7 @@ class Customer extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'email', 'phone', 'address'];
+    protected $fillable = ['company_id', 'name', 'email', 'phone', 'address'];
 
     public function orders()
     {
@@ -22,7 +22,7 @@ class Customer extends Model
         return $this->hasMany(DeliveryAddress::class);
     }
 
-    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
