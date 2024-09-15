@@ -18,11 +18,14 @@ class ItemController extends Controller
         $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
 
         if ($roleId == 1) {
-            return ItemResource::collection(Item::all()->load('stock', 'category'));
+            // Retorna todos os itens com paginação de 25 itens por página
+            return ItemResource::collection(Item::with('stock', 'category')->paginate(15));
         } else {
-            return ItemResource::collection(Item::where('company_id', $user->company_id)->get()->load('stock', 'category'));
+            // Retorna itens da empresa específica com paginação de 25 itens por página
+            return ItemResource::collection(Item::where('company_id', $user->company_id)->with('stock', 'category')->paginate(15));
         }
     }
+
 
     public function showByCategoryId(Request $request, $categoryId)
     {

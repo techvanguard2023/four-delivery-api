@@ -62,5 +62,15 @@ class OrderItemSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now()
         ]);
+
+        OrderItem::create([
+            'order_id' => 4,
+            'item_id' => 9,
+            'quantity' => 1,
+            'price' => 91.00,
+            'observation' => 'Sem cebola',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 }

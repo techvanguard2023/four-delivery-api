@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\ViaCepController;
+use App\Http\Controllers\Admin\OrderTypeController;
 
 use App\Http\Controllers\Site\BannerController;
 
@@ -70,6 +71,9 @@ Route::prefix('admin-v1')->group(function () {
 
         Route::post('/orders/{order}/update-item', [OrderController::class, 'updateItem']);
         Route::post('/orders/{order}/update-item-price', [OrderController::class, 'updateItemPrice']);
+
+        // Rotas de tipo de pedidos
+        Route::apiResource('/order-types', OrderTypeController::class);
 
         // Rotas para Avaliações
         Route::apiResource('reviews', ReviewController::class);

@@ -11,6 +11,7 @@ use App\Http\Resources\ShowOrderResource;
 use App\Models\Item;
 use App\Models\OrderItem;
 use App\Models\Stock;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -20,28 +21,56 @@ class OrderController extends Controller
         $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
 
         if ($roleId == 1) {
-            return ListOrdersResource::collection(Order::with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])->get());
+            // Retorna todos os pedidos com paginação de 25 pedidos por página
+            return ListOrdersResource::collection(Order::with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])->paginate(25));
         } else {
-            return ListOrdersResource::collection(Order::where('company_id', $user->company_id)->with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])->get());
+            // Retorna pedidos da empresa específica com paginação de 25 pedidos por página
+            return ListOrdersResource::collection(Order::where('company_id', $user->company_id)->with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])->paginate(25));
         }
     }
+
 
     public function store(Request $request)
     {
         $user = $request->user(); // Obtém o usuário autenticado
+
         $validatedData = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
+            'customer_id' => 'required_if:order_type_id,1|exists:customers,id',
             'total_price' => 'required|numeric|min:0',
             'status_id' => 'required|exists:statuses,id',
-            'payment_status' => 'required|string'
+            'payment_status' => 'required|string',
+            'order_type_id' => 'required|exists:order_types,id',
+            'location' => 'nullable|string'
         ]);
 
-        $validatedData['company_id'] = $user->company_id; // Adiciona o company_id do usuário autenticado
+        // Adiciona o company_id do usuário autenticado
+        $validatedData['company_id'] = $user->company_id;
 
-        $order = Order::create($validatedData);
+        // Usa uma transação para garantir integridade
+        $order = DB::transaction(function () use ($validatedData, $request) {
+            $order = Order::create($validatedData);
 
-        return response()->json($order, 201);
+            // Adiciona os itens ao pedido
+            if ($request->has('items')) {
+                $orderItems = [];
+                foreach ($request->items as $item) {
+                    $orderItems[] = [
+                        'item_id' => $item['item_id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'],
+                        'observation' => $item['observation'] ?? null,
+                    ];
+                }
+                $order->orderItems()->createMany($orderItems);
+            }
+
+            return $order;
+        });
+
+        // Retorna o pedido e seus itens relacionados
+        return response()->json($order->load('orderItems'), 201);
     }
+
 
     public function show(Request $request, Order $order)
     {

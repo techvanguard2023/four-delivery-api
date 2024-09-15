@@ -97,5 +97,10 @@ class StatusSeeder extends Seeder
             'name' => 'Pedido Fechado',
             'description' => 'Status para atribuir quando a venda for presencial e o cliente consumiu no estabelecimento e acabou de fazer o pagamento.'
         ]);
+
+        Status::create([
+            'name' => 'Pedido Finalizado',
+            'description' => 'Status para atribuir quando a venda for presencial e o cliente consumiu no estabelecimento e já foi embora.'
+        ]);
     }
 }
