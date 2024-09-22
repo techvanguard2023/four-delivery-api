@@ -25,4 +25,9 @@ class Company extends Model
         'whatsapp',
         'website'
     ];
+
+    public function plans()
+    {
+        return $this->hasMany(CompanyPlan::class);
+    }
 }
