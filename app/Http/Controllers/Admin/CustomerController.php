@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Services\UserRoleService;
 
@@ -28,18 +29,28 @@ class CustomerController extends Controller
         $user = $request->user(); // Obtém o usuário autenticado
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'email|unique:customers,email',
-            'phone' => 'required|unique:customers,phone',
-            'address' => 'string'
+            'phone' => 'required|unique:customers,phone'
         ]);
 
         $validatedData['company_id'] = $user->company_id; // Adiciona o company_id do usuário autenticado
 
+        // Inicia a transação
+        $customer = DB::transaction(function () use ($validatedData, $request) {
+            // Cria o cliente
+            $customer = Customer::create($validatedData);
 
-        $customer = Customer::create($validatedData);
+            // Verifica se o request possui o campo 'address' e cria o endereço de entrega
+            if ($request->has('address')) {
+                $customer->deliveryAddresses()->create($request->address);
+            }
 
-        return response()->json($customer, 201);
+            return $customer;
+        });
+
+        // Retorna uma resposta de sucesso
+        return response()->json(['customer' => $customer], 201);
     }
+
 
     public function show(Customer $customer)
     {

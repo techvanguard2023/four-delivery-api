@@ -14,15 +14,39 @@ class StockSeeder extends Seeder
      */
     public function run(): void
     {
-        $stocks = [];
+        Stock::create([
+            'item_id' => 1,
+            'quantity' => 100,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        for ($i = 1; $i <= 50; $i++) {
-            $stocks[] = [
-                'item_id' => $i,
-                'quantity' => mt_rand(10, 100),
-            ];
-        }
+        Stock::create([
+            'item_id' => 2,
+            'quantity' => 100,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        DB::table('stocks')->insert($stocks);
+        Stock::create([
+            'item_id' => 3,
+            'quantity' => 100,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        Stock::create([
+            'item_id' => 4,
+            'quantity' => 100,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        Stock::create([
+            'item_id' => 5,
+            'quantity' => 100,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

@@ -12,9 +12,7 @@ class CreateCustomersTable extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
             $table->string('name');
-            $table->string('email')->unique()->nullable();
             $table->string('phone')->unique();
-            $table->string('address')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

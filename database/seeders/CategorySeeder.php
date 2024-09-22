@@ -120,5 +120,11 @@ class CategorySeeder extends Seeder
             'description' => 'Mini-hambúrguer, batata frita, nuggets, sucos em caixinha.',
             'image_url' => 'https://media-cdn.tripadvisor.com/media/photo-s/0d/e4/82/45/prato-kids-loucos-por.jpg'
         ]);
+
+        Category::create([
+            'name' => 'Caldos e Sopas',
+            'description' => 'Caldo de feijão, sopa de legumes, caldo verde, canja de galinha etc..',
+            'image_url' => 'https://conteudo.solutudo.com.br/wp-content/uploads/2022/05/Lugares-que-vendem-caldos-em-Presidente-Prudente.jpg'
+        ]);
     }
 }

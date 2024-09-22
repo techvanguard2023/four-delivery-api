@@ -17,8 +17,8 @@ class OrderItemSeeder extends Seeder
             'order_id' => 1,
             'item_id' => 1,
             'quantity' => 1,
-            'price' => 77.00,
-            'observation' => 'Sem cebola',
+            'price' => 4.50,
+            'observation' => '',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -27,8 +27,8 @@ class OrderItemSeeder extends Seeder
             'order_id' => 1,
             'item_id' => 2,
             'quantity' => 1,
-            'price' => 53.00,
-            'observation' => 'Bem gelado',
+            'price' => 3.50,
+            'observation' => '',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -37,8 +37,8 @@ class OrderItemSeeder extends Seeder
             'order_id' => 2,
             'item_id' => 3,
             'quantity' => 1,
-            'price' => 71.00,
-            'observation' => 'Sem azeitona',
+            'price' => 3.50,
+            'observation' => 'Gelo e limão',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -47,8 +47,8 @@ class OrderItemSeeder extends Seeder
             'order_id' => 2,
             'item_id' => 4,
             'quantity' => 1,
-            'price' => 61.00,
-            'observation' => 'Com muito bacon',
+            'price' => 2.50,
+            'observation' => 'Com gelo',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -57,18 +57,18 @@ class OrderItemSeeder extends Seeder
             'order_id' => 3,
             'item_id' => 5,
             'quantity' => 1,
-            'price' => 63.00,
-            'observation' => 'Sem cheiro verde',
+            'price' => 3.50,
+            'observation' => 'Com gelo',
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         OrderItem::create([
             'order_id' => 4,
-            'item_id' => 9,
+            'item_id' => 1,
             'quantity' => 1,
-            'price' => 91.00,
-            'observation' => 'Sem cebola',
+            'price' => 4.50,
+            'observation' => 'Sem gelo',
             'created_at' => now(),
             'updated_at' => now()
         ]);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Services\UserRoleService;
 
 
 class CategoryController extends Controller
@@ -13,8 +14,30 @@ class CategoryController extends Controller
 
     public function index()
     {
-        return Category::all();
+        return Category::orderBy('name', 'asc')->get();
     }
+
+    public function listCategoriesWithCompanyItems(Request $request)
+    {
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user);
+
+        $categoriesQuery = Category::whereHas('items', function ($query) use ($user, $roleId) {
+            if ($roleId != 1) {
+                $query->where('company_id', $user->company_id);
+            }
+        })->orderBy('name', 'asc');
+
+        $categories = $categoriesQuery->with(['items' => function ($query) use ($user, $roleId) {
+            if ($roleId != 1) {
+                $query->where('company_id', $user->company_id);
+            }
+        }])->get();
+
+        return response()->json($categories);
+    }
+
+
 
     public function store(Request $request)
     {
