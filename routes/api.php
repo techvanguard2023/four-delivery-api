@@ -51,12 +51,14 @@ Route::prefix('admin-v1')->group(function () {
         // Rotas para Itens
         Route::apiResource('items', ItemController::class);
         Route::get('/items/category/{categoryId}', [ItemController::class, 'showByCategoryId']);
+
         // Rotas para Categorias
         Route::apiResource('categories', CategoryController::class);
         Route::get('/categories-with-company-items', [CategoryController::class, 'listCategoriesWithCompanyItems']);
 
         // Rotas para Clientes
         Route::apiResource('customers', CustomerController::class);
+        Route::get('/customers-search', [CustomerController::class, 'SearchCustomer']);
 
         // Rotas para Endereços de Entrega
         Route::apiResource('delivery-addresses', DeliveryAddressController::class);

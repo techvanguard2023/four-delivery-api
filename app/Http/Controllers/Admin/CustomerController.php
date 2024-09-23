@@ -47,8 +47,7 @@ class CustomerController extends Controller
             return $customer;
         });
 
-        // Retorna uma resposta de sucesso
-        return response()->json(['customer' => $customer], 201);
+        return response()->json($customer, 201);
     }
 
 
@@ -76,5 +75,32 @@ class CustomerController extends Controller
         $customer->delete();
 
         return response()->json(null, 204);
+    }
+
+
+    public function SearchCustomer(Request $request)
+    {
+        var_dump('ok');
+
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user);
+
+        // Verifica se o campo 'name' ou 'phone' foi passado na requisição
+        $query = Customer::query();
+
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->has('phone')) {
+            $query->orWhere('phone', 'like', '%' . $request->phone . '%');
+        }
+
+        // Se o usuário não for um admin, filtra também pela empresa
+        if ($roleId != 1) {
+            $query->where('company_id', $user->company_id);
+        }
+
+        return $query->paginate(25);
     }
 }
