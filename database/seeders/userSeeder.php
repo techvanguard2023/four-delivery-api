@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class userSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     protected static ?string $password;
     /**
