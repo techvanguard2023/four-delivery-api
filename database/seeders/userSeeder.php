@@ -4,15 +4,17 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
-    protected static ?string $password;
     /**
      * Run the database seeds.
      */
+
+    private static $password;
+
     public function run(): void
     {
         User::create([
