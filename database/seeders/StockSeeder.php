@@ -16,14 +16,14 @@ class StockSeeder extends Seeder
     {
         Stock::create([
             'item_id' => 1,
-            'quantity' => 100,
+            'quantity' => 18,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
         Stock::create([
             'item_id' => 2,
-            'quantity' => 100,
+            'quantity' => 9,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

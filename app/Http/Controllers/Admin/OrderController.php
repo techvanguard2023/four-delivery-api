@@ -20,14 +20,43 @@ class OrderController extends Controller
         $user = $request->user();
         $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
 
-        if ($roleId == 1) {
-            // Retorna todos os pedidos com paginação de 25 pedidos por página
-            return ListOrdersResource::collection(Order::with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])->paginate(25));
-        } else {
-            // Retorna pedidos da empresa específica com paginação de 25 pedidos por página
-            return ListOrdersResource::collection(Order::where('company_id', $user->company_id)->with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])->paginate(25));
+        // Query base
+        $query = Order::with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])
+            ->where(function ($q) {
+                $q->whereNull('location')
+                    ->orWhere('location', '');
+            });
+
+        // Verifica o role do usuário para determinar se retorna todos os pedidos ou somente da empresa específica
+        if ($roleId != 1) {
+            $query->where('company_id', $user->company_id);
         }
+
+        // Retorna a coleção paginada de pedidos com 25 por página
+        return ListOrdersResource::collection($query->paginate(25));
     }
+
+
+    public function orderByLocation(Request $request)
+    {
+
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+
+        // Query base filtrando pedidos onde 'location' não é nulo nem vazio
+        $query = Order::with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])
+            ->whereNotNull('location')
+            ->where('location', '!=', '');
+
+        // Verifica o role do usuário para determinar se retorna todos os pedidos ou somente da empresa específica
+        if ($roleId != 1) {
+            $query->where('company_id', $user->company_id);
+        }
+
+        // Ordena pelos valores de 'location' e retorna a coleção paginada com 25 por página
+        return ListOrdersResource::collection($query->orderBy('location')->paginate(25));
+    }
+
 
 
     public function store(Request $request)

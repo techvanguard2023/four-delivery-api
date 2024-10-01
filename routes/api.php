@@ -65,6 +65,7 @@ Route::prefix('admin-v1')->group(function () {
 
         // Rotas para Pedidos
         Route::apiResource('orders', OrderController::class);
+        Route::get('/orders-location/has-location', [OrderController::class, 'orderByLocation']);
         Route::put('/orders/{order}/update-status', [OrderController::class, 'updateStatus']);
         Route::put('/orders/{order}/update-payment-status', [OrderController::class, 'updatePaymentStatus']);
         Route::post('/orders/get-last-status-and-reativate', [OrderController::class, 'getLastStatusAndReativate']);
