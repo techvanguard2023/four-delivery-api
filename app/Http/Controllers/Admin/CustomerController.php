@@ -53,22 +53,50 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
+        // Carrega os endereços de entrega do cliente
+        $customer->load('deliveryAddresses');
+
         return $customer;
     }
 
+
     public function update(Request $request, Customer $customer)
     {
+        // Validação dos dados do cliente
         $validatedData = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:customers,email,' . $customer->id,
-            'phone' => 'sometimes|string',
-            'address' => 'sometimes|string'
+            'phone' => 'sometimes|string|unique:customers,phone,' . $customer->id,
+            'addresses' => 'sometimes|array',
+            'addresses.*.id' => 'sometimes|exists:delivery_addresses,id', // Validação de cada endereço
+            'addresses.*.address' => 'sometimes|string|max:255',
+            'addresses.*.number' => 'sometimes|string|max:20',
+            'addresses.*.complement' => 'sometimes|string|max:255',
+            'addresses.*.neighborhood' => 'sometimes|string|max:255',
+            'addresses.*.reference_point' => 'sometimes|string|max:255',
+            'addresses.*.city' => 'sometimes|string|max:255',
+            'addresses.*.state' => 'sometimes|string|max:255',
+            'addresses.*.zip_code' => 'sometimes|string|max:20',
         ]);
 
+        // Atualiza os dados do cliente
         $customer->update($validatedData);
 
-        return response()->json($customer, 200);
+        // Verifica se existem endereços para serem atualizados
+        if ($request->has('addresses')) {
+            foreach ($request->input('addresses') as $addressData) {
+                if (isset($addressData['id'])) {
+                    // Atualiza o endereço existente
+                    $customer->deliveryAddresses()->where('id', $addressData['id'])->update($addressData);
+                } else {
+                    // Cria um novo endereço se não houver ID
+                    $customer->deliveryAddresses()->create($addressData);
+                }
+            }
+        }
+
+        return response()->json($customer->load('deliveryAddresses'), 200);
     }
+
 
     public function destroy(Customer $customer)
     {

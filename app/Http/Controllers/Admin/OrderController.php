@@ -32,9 +32,13 @@ class OrderController extends Controller
             $query->where('company_id', $user->company_id);
         }
 
+        // Adiciona ordenação pela posição dos pedidos e status, caso existam
+        $query->orderBy('position', 'asc');
+
         // Retorna a coleção paginada de pedidos com 25 por página
         return ListOrdersResource::collection($query->paginate(25));
     }
+
 
 
     public function orderByLocation(Request $request)
@@ -441,5 +445,32 @@ class OrderController extends Controller
         }
 
         return response()->json($orderItem, 200);
+    }
+
+    public function updateOrderPositions(Request $request)
+    {
+        $orders = $request->input('orders');
+
+        // Verifica se os pedidos foram fornecidos
+        if (!is_array($orders) || empty($orders)) {
+            return response()->json(['message' => 'Nenhum pedido fornecido!'], 400);
+        }
+
+        foreach ($orders as $orderData) {
+            // Verifica se o ID do pedido está definido
+            if (!isset($orderData['id'])) {
+                return response()->json(['message' => 'ID do pedido não fornecido!'], 400);
+            }
+
+            $order = Order::find($orderData['id']); // Encontra o pedido pelo ID
+            if ($order) {
+                $order->position = $orderData['position']; // Atualiza a posição
+                $order->save(); // Salva no banco de dados
+            } else {
+                return response()->json(['message' => 'Pedido não encontrado!'], 404);
+            }
+        }
+
+        return response()->json(['message' => 'Posições atualizadas com sucesso!'], 200);
     }
 }

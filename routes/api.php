@@ -73,6 +73,8 @@ Route::prefix('admin-v1')->group(function () {
         Route::post('/orders/{order}/add-item', [OrderController::class, 'addItem']);
         Route::post('/orders/{order}/remove-item', [OrderController::class, 'removeItem']);
         Route::post('/orders/{order}/update-item-quantity', [OrderController::class, 'updateItemQuantity']);
+        Route::post('/orders/update-order-positions', [OrderController::class, 'updateOrderPositions']);
+
 
         Route::post('/orders/{order}/update-item', [OrderController::class, 'updateItem']);
         Route::post('/orders/{order}/update-item-price', [OrderController::class, 'updateItemPrice']);

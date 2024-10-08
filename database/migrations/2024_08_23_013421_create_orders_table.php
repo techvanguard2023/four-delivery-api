@@ -21,6 +21,7 @@ class CreateOrdersTable extends Migration
             $table->foreignId('order_type_id')->constrained('order_types');
             $table->string('location')->nullable();
             $table->foreignId('order_origin_id')->nullable();
+            $table->integer('position')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

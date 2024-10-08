@@ -26,6 +26,8 @@ class ListOrdersResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'delivery_person' => $this->deliveryPerson->name ?? 'Not assigned',
             'location' => $this->location ?? null,
+            'position' => $this->position ?? null,
+            'status_id' => $this->status_id,
         ];
     }
 }
