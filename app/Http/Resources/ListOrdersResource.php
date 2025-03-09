@@ -17,11 +17,13 @@ class ListOrdersResource extends JsonResource
         return [
             'id' => $this->id,
             'customer' => $this->customer->name ?? '',
+            'customer_phone' => $this->customer->phone ?? '',
             'customer_id' => $this->customer->id ?? '',
             'order_type' => $this->orderType->name ?? '',
             'total_price' => $this->total_price,
             'status' => $this->status->name ?? 'Pending',
             'payment_status' => $this->payment_status ?? 'Unpaid',
+            'payment_method' => $this->payment_method ?? '',
             'total_items' => $this->orderItems->count(),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'delivery_person' => $this->deliveryPerson->name ?? 'Not assigned',

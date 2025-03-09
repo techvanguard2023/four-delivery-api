@@ -53,8 +53,10 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
-    public function show(Category $category)
+    public function show(Category $category, Request $request)
     {
+        $user = $request->user();
+
         $category = Category::find($category->id);
 
         if (!$category) {
@@ -63,7 +65,7 @@ class CategoryController extends Controller
 
         // Paginação de itens relacionados
         $itemsPerPage = 25; // Defina o número de itens por página
-        $items = $category->items()->paginate($itemsPerPage);
+        $items = $category->items()->where('company_id', $user->company_id)->paginate($itemsPerPage);
 
         return response()->json([
             'category' => $category,

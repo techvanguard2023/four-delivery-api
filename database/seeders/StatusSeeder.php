@@ -35,12 +35,7 @@ class StatusSeeder extends Seeder
 
         Status::create([
             'name' => 'Pronto para Retirada',
-            'description' => 'O pedido está pronto e aguardando para ser retirado pelo entregador.'
-        ]);
-
-        Status::create([
-            'name' => 'Pronto para Retirada pelo Cliente',
-            'description' => 'O pedido está pronto e aguardando o cliente para retirar.'
+            'description' => 'O pedido está pronto e aguardando para ser retirado.'
         ]);
 
         Status::create([

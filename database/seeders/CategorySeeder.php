@@ -34,7 +34,7 @@ class CategorySeeder extends Seeder
         Category::create([
             'name' => 'Salgados',
             'description' => 'Coxinha, empada, quibe, esfiha, pastel, croissant, pão de queijo.',
-            'image_url' => 'https://www.salgadosparafestassp.com.br/wp-content/uploads/2019/12/salgados-e-doces-zona-leste-D_NQ_NP_973911-MLB20660157330_042016-F.jpg'
+            'image_url' => 'https://interlasermaquinas.com.br/wp-content/uploads/2022/12/salgados-para-festa-1024x686.jpg'
         ]);
 
         Category::create([
@@ -70,7 +70,7 @@ class CategorySeeder extends Seeder
         Category::create([
             'name' => 'Vegetarianas/Veganas',
             'description' => 'Hambúrguer vegetariano, sanduíches veganos, saladas veganas.',
-            'image_url' => 'https://fornerialuce.com.br/media/magefan_blog/refeicoes-vegetarianas-equilibradas-descubra-opcoes-deliciosas-e-nutritivas.jpg'
+            'image_url' => 'https://i0.wp.com/www.vidanatural.org.br/wp-content/uploads/2020/02/0_dieta-vegetariana.jpg'
         ]);
 
         Category::create([

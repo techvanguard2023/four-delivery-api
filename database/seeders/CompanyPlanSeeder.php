@@ -15,7 +15,7 @@ class CompanyPlanSeeder extends Seeder
         $companyPlans = [
             [
                 'company_id' => 1,
-                'plan_id' => 1,
+                'plan_id' => 3,
                 'start_date' => now(),
                 'end_date' => now()->addDays(30),
                 'status' => 'active',
@@ -25,6 +25,15 @@ class CompanyPlanSeeder extends Seeder
             [
                 'company_id' => 2,
                 'plan_id' => 2,
+                'start_date' => now(),
+                'end_date' => now()->addDays(30),
+                'status' => 'active',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'company_id' => 3,
+                'plan_id' => 1,
                 'start_date' => now(),
                 'end_date' => now()->addDays(30),
                 'status' => 'active',

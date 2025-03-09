@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    private static $password;
+
 
     public function run(): void
     {
@@ -25,48 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
         $this->call(ItemsSeeder::class);
         $this->call(PermissionSeeder::class);
-
-
-        User::create([
-            'name' => 'Robson Gomes Pedreira',
-            'email' => 'masterdba6@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 1
-        ]);
-
-        User::create([
-            'name' => 'Gerente',
-            'email' => 'gerente@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 1
-        ]);
-
-        User::create([
-            'name' => 'Atendente',
-            'email' => 'atendente@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 1
-        ]);
-
-        User::create([
-            'name' => 'Emporio dos Sabores Gerente',
-            'email' => 'emporiodosaborgerente@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 2
-        ]);
-
-        User::create([
-            'name' => 'Emporio dos Sabores Atendente',
-            'email' => 'emporiodosaboratendente@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 2
-        ]);
-
+        $this->call(UserSeeder::class);
         $this->call(OrderOriginSeeder::class);
         $this->call(StatusSeeder::class);
         $this->call(OrderTypeSeeder::class);

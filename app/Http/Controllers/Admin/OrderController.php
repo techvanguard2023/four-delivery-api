@@ -88,6 +88,16 @@ class OrderController extends Controller
             if ($request->has('items')) {
                 $orderItems = [];
                 foreach ($request->items as $item) {
+                    // Atualiza o estoque
+                    $stock = Stock::where('item_id', $item['item_id'])->first();
+
+                    if (!$stock || $stock->quantity < $item['quantity']) {
+                        throw new \Exception("Estoque insuficiente para o item ID: {$item['item_id']}");
+                    }
+
+                    $stock->decrement('quantity', $item['quantity']);
+
+                    // Adiciona o item ao pedido
                     $orderItems[] = [
                         'item_id' => $item['item_id'],
                         'quantity' => $item['quantity'],
@@ -104,6 +114,7 @@ class OrderController extends Controller
         // Retorna o pedido e seus itens relacionados
         return response()->json($order->load('orderItems'), 201);
     }
+
 
 
     public function show(Request $request, Order $order)

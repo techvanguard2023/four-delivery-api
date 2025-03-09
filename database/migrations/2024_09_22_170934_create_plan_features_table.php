@@ -15,10 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('plan_id')->constrained('plans');
             $table->foreignId('feature_id')->constrained('features');
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->integer('position')->default(0);
-            $table->string('status')->default('active');
             $table->timestamps();
         });
     }

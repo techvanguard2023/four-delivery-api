@@ -65,5 +65,31 @@ class OrderSeeder extends Seeder
             'updated_at' => now(),
             'location' => 'Mesa 1'
         ]);
+
+        Order::create([
+            'company_id' => 2,
+            'customer_id' => 12,
+            'total_price' => 163.00,
+            'status_id' => 3,
+            'payment_status' => 'pending',
+            'order_type_id' => 3,
+            'order_origin_id' => 4,
+            'position' => 3,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        Order::create([
+            'company_id' => 2,
+            'customer_id' => 10,
+            'total_price' => 103.00,
+            'status_id' => 3,
+            'payment_status' => 'pending',
+            'order_type_id' => 3,
+            'order_origin_id' => 4,
+            'position' => 3,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 }

@@ -26,7 +26,9 @@ class CompanyController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
+            'fantasy_name' => 'required|string|max:255',
             'cnpj' => 'required|string|max:18|unique:companies,cnpj',
+            'cpf' => 'required|string|max:14|unique:companies,cpf',
             'email' => 'required|email|unique:companies,email',
             'address' => 'required|string|max:255',
             'number' => 'required|string|max:10',

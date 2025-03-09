@@ -66,10 +66,18 @@ class ItemController extends Controller
         return response()->json($item->load('stock'), 201);
     }
 
-    public function show(Item $item)
+    public function show(Item $item, Request $request)
     {
-        return $item;
+        $user = $request->user();
+
+        // Garantir que o item pertence à mesma empresa do usuário autenticado
+        if ($item->company_id !== $user->company_id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        return new ItemResource($item->load('stock', 'category'));
     }
+
 
     public function update(Request $request, Item $item)
     {

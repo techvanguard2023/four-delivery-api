@@ -12,96 +12,75 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
+        $permissions = [
+            // Administrador
+            [
+                'name' => 'Gerenciar Usuários',
+                'description' => 'Permite criar, editar e remover usuários do sistema.',
+                'tag' => 'manage-users'
+            ],
+            [
+                'name' => 'Gerenciar Configurações',
+                'description' => 'Permite alterar as configurações do sistema.',
+                'tag' => 'manage-settings'
+            ],
+            [
+                'name' => 'Gerenciar Permissões',
+                'description' => 'Permite gerenciar as permissões de usuários e funções.',
+                'tag' => 'manage-permissions'
+            ],
 
-        Permission::create([
-            'id' => 1,
-            'name' => 'Gerenciar Empresas',
-            'description' => 'Permite gerenciar as empresas do sistema.',
-            'tag' => 'manage-companies'
-        ]);
+            // Gerente
+            [
+                'name' => 'Aprovar Solicitações',
+                'description' => 'Permite aprovar ou rejeitar solicitações feitas pelos usuários.',
+                'tag' => 'approve-requests'
+            ],
+            [
+                'name' => 'Visualizar Relatórios',
+                'description' => 'Permite acessar relatórios detalhados do sistema.',
+                'tag' => 'view-reports'
+            ],
 
-        Permission::create([
-            'id' => 2,
-            'name' => 'Gerenciar Roles',
-            'description' => 'Permite gerenciar as Roles do sistema.',
-            'tag' => 'manage-roles'
-        ]);
+            // Atendente
+            [
+                'name' => 'Gerenciar Pedidos',
+                'description' => 'Permite criar, atualizar e cancelar pedidos.',
+                'tag' => 'manage-orders'
+            ],
+            [
+                'name' => 'Atender Clientes',
+                'description' => 'Permite interagir com clientes e responder suas solicitações.',
+                'tag' => 'attend-customers'
+            ],
 
-        Permission::create([
-            'id' => 3,
-            'name' => 'Gerenciar Permissões',
-            'description' => 'Permite gerenciar as Permissões do sistema.',
-            'tag' => 'manage-permissions'
-        ]);
+            // Garçom
+            [
+                'name' => 'Registrar Pedidos',
+                'description' => 'Permite adicionar pedidos ao sistema.',
+                'tag' => 'place-orders'
+            ],
+            [
+                'name' => 'Atualizar Status do Pedido',
+                'description' => 'Permite mudar o status do pedido conforme necessário.',
+                'tag' => 'update-order-status'
+            ],
 
-        Permission::create([
-            'id' => 4,
-            'name' => 'Gerenciar Categorias',
-            'description' => 'Permite gerenciar as categorias do sistema.',
-            'tag' => 'manage-categories'
-        ]);
+            // Entregador
+            [
+                'name' => 'Visualizar Pedidos Atribuídos',
+                'description' => 'Permite ver a lista de pedidos que deve entregar.',
+                'tag' => 'view-assigned-orders'
+            ],
+            [
+                'name' => 'Atualizar Status de Entrega',
+                'description' => 'Permite marcar pedidos como entregues.',
+                'tag' => 'update-delivery-status'
+            ],
+        ];
 
-        Permission::create([
-            'id' => 5,
-            'name' => 'Gerenciar Produtos',
-            'description' => 'Permite gerenciar os produtos do sistema.',
-            'tag' => 'manage-products'
-        ]);
-
-        Permission::create([
-            'id' => 6,
-            'name' => 'Acesso ao Dashbord',
-            'description' => 'Permite ver o dashbord de vendas.',
-            'tag' => 'view-sales-reports'
-        ]);
-
-        Permission::create([
-            'id' => 7,
-            'name' => 'Gerenciar Usuários',
-            'description' => 'Permite gerenciar os usuários do sistema.',
-            'tag' => 'manage-users'
-        ]);
-
-        Permission::create([
-            'id' => 8,
-            'name' => 'Gerenciar Clientes',
-            'description' => 'Permite gerenciar os clientes do sistema.',
-            'tag' => 'manage-customers'
-        ]);
-
-        Permission::create([
-            'id' => 9,
-            'name' => 'Gerenciar Entregadores',
-            'description' => 'Permite gerenciar os entregadores do sistema.',
-            'tag' => 'manage-delivery-person'
-        ]);
-
-        Permission::create([
-            'id' => 10,
-            'name' => 'Gerenciar pedidos',
-            'description' => 'Permite gerenciar os pedidos do sistema.',
-            'tag' => 'manage-orders'
-        ]);
-
-        Permission::create([
-            'id' => 11,
-            'name' => 'Atualizar status dos pedidos',
-            'description' => 'Permite alterar o status dos pedidos do sistema',
-            'tag' => 'update-order-status'
-        ]);
-
-        Permission::create([
-            'id' => 12,
-            'name' => 'Gerenciar Configurações',
-            'description' => 'Permite gerenciar as configurações do sistema.',
-            'tag' => 'manage-settings'
-        ]);
-
-        Permission::create([
-            'id' => 13,
-            'name' => 'Permissão Básica Padrão',
-            'description' => 'Permite o mínimo possível no sistema.',
-            'tag' => 'default'
-        ]);
+        foreach ($permissions as $permission) {
+            Permission::create($permission);
+        }
     }
 }

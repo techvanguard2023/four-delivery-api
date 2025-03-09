@@ -25,5 +25,13 @@ class RoleSeeder extends Seeder
             'name' => 'Atendente',
             'description' => 'Este papel é atribuído a usuários regulares do sistema. Eles têm acesso limitado, geralmente apenas para visualização e interação com recursos específicos do sistema',
         ]);
+        Role::create([
+            'name' => 'Garçom',
+            'description' => 'Eles têm acesso limitado a fazer pedidos',
+        ]);
+        Role::create([
+            'name' => 'Entregador',
+            'description' => 'Eles têm acesso limitado a lista de pedidos associados a ele',
+        ]);
     }
 }

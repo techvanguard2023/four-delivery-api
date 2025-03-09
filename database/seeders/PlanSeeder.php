@@ -14,21 +14,21 @@ class PlanSeeder extends Seeder
     {
         $plans = [
             [
-                'name' => 'Free',
-                'slug' => 'free-plan',
-                'description' => 'Free plan',
-                'price' => 0,
-                'duration' => 0,
+                'name' => 'Essencial',
+                'slug' => 'essencial-plan',
+                'description' => 'Inclui recursos básicos como cadastro de clientes, pedidos, dashboard financeiro e cardápio digital.',
+                'price' => 150.00,
+                'duration' => 30,
                 'status' => 'active',
                 'created_at' => now(),
                 'updated_at' => now(),
 
             ],
             [
-                'name' => 'Basic',
-                'slug' => 'basic-plan',
-                'description' => 'Basic plan',
-                'price' => 9.99,
+                'name' => 'Profissional',
+                'slug' => 'profissional-plan',
+                'description' => 'Todos os itens do planos Basico + Adiciona pedidos pelo WhatsApp, comanda digital e pedidos feitos no local.',
+                'price' => 200.00,
                 'duration' => 30,
                 'status' => 'active',
                 'created_at' => now(),
@@ -37,8 +37,8 @@ class PlanSeeder extends Seeder
             [
                 'name' => 'Premium',
                 'slug' => 'premium-plan',
-                'description' => 'Premium plan',
-                'price' => 19.99,
+                'description' => 'Inclui todas as funcionalidades dos outros planos + controle de estoque, cadastro de entregadores e site.',
+                'price' => 250.00,
                 'duration' => 30,
                 'status' => 'active',
                 'created_at' => now(),

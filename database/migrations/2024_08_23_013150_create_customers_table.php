@@ -13,6 +13,7 @@ class CreateCustomersTable extends Migration
             $table->foreignId('company_id')->constrained('companies');
             $table->string('name');
             $table->string('phone')->unique();
+            $table->string('status')->default('active');
             $table->timestamps();
             $table->softDeletes();
         });
