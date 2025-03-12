@@ -13,7 +13,7 @@ class Plan extends Model
 
     public function features()
     {
-        return $this->hasMany(PlanFeature::class);
+        return $this->belongsToMany(Feature::class, 'plan_features');
     }
 
     public function companyPlans()

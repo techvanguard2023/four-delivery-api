@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\PlanFeature;
+use App\Models\Plan;
+use App\Models\Feature;
 
 class PlanFeatureSeeder extends Seeder
 {
@@ -12,161 +14,25 @@ class PlanFeatureSeeder extends Seeder
      */
     public function run(): void
     {
-        $planFeatures = [
-            //Essencial plan features
-            [
-                'plan_id' => 1,
-                'feature_id' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 1,
-                'feature_id' => 2,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 1,
-                'feature_id' => 3,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 1,
-                'feature_id' => 4,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 1,
-                'feature_id' => 11,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            //Professional plan features
-            [
-                'plan_id' => 2,
-                'feature_id' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 2,
-                'feature_id' => 2,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 2,
-                'feature_id' => 3,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 2,
-                'feature_id' => 4,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 2,
-                'feature_id' => 5,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 2,
-                'feature_id' => 6,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 2,
-                'feature_id' => 7,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 2,
-                'feature_id' => 11,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            //Premium plan features
-            [
-                'plan_id' => 3,
-                'feature_id' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 2,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 3,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 4,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 5,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 6,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 7,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 8,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 9,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 10,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'plan_id' => 3,
-                'feature_id' => 11,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
+        $plans = [
+            1 => [1, 2, 3, 4, 11],             // Essencial
+            2 => [1, 2, 3, 4, 5, 6, 7, 11],    // Professional
+            3 => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], // Premium
         ];
 
-        foreach ($planFeatures as $planFeature) {
-            \App\Models\PlanFeature::create($planFeature);
+        foreach ($plans as $planId => $features) {
+            $plan = Plan::find($planId);
+            if (!$plan) continue; // Se o plano não existir, pula para o próximo
+
+            foreach ($features as $featureId) {
+                $feature = Feature::find($featureId);
+                if (!$feature) continue; // Se a feature não existir, pula
+
+                PlanFeature::updateOrCreate(
+                    ['plan_id' => $plan->id, 'feature_id' => $feature->id],
+                    [] // Sem necessidade de valores adicionais
+                );
+            }
         }
     }
 }

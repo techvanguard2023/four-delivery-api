@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use Illuminate\Http\Request;
 
@@ -13,14 +14,16 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+        $roleId = UserRoleService::getUserRoleId($user);
 
         if ($roleId == 1) {
-            return Company::paginate(25);
+            return CompanyResource::collection(Company::paginate(25)->get());
         } else {
-            return response()->json(['message' => 'You are not authorized to access this resource'], 403);
+            return CompanyResource::collection(Company::where('id', $user->company_id)->with(['plans.plan.features'])->get());
+            //return Company::where('id', $user->company_id)->with(['plans.plan.features'])->firstOrFail();
         }
     }
+
 
     public function store(Request $request)
     {

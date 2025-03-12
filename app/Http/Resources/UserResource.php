@@ -37,8 +37,22 @@ class UserResource extends JsonResource
                     }),
                 ];
             }),
+            'plans' => $this->company?->companyPlans?->map(function ($companyPlan) {
+                    return [
+                        'id' => $companyPlan->plan?->id,
+                        'name' => $companyPlan->plan?->name,
+                        'features' => $companyPlan->plan?->features?->map(function ($feature) {
+                                return [
+                                    'id' => $feature->id,
+                                    'name' => $feature->name,
+                                    'description' => $feature->description,
+                                ];
+                            }) ?? [], // Se features for null, retorna um array vazio
+                    ];
+                }) ?? [], // Se companyPlans for null, retorna um array vazio
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
+
     }
 }

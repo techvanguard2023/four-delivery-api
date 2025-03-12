@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Plan;
 use Illuminate\Database\Seeder;
 
 class PlanSeeder extends Seeder
@@ -20,19 +20,14 @@ class PlanSeeder extends Seeder
                 'price' => 150.00,
                 'duration' => 30,
                 'status' => 'active',
-                'created_at' => now(),
-                'updated_at' => now(),
-
             ],
             [
                 'name' => 'Profissional',
                 'slug' => 'profissional-plan',
-                'description' => 'Todos os itens do planos Basico + Adiciona pedidos pelo WhatsApp, comanda digital e pedidos feitos no local.',
+                'description' => 'Todos os itens do plano Essencial + pedidos pelo WhatsApp, comanda digital e pedidos feitos no local.',
                 'price' => 200.00,
                 'duration' => 30,
                 'status' => 'active',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'name' => 'Premium',
@@ -41,13 +36,14 @@ class PlanSeeder extends Seeder
                 'price' => 250.00,
                 'duration' => 30,
                 'status' => 'active',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
         ];
 
         foreach ($plans as $plan) {
-            \App\Models\Plan::create($plan);
+            Plan::updateOrCreate(
+                ['slug' => $plan['slug']], // Condição para evitar duplicação
+                array_merge($plan, ['updated_at' => now()]) // Atualiza caso já exista
+            );
         }
     }
 }

@@ -15,17 +15,21 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-
         $user = $request->user();
         $roleId = UserRoleService::getUserRoleId($user);
 
         if ($roleId == 1) {
-            return UserResource::collection(User::all()->load('company', 'roles'));
+            return UserResource::collection(
+                User::with(['company.companyPlans.plan.features', 'roles.permissions'])->get()
+            );
         } else {
-            return UserResource::collection(User::where('company_id', $user->company_id)->get()->load('company', 'roles'));
+            return UserResource::collection(
+                User::where('company_id', $user->company_id)
+                    ->with(['company.companyPlans.plan.features', 'roles.permissions'])
+                    ->get()
+            );
         }
     }
-
 
 
     public function show(User $user)
