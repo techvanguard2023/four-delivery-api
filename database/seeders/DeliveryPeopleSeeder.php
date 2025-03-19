@@ -22,6 +22,7 @@ class DeliveryPeopleSeeder extends Seeder
                 'company_id' => mt_rand(1, 2),
                 'name' => fake()->name,
                 'phone' => fake()->phoneNumber,
+                'is_whatsapp' => fake()->boolean,
                 'vehicle' => $vehicles[array_rand($vehicles)],
                 'created_at' => now(),
             ];

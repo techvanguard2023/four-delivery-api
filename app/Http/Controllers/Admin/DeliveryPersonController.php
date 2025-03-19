@@ -28,6 +28,7 @@ class DeliveryPersonController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string',
+            'is_whatsapp' => 'boolean',
             'vehicle' => 'required|string'
         ]);
 

@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
 
 
         User::create([
-            'name' => 'Emporio do Sabor - Gerente',
+            'name' => 'Aleksander Calheiros',
             'email' => 'emporiodosaborgerente@gmail.com',
             'phone' => '21981321890',
             'password' => static::$password ??= Hash::make('Rm@150917'),
@@ -60,7 +60,7 @@ class UserSeeder extends Seeder
 
 
         User::create([
-            'name' => 'Point do Oásis - Gerente',
+            'name' => 'Verucia Freignan',
             'email' => 'pointdooasisgerente@gmail.com',
             'phone' => '21981321890',
             'password' => static::$password ??= Hash::make('Rm@150917'),

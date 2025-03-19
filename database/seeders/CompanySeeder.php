@@ -74,6 +74,7 @@ class CompanySeeder extends Seeder
     public function run(): void
     {
         Company::create([
+            'id' => 1,
             'name' => 'Robson Gomes Pedreira Desenvolvimento de Software Ltda',
             'fantasy_name' => 'Tech Vanguard',
             'cnpj' => '52648609000175',
@@ -92,6 +93,7 @@ class CompanySeeder extends Seeder
         ]);
 
         Company::create([
+            'id' => 2,
             'name' => 'Emporio do Sabor',
             'fantasy_name' => 'Emporio do Sabor',
             'cnpj' => $this->generateCnpj(),
@@ -110,6 +112,7 @@ class CompanySeeder extends Seeder
         ]);
 
         Company::create([
+            'id' => 3,
             'name' => 'Point do Oásis',
             'fantasy_name' => 'Point do Oásis',
             'cnpj' => $this->generateCnpj(),

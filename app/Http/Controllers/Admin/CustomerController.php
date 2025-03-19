@@ -29,7 +29,8 @@ class CustomerController extends Controller
         $user = $request->user(); // Obtém o usuário autenticado
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|unique:customers,phone'
+            'phone' => 'required|unique:customers,phone',
+            'is_whatsapp' => 'boolean',
         ]);
 
         $validatedData['company_id'] = $user->company_id; // Adiciona o company_id do usuário autenticado

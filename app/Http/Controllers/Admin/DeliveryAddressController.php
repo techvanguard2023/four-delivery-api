@@ -29,6 +29,10 @@ class DeliveryAddressController extends Controller
         $validatedData = $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'address' => 'required|string|max:255',
+            'number' => 'string|max:10',
+            'complement' => 'string|max:255',
+            'neighborhood' => 'required|string|max:255',
+            'reference_point' => 'string|max:255',
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip_code' => 'required|string|max:10'

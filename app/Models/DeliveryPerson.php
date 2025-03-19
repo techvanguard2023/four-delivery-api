@@ -10,7 +10,7 @@ class DeliveryPerson extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['company_id', 'name', 'phone', 'vehicle'];
+    protected $fillable = ['company_id', 'name', 'phone', 'is_whatsapp', 'vehicle'];
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
