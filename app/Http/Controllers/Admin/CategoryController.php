@@ -17,6 +17,56 @@ class CategoryController extends Controller
         return Category::orderBy('name', 'asc')->get();
     }
 
+    public function listCategoriesWithTotalItems(Request $request)
+    {
+        $user = $request->user();
+
+        $categories = Category::withCount(['items' => function ($query) use ($user) {
+            $query->where('company_id', $user->company_id);
+        }])
+            ->whereHas('items', function ($query) use ($user) {
+                $query->where('company_id', $user->company_id);
+            })
+            ->with([
+                'items' => function ($query) use ($user) {
+                    $query->where('company_id', $user->company_id)
+                        ->with('stock') // Inclui a relação de estoque
+                        ->orderBy('name', 'asc');
+                }
+            ])
+            ->orderBy('name', 'asc') // Ordena as categorias pelo nome
+            ->get()
+            ->map(function ($category) {
+                $items = $category->items;
+
+                $maxStockItem = $items->sortByDesc(fn($item) => $item->stock->quantity ?? 0)->first();
+                $minStockItem = $items->sortBy(fn($item) => $item->stock->quantity ?? 0)->first();
+
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'description' => $category->description,
+                    'image_url' => $category->image_url,
+                    'total_items' => $category->items_count,
+                    'max_stock_item' => $maxStockItem ? [
+                        'id' => $maxStockItem->id,
+                        'name' => $maxStockItem->name,
+                        'stock' => $maxStockItem->stock->quantity ?? 0
+                    ] : null,
+                    'min_stock_item' => $minStockItem ? [
+                        'id' => $minStockItem->id,
+                        'name' => $minStockItem->name,
+                        'stock' => $minStockItem->stock->quantity ?? 0
+                    ] : null,
+                ];
+            });
+
+        return response()->json($categories);
+    }
+
+
+
     public function listCategoriesWithCompanyItems(Request $request)
     {
         $user = $request->user();
@@ -44,6 +94,7 @@ class CategoryController extends Controller
         $validatedData = $request->validate([
             'company_id' => 'required|interger',
             'name' => 'required|string|max:255|unique:categories,name',
+            'slug' => 'required|string|unique:categories',
             'description' => 'required|string',
             'image_url' => 'required|string'
         ]);

@@ -22,6 +22,7 @@ class OrderSlipSeeder extends Seeder
             'order_type_id' => 1,
             'order_origin_id' => 6,
             'position' => 1,
+            'user_id' => 1,
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -35,6 +36,7 @@ class OrderSlipSeeder extends Seeder
             'order_type_id' => 1,
             'order_origin_id' => 6,
             'position' => 1,
+            'user_id' => 2,
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -49,6 +51,7 @@ class OrderSlipSeeder extends Seeder
             'order_type_id' => 1,
             'order_origin_id' => 6,
             'position' => 1,
+            'user_id' => 6,
             'created_at' => now(),
             'updated_at' => now()
         ]);

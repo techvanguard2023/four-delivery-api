@@ -19,7 +19,24 @@ class CustomerController extends Controller
         if ($roleId == 1) {
             return Customer::paginate(25); // Paginação direta
         } else {
-            return Customer::where('company_id', $user->company_id)->paginate(25); // Paginação após a query
+            return Customer::where('company_id', $user->company_id)
+                ->with('deliveryAddresses') // Carrega os endereços de entrega
+                ->paginate(25); // Paginação após a query
+        }
+    }
+
+
+    public function getCustomerWithoutPaginate(Request $request)
+    {
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+
+        if ($roleId == 1) {
+            return Customer::paginate(25); // Paginação direta
+        } else {
+            return Customer::where('company_id', $user->company_id)
+                ->with('deliveryAddresses') // Carrega os endereços de entrega
+                ->get(); // Paginação após a query
         }
     }
 

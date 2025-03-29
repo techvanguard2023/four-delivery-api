@@ -56,6 +56,7 @@ class RolePermissionSeeder extends Seeder
                 'approve-requests',
             ],
             'Garçom' => [
+                'manage-orders',
                 'place-orders',
                 'update-order-status',
             ],

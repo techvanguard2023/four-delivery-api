@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class CategorySeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'Bebidas Frias',
-                'description' => 'Refrigerantes, cerveja, sucos, água mineral, chá gelado, bebidas energéticas, água de coco.',
+                'description' => 'Refrigerantes, sucos, água mineral, chá gelado, bebidas energéticas, água de coco.',
                 'image_url' => 'https://centraldebebidas.com.br/wp-content/uploads/2020/05/refrigerantes.jpg'
             ],
             [
@@ -126,7 +127,7 @@ class CategorySeeder extends Seeder
                 'id' => 19,
                 'name' => 'Kids',
                 'description' => 'Mini-hambúrguer, batata frita, nuggets, sucos em caixinha.',
-                'image_url' => 'https://media-cdn.tripadvisor.com/media/photo-s/0d/e4/82/45/prato-kids-loucos-por.jpg'
+                'image_url' => 'https://media-cdn.tripadvisor.com/media/photo-s/0e/8c/ef/22/prato-kids.jpg'
             ],
             [
                 'id' => 20,
@@ -134,10 +135,20 @@ class CategorySeeder extends Seeder
                 'description' => 'Caldo de feijão, sopa de legumes, caldo verde, canja de galinha etc..',
                 'image_url' => 'https://conteudo.solutudo.com.br/wp-content/uploads/2022/05/Lugares-que-vendem-caldos-em-Presidente-Prudente.jpg'
             ],
+            [
+                'id' => 21,
+                'name' => 'Bebidas Alcoólicas',
+                'description' => 'Cerveja, vinho, whisky, vodka, tequila, gin, rum, licor.',
+                'image_url' => 'https://diariodocomercio.com.br/wp-content/uploads/2023/03/Design-sem-nome-19.jpg'
+            ],
         ];
 
         foreach ($categories as $category) {
-            Category::create($category);
+            Category::create(array_merge($category, [
+                'slug' => Str::slug($category['name']),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]));
         }
     }
 }

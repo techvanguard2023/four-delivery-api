@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\ViaCepController;
 use App\Http\Controllers\Admin\OrderTypeController;
 use App\Http\Controllers\Admin\OrderOriginController;
+use App\Http\Controllers\Admin\ReservationController;
+use App\Http\Controllers\Admin\OrderSlipController;
 
 use App\Http\Controllers\Site\BannerController;
 
@@ -29,6 +31,9 @@ Route::prefix('admin-v1')->group(function () {
     Route::get('status', function () {
         return response()->json(['status' => 'API Admin V1 is alive!'], 200);
     });
+
+    Route::post('/send-message', [App\Http\Controllers\BroadcastTestController::class, 'send']);
+
 
     // Rotas públicas
     Route::post('login', [AuthController::class, 'login']);
@@ -55,10 +60,12 @@ Route::prefix('admin-v1')->group(function () {
         // Rotas para Categorias
         Route::apiResource('categories', CategoryController::class);
         Route::get('/categories-with-company-items', [CategoryController::class, 'listCategoriesWithCompanyItems']);
+        Route::get('/categories-with-total-items', [CategoryController::class, 'listCategoriesWithTotalItems']);
 
         // Rotas para Clientes
         Route::apiResource('customers', CustomerController::class);
         Route::get('/customers-search', [CustomerController::class, 'SearchCustomer']);
+        Route::get('/customers-without-paginate', [CustomerController::class, 'getCustomerWithoutPaginate']);
 
         // Rotas para Endereços de Entrega
         Route::apiResource('delivery-addresses', DeliveryAddressController::class);
@@ -111,6 +118,10 @@ Route::prefix('admin-v1')->group(function () {
 
         // Rotas para CEP
         Route::get('/zip-code/{zipCode}', [ViaCepController::class, 'search']);
+
+        Route::apiResource('reservations', ReservationController::class);
+
+        Route::apiResource('order-slips', OrderSlipController::class);
     });
 });
 

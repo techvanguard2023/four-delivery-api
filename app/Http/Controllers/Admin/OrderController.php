@@ -18,26 +18,39 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+        $userRoleId = UserRoleService::getUserRoleId($user);
 
-        // Query base
         $query = Order::with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])
             ->where(function ($q) {
                 $q->whereNull('location')
                     ->orWhere('location', '');
             });
 
-        // Verifica o role do usuário para determinar se retorna todos os pedidos ou somente da empresa específica
-        if ($roleId != 1) {
+        if ($userRoleId != 1) {
             $query->where('company_id', $user->company_id);
         }
 
-        // Adiciona ordenação pela posição dos pedidos e status, caso existam
         $query->orderBy('position', 'asc');
 
-        // Retorna a coleção paginada de pedidos com 25 por página
-        return ListOrdersResource::collection($query->paginate(25));
+        $orders = $query->get();
+
+        // Contagens por status_id (ajuste conforme seus IDs)
+        $summary = [
+            'received' => $orders->where('status_id', 3)->count(),
+            'pending' => $orders->where('status_id', 13)->count(),
+            'preparing' => $orders->where('status_id', 4)->count(),
+            'waiting_for_delivery_man' => $orders->where('status_id', 5)->count(),
+            'out_for_delivery' => $orders->where('status_id', 7)->count(),
+            'delivered' => $orders->where('status_id', 8)->count(),
+            'canceled' => $orders->where('status_id', 9)->count(),
+        ];
+
+        return ListOrdersResource::collection($orders)->additional([
+            'summary' => $summary,
+        ]);
     }
+
+
 
 
 
@@ -176,12 +189,19 @@ class OrderController extends Controller
         $order->status_id = $validatedData['status_id'];
 
         // Verifica os status de cancelamento
-        if (in_array($validatedData['status_id'], [10, 11, 12, 15, 17])) {
+        if (in_array($validatedData['status_id'], [9, 10, 14])) {
             $order->payment_status = 'canceled';
         }
 
-        // Verifica os status de pagamento concluído
-        if (in_array($validatedData['status_id'], [2, 9])) {
+        if (in_array($validatedData['status_id'], [11])) {
+            $order->payment_status = 'refunded';
+        }
+
+        if (in_array($validatedData['status_id'], [1, 3, 4, 5, 6, 7, 12, 13])) {
+            $order->payment_status = 'pending';
+        }
+
+        if (in_array($validatedData['status_id'], [2, 8])) {
             $order->payment_status = 'paid';
         }
 

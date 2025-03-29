@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('companies');
-            $table->string('key')->unique(); // Chave única para identificar o tipo de configuração
-            $table->text('value'); // Valor da configuração, pode ser um JSON para armazenar dados complexos
+            $table->foreignId('company_id')->constrained('companies')->unique();
+            $table->json('data'); // Aqui você salva tudo
             $table->timestamps();
         });
     }

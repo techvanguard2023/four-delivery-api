@@ -7,6 +7,7 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use App\Http\Resources\ItemResource;
 use App\Models\Stock;
+use Illuminate\Support\Str;
 
 use App\Services\UserRoleService;
 
@@ -49,10 +50,14 @@ class ItemController extends Controller
             'price' => 'required|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'available' => 'required|boolean',
-            'quantity' => 'required|integer|min:0' // Adicionado validação para quantidade
+            'quantity' => 'required|integer|min:0'
         ]);
 
         $validatedData['company_id'] = $user->company_id;
+
+        // Criando o slug único
+        $slug = Str::slug($validatedData['name']) . '-' . time();
+        $validatedData['slug'] = $slug;
 
         $item = Item::create($validatedData);
 

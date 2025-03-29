@@ -10,17 +10,35 @@ class OrderSlip extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['company_id', 'customer_name', 'total_price', 'status_id', 'payment_status', 'last_status_id', 'last_payment_status', 'order_type_id', 'location', 'order_origin_id', 'position'];
+    protected $fillable = [
+        'company_id',
+        'customer_name',
+        'position',
+        'total_price',
+        'status_id',
+        'payment_status',
+        'last_status_id',
+        'last_payment_status',
+        'order_type_id',
+        'order_origin_id',
+        'duration',
+        'user_id',
+    ];
 
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 
     public function status()
     {
         return $this->belongsTo(Status::class);
     }
 
-    public function orderItems()
+    public function orderSlipItems()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderSlipItem::class);
     }
 
     public function payment()
@@ -41,5 +59,10 @@ class OrderSlip extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('position', 'asc');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

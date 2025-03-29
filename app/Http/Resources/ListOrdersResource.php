@@ -22,6 +22,7 @@ class ListOrdersResource extends JsonResource
             'order_type' => $this->orderType->name ?? '',
             'total_price' => $this->total_price,
             'status' => $this->status->name ?? 'Pending',
+            'status_id' => $this->status_id,
             'payment_status' => $this->payment_status ?? 'Unpaid',
             'payment_method' => $this->payment_method ?? '',
             'total_items' => $this->orderItems->count(),

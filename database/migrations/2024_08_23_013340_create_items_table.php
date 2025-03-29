@@ -12,6 +12,7 @@ class CreateItemsTable extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
             $table->string('name');
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->text('image_url')->nullable();
             $table->decimal('price', 8, 2);

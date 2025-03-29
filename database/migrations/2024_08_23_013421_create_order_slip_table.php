@@ -15,15 +15,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
             $table->string('customer_name')->nullable();
+            $table->string('position'); // ex: "Mesa 1"
             $table->decimal('total_price', 8, 2);
             $table->foreignId('status_id')->constrained('statuses');
             $table->string('payment_status');
             $table->string('last_status_id')->nullable();
             $table->string('last_payment_status')->nullable();
             $table->foreignId('order_type_id')->constrained('order_types');
-            $table->string('location')->nullable();
             $table->foreignId('order_origin_id')->nullable();
-            $table->integer('position')->nullable();
+            $table->time('duration')->nullable();
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
             $table->softDeletes();
         });
