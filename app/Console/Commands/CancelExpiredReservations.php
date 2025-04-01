@@ -14,7 +14,7 @@ class CancelExpiredReservations extends Command
 
     public function handle()
     {
-        $now = Carbon::now();
+        $now = Carbon::now('America/Sao_Paulo');
 
         // Log pra ver se o schedule está rodando
         Log::channel('reservations')->info('🔁 Iniciando verificação de reservas expiradas no horário de ' . $now);
@@ -25,7 +25,7 @@ class CancelExpiredReservations extends Command
 
         foreach ($expiredReservations as $reservation) {
             //$endTime = Carbon::parse($reservation->reserved_at)->addMinutes($reservation->duration_minutes);
-            $endTime = Carbon::parse($reservation->reserved_at);
+            $endTime = Carbon::parse($reservation->reserved_at)->addMinutes(5);
 
             // Verifica se o horário de término já passou
             if ($now->greaterThan($endTime)) {

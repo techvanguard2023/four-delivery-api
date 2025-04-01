@@ -24,17 +24,14 @@ class CategoryController extends Controller
         $categories = Category::withCount(['items' => function ($query) use ($user) {
             $query->where('company_id', $user->company_id);
         }])
-            ->whereHas('items', function ($query) use ($user) {
-                $query->where('company_id', $user->company_id);
-            })
             ->with([
                 'items' => function ($query) use ($user) {
                     $query->where('company_id', $user->company_id)
-                        ->with('stock') // Inclui a relação de estoque
+                        ->with('stock')
                         ->orderBy('name', 'asc');
                 }
             ])
-            ->orderBy('name', 'asc') // Ordena as categorias pelo nome
+            ->orderBy('name', 'asc')
             ->get()
             ->map(function ($category) {
                 $items = $category->items;
@@ -72,20 +69,15 @@ class CategoryController extends Controller
         $user = $request->user();
         $roleId = UserRoleService::getUserRoleId($user);
 
-        $categoriesQuery = Category::whereHas('items', function ($query) use ($user, $roleId) {
+        $categories = Category::with(['items' => function ($query) use ($user, $roleId) {
             if ($roleId != 1) {
                 $query->where('company_id', $user->company_id);
             }
-        })->orderBy('name', 'asc');
-
-        $categories = $categoriesQuery->with(['items' => function ($query) use ($user, $roleId) {
-            if ($roleId != 1) {
-                $query->where('company_id', $user->company_id);
-            }
-        }])->get();
+        }])->orderBy('name', 'asc')->get();
 
         return response()->json($categories);
     }
+
 
 
 

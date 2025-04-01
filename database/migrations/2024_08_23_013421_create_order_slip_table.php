@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
             $table->string('customer_name')->nullable();
-            $table->string('position'); // ex: "Mesa 1"
+            $table->string('position')->nullable(); // ex: "Mesa 1"
             $table->decimal('total_price', 8, 2);
             $table->foreignId('status_id')->constrained('statuses');
             $table->string('payment_status');

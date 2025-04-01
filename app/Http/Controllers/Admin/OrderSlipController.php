@@ -30,7 +30,7 @@ class OrderSlipController extends Controller
 
         $data = $request->validate([
             'customer_name' => 'nullable|string',
-            'position' => 'required|string',
+            'position' => 'string',
             'total_price' => 'required|numeric',
             'status_id' => 'required|exists:statuses,id',
             'payment_status' => 'required|string',
@@ -115,4 +115,34 @@ class OrderSlipController extends Controller
 
         return response()->json(['message' => 'Order slip deleted successfully.']);
     }
+
+    public function printView($id)
+    {
+        $orderSlip = OrderSlip::with('orderSlipItems')->findOrFail($id);
+        return view('print.orderslip', compact('orderSlip'));
+    }
+
+    public function printCloseView($id)
+    {
+        $orderSlip = OrderSlip::with(['orderSlipItems.item', 'user', 'status', 'adjustments'])->findOrFail($id);
+        return view('print.orderslip_close', compact('orderSlip'));
+    }
+
+
+
+    //Cálculo do total final (exemplo no controller ou service)
+
+    // $total = $orderSlip->total_price;
+
+    // foreach ($orderSlip->adjustments as $adj) {
+    //     $adjustmentValue = $adj->value_type === 'percentage'
+    //         ? ($total * ($adj->value / 100))
+    //         : $adj->value;
+
+    //     if ($adj->type === 'discount') {
+    //         $total -= $adjustmentValue;
+    //     } else {
+    //         $total += $adjustmentValue;
+    //     }
+    // }
 }

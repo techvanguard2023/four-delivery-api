@@ -33,6 +33,9 @@ Route::prefix('admin-v1')->group(function () {
     });
 
     Route::post('/send-message', [App\Http\Controllers\BroadcastTestController::class, 'send']);
+    Route::get('/print-order/{order}', [OrderSlipController::class, 'printView']);
+    Route::get('/order-slip/print-close/{id}', [OrderSlipController::class, 'printCloseView']);
+
 
 
     // Rotas públicas
