@@ -60,7 +60,7 @@ class CategorySeeder extends Seeder
             [
                 'id' => 8,
                 'name' => 'Aperitivos e Petiscos',
-                'description' => 'Batata frita, onion rings, nuggets, nachos, mini pastéis.',
+                'description' => 'Batata frita, churrasco no espeto, onion rings, nuggets, nachos, mini pastéis.',
                 'image_url' => 'https://www.segs.com.br/media/k2/items/cache/7f76895795a93da2100c1a26609c8a94_XL.jpg'
             ],
             [
