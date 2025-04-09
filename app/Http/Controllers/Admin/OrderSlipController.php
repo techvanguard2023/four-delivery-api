@@ -17,6 +17,7 @@ class OrderSlipController extends Controller
         // Busca todos os OrderSlips da empresa do usuário autenticado
         $orderSlips = OrderSlip::query()
             ->where('company_id', $user->company_id)
+            ->whereNotIn('status_id', [16, 9])
             ->with('orderSlipItems') // Carrega os itens do pedido
             ->get(); // Executa a query
 

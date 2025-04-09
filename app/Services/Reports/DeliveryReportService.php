@@ -5,27 +5,73 @@ namespace App\Services\Reports;
 use App\Models\Order;
 use Carbon\Carbon;
 
+
+
 class DeliveryReportService
 {
     public function getTurnover(): array
     {
         return [
-            'daily turnover' => $this->sumOrdersForPeriod('day'),
-            'weekly turnover' => $this->sumOrdersForPeriod('week'),
-            'monthly turnover' => $this->sumOrdersForPeriod('month'),
-            'yearly turnover' => $this->sumOrdersForPeriod('year'),
+            [
+                'key' => 'daily_turnover',
+                'title' => 'Faturamento Diário',
+                'description' => 'Total faturado com entregas no dia atual.',
+                'value' => $this->sumOrdersForPeriod('day'),
+            ],
+            [
+                'key' => 'weekly_turnover',
+                'title' => 'Faturamento Semanal',
+                'description' => 'Total faturado com entregas na semana atual.',
+                'value' => $this->sumOrdersForPeriod('week'),
+            ],
+            [
+                'key' => 'monthly_turnover',
+                'title' => 'Faturamento Mensal',
+                'description' => 'Total faturado com entregas no mês atual.',
+                'value' => $this->sumOrdersForPeriod('month'),
+            ],
+            [
+                'key' => 'yearly_turnover',
+                'title' => 'Faturamento Anual',
+                'description' => 'Total faturado com entregas no ano atual.',
+                'value' => $this->sumOrdersForPeriod('year'),
+            ],
         ];
     }
 
+
+
     public function getOrdersCount(): array
-    {
-        return [
-            'daily orders' => $this->countOrdersForPeriod('day'),
-            'weekly orders' => $this->countOrdersForPeriod('week'),
-            'monthly orders' => $this->countOrdersForPeriod('month'),
-            'yearly orders' => $this->countOrdersForPeriod('year'),
-        ];
-    }
+        {
+            return [
+                [
+                    'key' => 'daily_orders',
+                    'title' => 'Pedidos do Dia',
+                    'description' => 'Total de pedidos realizados hoje.',
+                    'value' => $this->countOrdersForPeriod('day'),
+                ],
+                [
+                    'key' => 'weekly_orders',
+                    'title' => 'Pedidos da Semana',
+                    'description' => 'Total de pedidos realizados nesta semana.',
+                    'value' => $this->countOrdersForPeriod('week'),
+                ],
+                [
+                    'key' => 'monthly_orders',
+                    'title' => 'Pedidos do Mês',
+                    'description' => 'Total de pedidos realizados neste mês.',
+                    'value' => $this->countOrdersForPeriod('month'),
+                ],
+                [
+                    'key' => 'yearly_orders',
+                    'title' => 'Pedidos do Ano',
+                    'description' => 'Total de pedidos realizados neste ano.',
+                    'value' => $this->countOrdersForPeriod('year'),
+                ],
+            ];
+        }
+
+
 
     protected function sumOrdersForPeriod(string $period)
     {
@@ -39,8 +85,10 @@ class DeliveryReportService
 
     protected function queryByPeriod(string $period)
     {
-        $query = Order::where('order_type_id', 2)
-            ->where('company_id', auth()->user()->company_id); // <- filtro pela empresa do usuário
+        $user = auth()->user();
+        // Verifica se o usuário está autenticado
+        $query = Order::where('status_id', 8)
+            ->where('company_id', $user->company_id); // <- filtro pela empresa do usuário
 
 
         switch ($period) {

@@ -105,7 +105,7 @@ class StatusSeeder extends Seeder
 
         Status::create([
             'id' => 16,
-            'name' => 'Pedido Fechado',
+            'name' => 'Pedido ou Comanda Fechada',
             'description' => 'Status para atribuir quando a venda for presencial e o cliente consumiu no estabelecimento e acabou de fazer o pagamento.'
         ]);
 

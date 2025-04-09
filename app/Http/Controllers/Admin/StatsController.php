@@ -4,42 +4,61 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\Reports\DeliveryReportService;
+use App\Services\Reports\OrderSlipReportService;
+use App\Services\Reports\AvailableTablesReportService;
+use App\Services\Reports\MonthlyChartService;
+use App\Services\Reports\RecentCustomersService;
+use App\Services\Reports\InventoryStockReportService;
+use App\Services\Reports\ReservationReportService;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-
-
 
 class StatsController extends Controller
 {
+    protected DeliveryReportService $deliveryService;
+    protected OrderSlipReportService $orderSlipService;
+    protected AvailableTablesReportService $availableTablesService;
+    protected MonthlyChartService $chartService;
+    protected RecentCustomersService $recentCustomersService;
+    protected InventoryStockReportService $inventoryStockReportService;
+    protected ReservationReportService $reservationReportService;
 
-    protected $service;
-
-    public function __construct(DeliveryReportService $service)
-    {
-        $this->service = $service;
+    public function __construct(
+        DeliveryReportService $deliveryService,
+        OrderSlipReportService $orderSlipService,
+        AvailableTablesReportService $availableTablesService,
+        MonthlyChartService $chartService,
+        RecentCustomersService $recentCustomersService,
+        InventoryStockReportService $inventoryStockReportService,
+        ReservationReportService $reservationReportService,
+    ) {
+        $this->deliveryService = $deliveryService;
+        $this->orderSlipService = $orderSlipService;
+        $this->availableTablesService = $availableTablesService;
+        $this->chartService = $chartService;
+        $this->recentCustomersService = $recentCustomersService;
+        $this->inventoryStockReportService = $inventoryStockReportService;
+        $this->reservationReportService = $reservationReportService;
     }
 
     public function index()
     {
+        $companyId = auth()->user()->company_id;
+
         return [
             'store' => [
-                'store_turnover' => [
-                    'daily turnover' => 100,
-                    'weekly turnover' => 500,
-                    'monthly turnover' => 1000,
-                    'yearly turnover' => 12000,
-                ],
-                'store_orders' => [
-                    'daily orders' => 10,
-                    'weekly orders' => 50,
-                    'monthly orders' => 100,
-                    'yearly orders' => 1200,
-                ],
+                'orderslip_turnover' => $this->orderSlipService->getOrderSlipsTurnover(),
+                'orderslip' => $this->orderSlipService->getOrderSlipCount(),
+                'tables' => $this->availableTablesService->getAvailableTables(),
+                'reservations' => $this->reservationReportService->getTodayReservations(), //verificar a criacao de reservas no front
             ],
             'delivery' => [
-                'delivery_turnover' => $this->service->getTurnover(),
-                'delivery_orders' => $this->service->getOrdersCount(),
-            ]
+                'delivery_turnover' => $this->deliveryService->getTurnover(),
+                'delivery_orders' => $this->deliveryService->getOrdersCount(),
+                'recent_customers' => $this->recentCustomersService->getLastCustomers(),
+                'total_customers' => $this->recentCustomersService->getTotalCustomers(),
+            ],
+            'stock' => $this->inventoryStockReportService->getReport($companyId),
+            'chart' => $this->chartService->getMonthlyChartData(),
         ];
     }
 }
