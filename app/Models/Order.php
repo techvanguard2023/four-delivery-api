@@ -10,7 +10,7 @@ class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['company_id', 'customer_id', 'delivery_person_id', 'total_price', 'status_id', 'payment_status', 'last_status_id', 'last_payment_status', 'order_type_id', 'location', 'order_origin_id', 'position'];
+    protected $fillable = ['company_id', 'customer_id', 'delivery_person_id', 'total_price', 'discount', 'total_price_with_discount', 'status_id', 'payment_status', 'last_status_id', 'last_payment_status', 'order_type_id', 'location', 'order_origin_id', 'position'];
 
     public function customer()
     {
