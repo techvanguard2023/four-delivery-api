@@ -55,7 +55,7 @@ class CategorySeeder extends Seeder
                 'id' => 7,
                 'name' => 'Saladas',
                 'description' => 'Salada de frutas, salada verde, salada de frango, salada caprese.',
-                'image_url' => 'https://www.academiaassai.com.br/sites/default/files/styles/noticia_1020x640/public/shutterstock_318379043.jpg'
+                'image_url' => 'https://midias.agazeta.com.br/2025/01/04/edicasesalada-de-alface-com-tomate-e-pepino-imagem-nitr--shutterstock-fx0xmw7k.jpg'
             ],
             [
                 'id' => 8,
@@ -103,7 +103,7 @@ class CategorySeeder extends Seeder
                 'id' => 15,
                 'name' => 'Sucos Naturais',
                 'description' => 'Sucos de laranja, limão, maracujá, detox, sucos de polpa.',
-                'image_url' => 'https://www.academiaassai.com.br/sites/default/files/styles/noticia_1020x640/public/sucos_naturais_capa.jpg?itok=MThhZZOC'
+                'image_url' => 'https://brastempexperience.s3.us-west-2.amazonaws.com/wp-content/uploads/2022/02/20220201144535-sucosnaturais-header-fita-scaled.jpg'
             ],
             [
                 'id' => 16,
@@ -127,7 +127,7 @@ class CategorySeeder extends Seeder
                 'id' => 19,
                 'name' => 'Kids',
                 'description' => 'Mini-hambúrguer, batata frita, nuggets, sucos em caixinha.',
-                'image_url' => 'https://media-cdn.tripadvisor.com/media/photo-s/0e/8c/ef/22/prato-kids.jpg'
+                'image_url' => 'https://www.diariodaregiao.com.br/image/policy:1.239170:1625765797/image.jpg?f=2x1'
             ],
             [
                 'id' => 20,
