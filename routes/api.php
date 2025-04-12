@@ -27,6 +27,8 @@ use App\Http\Controllers\Admin\StatsController;
 
 use App\Http\Controllers\Site\BannerController;
 
+use App\Http\Controllers\App\CategoryController as AppCategoryController;
+
 // Grupo de rotas para o Admin
 Route::prefix('admin-v1')->group(function () {
     Route::get('status', function () {
@@ -148,4 +150,15 @@ Route::prefix('bot-v1')->group(function () {
     Route::get('status', function () {
         return response()->json(['status' => 'API Bot V1 is alive!'], 200);
     });
+});
+
+// Grupo de rotas para o App
+Route::prefix('app-v1')->group(function () {
+    Route::get('status', function () {
+        return response()->json(['status' => 'API APP V1 is alive!'], 200);
+    });
+
+
+    // Rotas para Categorias
+    Route::apiResource('categories', AppCategoryController::class);
 });
