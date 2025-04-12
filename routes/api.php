@@ -60,6 +60,7 @@ Route::prefix('admin-v1')->group(function () {
         // Rotas para Itens
         Route::apiResource('items', ItemController::class);
         Route::get('/items/category/{categoryId}', [ItemController::class, 'showByCategoryId']);
+        Route::get('/items-only-available/category/{categoryId}', [ItemController::class, 'getOnlyAvailableItems']);
 
         // Rotas para Categorias
         Route::apiResource('categories', CategoryController::class);

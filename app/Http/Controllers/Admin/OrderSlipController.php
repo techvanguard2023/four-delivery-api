@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\OrderSlip;
 use App\Models\Stock;
+use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -64,6 +65,11 @@ class OrderSlipController extends Controller
 
                 $stock->decrement('quantity', $item['quantity']);
 
+                // Se o estoque for zero ou menor, torna o item indisponível
+                if ($stock->quantity <= 0) {
+                    Item::where('id', $item['item_id'])->update(['available' => false]);
+                }
+
                 $orderItems[] = [
                     'item_id' => $item['item_id'],
                     'quantity' => $item['quantity'],
@@ -83,7 +89,7 @@ class OrderSlipController extends Controller
 
     public function show($id)
     {
-        $orderSlip = OrderSlip::with(['company', 'status', 'orderType', 'orderOrigin'])->findOrFail($id);
+        $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item'])->findOrFail($id);
         return response()->json($orderSlip);
     }
 

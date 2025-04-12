@@ -40,6 +40,18 @@ class ItemController extends Controller
         }
     }
 
+    public function getOnlyAvailableItems(Request $request, $categoryId)
+    {
+        $user = $request->user();
+        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
+
+        if ($roleId == 1) {
+            return ItemResource::collection(Item::where('category_id', $categoryId)->where('available', true)->get()->load('stock', 'category'));
+        } else {
+            return ItemResource::collection(Item::where('company_id', $user->company_id)->where('category_id', $categoryId)->where('available', true)->get()->load('stock', 'category'));
+        }
+    }
+
     public function store(Request $request)
     {
         $user = $request->user();
@@ -86,23 +98,58 @@ class ItemController extends Controller
 
     public function update(Request $request, Item $item)
     {
+        // Verifica se o usuário tem permissão para atualizar o item
+        if ($request->user()->company_id !== $item->company_id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
         $validatedData = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
+            'image_url' => 'nullable|string',
             'price' => 'sometimes|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
-            'available' => 'sometimes|boolean'
+            'available' => 'sometimes|boolean',
+            'quantity' => 'sometimes|integer|min:0'
         ]);
+
+        // Atualiza o slug se o nome for alterado
+        if (isset($validatedData['name'])) {
+            $validatedData['slug'] = Str::slug($validatedData['name']) . '-' . time();
+        }
 
         $item->update($validatedData);
 
-        return response()->json($item, 200);
+        // Atualiza a quantidade do estoque, se fornecida
+        if (isset($validatedData['quantity'])) {
+            if ($item->stock) {
+                $item->stock->update(['quantity' => $validatedData['quantity']]);
+            } else {
+                // Caso não tenha stock ainda (raro, mas possível)
+                $item->stock()->create(['quantity' => $validatedData['quantity']]);
+            }
+        }
+
+        return response()->json($item->load('stock'), 200);
     }
 
-    public function destroy(Item $item)
+
+    public function destroy(Request $request, Item $item)
     {
+        // Verifica se o usuário tem permissão para deletar o item
+        if ($request->user()->company_id !== $item->company_id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Deleta o estoque associado (se houver)
+        if ($item->stock) {
+            $item->stock->delete();
+        }
+
+        // Deleta o item
         $item->delete();
 
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Item deleted successfully'], 200);
     }
+
 }

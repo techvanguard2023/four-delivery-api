@@ -110,6 +110,11 @@ class OrderController extends Controller
 
                     $stock->decrement('quantity', $item['quantity']);
 
+                    // Se o estoque for zero ou menor, torna o item indisponível
+                    if ($stock->quantity <= 0) {
+                        Item::where('id', $item['item_id'])->update(['available' => false]);
+                    }
+
                     // Adiciona o item ao pedido
                     $orderItems[] = [
                         'item_id' => $item['item_id'],
