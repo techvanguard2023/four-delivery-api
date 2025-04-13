@@ -54,15 +54,19 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $user = $request->user(); // Usuário autenticado
+
         $input = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'max:255', 'unique:users'],
             'phone' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'max:255'],
-            'company_id' => ['required'],
+            'password_confirmation' => ['required', 'string', 'max:255', 'same:password'],
             'role_id' => ['required']
         ]);
+
+        $input['company_id'] = $user->company_id;
 
         // Crie o usuário
         $user = User::create([

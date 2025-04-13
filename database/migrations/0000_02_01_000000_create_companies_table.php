@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('fantasy_name')->nullable();
+            $table->string('slug')->unique();
             $table->string('cnpj')->unique()->nullable();
             $table->string('cpf')->unique()->nullable();
             $table->string('email')->unique();

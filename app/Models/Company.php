@@ -13,6 +13,7 @@ class Company extends Model
     protected $fillable = [
         'name',
         'fantasy_name',
+        'slug',
         'cnpj',
         'cpf',
         'email',
@@ -32,4 +33,10 @@ class Company extends Model
     {
         return $this->hasMany(CompanyPlan::class);
     }
+
+    public function companyPlans()
+    {
+        return $this->hasMany(CompanyPlan::class);
+    }
+
 }

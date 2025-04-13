@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 use App\Services\UserRoleService;
 
@@ -45,10 +47,22 @@ class CompanyController extends Controller
             'website' => 'required|string|max:255',
         ]);
 
+        // Gerar slug a partir do nome
+        $validatedData['slug'] = Str::slug($validatedData['name']);
+
+        // Garantir unicidade do slug (se necessário)
+        $originalSlug = $validatedData['slug'];
+        $count = 1;
+        while (Company::where('slug', $validatedData['slug'])->exists()) {
+            $validatedData['slug'] = $originalSlug . '-' . $count;
+            $count++;
+        }
+
         $company = Company::create($validatedData);
 
         return response()->json($company, 201);
     }
+
 
     public function show(Company $company)
     {
