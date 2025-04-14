@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\OrderOriginController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\OrderSlipController;
 use App\Http\Controllers\Admin\StatsController;
+use App\Http\Controllers\Admin\N8nBotControlController;
 
 use App\Http\Controllers\Site\BannerController;
 
@@ -132,6 +133,8 @@ Route::prefix('admin-v1')->group(function () {
 
         // Rota de Relatorios
         Route::get('stats', [StatsController::class, 'index']);
+
+        Route::apiResource('n8n-bot-controls', N8nBotControlController::class);
     });
 });
 
