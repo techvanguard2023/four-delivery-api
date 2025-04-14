@@ -54,34 +54,36 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $user = $request->user(); // Usuário autenticado
 
-        $input = $request->validate([
+        $authenticatedUser = $request->user();
+
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'max:255', 'unique:users'],
-            'phone' => ['required', 'string', 'max:255'],
-            'address' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'max:255'],
-            'password_confirmation' => ['required', 'string', 'max:255', 'same:password'],
-            'role_id' => ['required']
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:20'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'], // 'confirmed' cuida da confirmação
+            'role_id' => ['required', 'exists:roles,id'],
         ]);
+        
 
-        $input['company_id'] = $user->company_id;
 
-        // Crie o usuário
         $user = User::create([
-            'name' => $input['name'],
-            'phone' => $input['phone'],
-            'address' => $input['address'],
-            'email' => $input['email'],
-            'password' => bcrypt($input['password']),
-            'company_id' => $input['company_id']
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'password' => bcrypt($validated['password']),
+            'company_id' => $authenticatedUser->company_id,
         ]);
 
-        $user->roles()->attach($input['role_id']);
+        $user->roles()->attach($validated['role_id']);
 
-        return response()->json(['message' => 'User created successfully.'], 201);
+        return response()->json([
+            'message' => 'User created successfully.',
+            'user' => new UserResource($user),
+        ], 201);
+        
     }
+
 
 
     public function update(Request $request, User $user)
