@@ -18,6 +18,7 @@ class CreateItemsTable extends Migration
             $table->decimal('price', 8, 2);
             $table->foreignId('category_id')->constrained('categories');
             $table->boolean('available')->default(true);
+            $table->boolean('show_in_menu')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

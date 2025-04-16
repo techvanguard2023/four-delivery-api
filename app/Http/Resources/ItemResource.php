@@ -24,6 +24,7 @@ class ItemResource extends JsonResource
             'category_id' => $this->category->id,
             'stock' => $this->stock->quantity,
             'available' => $this->available,
+            'show_in_menu' => $this->show_in_menu,
             'created_at' => $this->created_at,
         ];
     }
