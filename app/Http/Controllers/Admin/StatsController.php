@@ -10,6 +10,10 @@ use App\Services\Reports\MonthlyChartService;
 use App\Services\Reports\RecentCustomersService;
 use App\Services\Reports\InventoryStockReportService;
 use App\Services\Reports\ReservationReportService;
+use App\Services\Reports\LastThreeMonthsChartService;
+use App\Services\Reports\LastThreeMonthsTurnoverService;
+use App\Services\Reports\MonthlyChartTurnoverService;
+
 use Illuminate\Http\Request;
 
 class StatsController extends Controller
@@ -21,6 +25,9 @@ class StatsController extends Controller
     protected RecentCustomersService $recentCustomersService;
     protected InventoryStockReportService $inventoryStockReportService;
     protected ReservationReportService $reservationReportService;
+    protected LastThreeMonthsChartService $lastThreeMonthsChartService;
+    protected LastThreeMonthsTurnoverService $lastThreeMonthsTurnoverService;
+    protected MonthlyChartTurnoverService $monthlyChartTurnoverService;
 
     public function __construct(
         DeliveryReportService $deliveryService,
@@ -30,6 +37,9 @@ class StatsController extends Controller
         RecentCustomersService $recentCustomersService,
         InventoryStockReportService $inventoryStockReportService,
         ReservationReportService $reservationReportService,
+        LastThreeMonthsChartService $lastThreeMonthsChartService,
+        LastThreeMonthsTurnoverService $lastThreeMonthsTurnoverService,
+        MonthlyChartTurnoverService $monthlyChartTurnoverService
     ) {
         $this->deliveryService = $deliveryService;
         $this->orderSlipService = $orderSlipService;
@@ -38,6 +48,9 @@ class StatsController extends Controller
         $this->recentCustomersService = $recentCustomersService;
         $this->inventoryStockReportService = $inventoryStockReportService;
         $this->reservationReportService = $reservationReportService;
+        $this->lastThreeMonthsChartService = $lastThreeMonthsChartService;
+        $this->lastThreeMonthsTurnoverService = $lastThreeMonthsTurnoverService;
+        $this->monthlyChartTurnoverService = $monthlyChartTurnoverService;
     }
 
     public function index()
@@ -59,6 +72,9 @@ class StatsController extends Controller
             ],
             'stock' => $this->inventoryStockReportService->getReport($companyId),
             'chart' => $this->chartService->getMonthlyChartData(),
+            'monthly_chart_turnover' => $this->monthlyChartTurnoverService->getMonthlyChartTurnoverData(),
+            'last_three_months' => $this->lastThreeMonthsChartService->getSalesChartData(),
+            'last_three_months_turnover' => $this->lastThreeMonthsTurnoverService->getTurnover($companyId),
         ];
     }
 }

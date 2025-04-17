@@ -152,4 +152,35 @@ class ItemController extends Controller
         return response()->json(['message' => 'Item deleted successfully'], 200);
     }
 
+
+    public function updateAvailable(Request $request, Item $item)
+    {
+        $request->validate([
+            'available' => 'required|boolean',
+        ]);
+
+        $item->available = $request->available;
+        $item->save();
+
+        return response()->json([
+            'message' => 'Disponibilidade atualizada com sucesso.',
+            'item' => $item
+        ]);
+    }
+
+    public function updateShowInMenu(Request $request, Item $item)
+    {
+        $request->validate([
+            'show_in_menu' => 'required|boolean',
+        ]);
+
+        $item->show_in_menu = $request->show_in_menu;
+        $item->save();
+
+        return response()->json([
+            'message' => 'Visibilidade no menu atualizada com sucesso.',
+            'item' => $item
+        ]);
+    }
+
 }

@@ -64,6 +64,9 @@ Route::prefix('admin-v1')->group(function () {
         Route::apiResource('items', ItemController::class);
         Route::get('/items/category/{categoryId}', [ItemController::class, 'showByCategoryId']);
         Route::get('/items-only-available/category/{categoryId}', [ItemController::class, 'getOnlyAvailableItems']);
+        Route::patch('/items/{item}/available', [ItemController::class, 'updateAvailable']);
+        Route::patch('/items/{item}/show-in-menu', [ItemController::class, 'updateShowInMenu']);
+
 
         // Rotas para Categorias
         Route::apiResource('categories', CategoryController::class);
