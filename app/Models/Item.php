@@ -31,4 +31,10 @@ class Item extends Model
     {
         return $this->hasOne(Stock::class);
     }
+
+    public function discounts()
+    {
+        return $this->hasMany(ItemDiscount::class);
+    }
+
 }

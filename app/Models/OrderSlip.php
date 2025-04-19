@@ -16,6 +16,7 @@ class OrderSlip extends Model
         'position',
         'total_price',
         'discount',
+        'couvert',
         'total_price_with_discount',
         'status_id',
         'payment_status',

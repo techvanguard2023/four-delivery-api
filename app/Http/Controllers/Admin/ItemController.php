@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ItemResource;
 use App\Models\Stock;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+
 
 use App\Services\UserRoleService;
 
@@ -55,6 +57,7 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -62,26 +65,39 @@ class ItemController extends Controller
             'price' => 'required|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'available' => 'required|boolean',
-            'quantity' => 'required|integer|min:0'
+            'show_in_menu' => 'required|boolean',
+            'quantity' => 'required|integer|min:0',
+            'discounts' => 'nullable|array',
+            'discounts.*.min_quantity' => 'required|integer|min:1',
+            'discounts.*.discounted_price' => 'required|numeric|min:0',
         ]);
 
-        $validatedData['company_id'] = $user->company_id;
+        return DB::transaction(function () use ($validatedData, $user) {
+            $validatedData['company_id'] = $user->company_id;
 
-        // Criando o slug único
-        $slug = Str::slug($validatedData['name']) . '-' . time();
-        $validatedData['slug'] = $slug;
+            // Cria o slug único
+            $slug = Str::slug($validatedData['name']) . '-' . time();
+            $validatedData['slug'] = $slug;
 
-        $item = Item::create($validatedData);
+            // Cria o item
+            $item = Item::create($validatedData);
 
-        $stock = new Stock([
-            'item_id' => $item->id,
-            'quantity' => $validatedData['quantity'],
-        ]);
+            // Cria o estoque
+            $item->stock()->create([
+                'quantity' => $validatedData['quantity'],
+            ]);
 
-        $item->stock()->save($stock);
+            // Cria os descontos, se houver
+            if (!empty($validatedData['discounts'])) {
+                foreach ($validatedData['discounts'] as $discount) {
+                    $item->discounts()->create($discount);
+                }
+            }
 
-        return response()->json($item->load('stock'), 201);
+            return response()->json($item->load(['stock', 'discounts']), 201);
+        });
     }
+
 
     public function show(Item $item, Request $request)
     {

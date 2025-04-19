@@ -133,6 +133,7 @@ Route::prefix('admin-v1')->group(function () {
         Route::apiResource('reservations', ReservationController::class);
 
         Route::apiResource('order-slips', OrderSlipController::class);
+        Route::patch('/order-slips/{id}/items', [OrderSlipController::class, 'adjustOrRemoveItems']);
 
         // Rota de Relatorios
         Route::get('stats', [StatsController::class, 'index']);

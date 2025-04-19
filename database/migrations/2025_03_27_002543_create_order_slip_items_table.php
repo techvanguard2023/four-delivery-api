@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('order_slip_id')->constrained('order_slips')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items');
             $table->integer('quantity');
-            $table->decimal('price', 8, 2);
+            $table->decimal('unit_price', 8, 2);
+            $table->decimal('total_price', 8, 2);
             $table->string('observation')->nullable();
             $table->timestamps();
             $table->softDeletes();
