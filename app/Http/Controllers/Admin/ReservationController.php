@@ -14,12 +14,18 @@ class ReservationController extends Controller
         $user = $request->user();
         $date = $request->input('date'); // formato: Y-m-d
 
-        $query = Reservation::query()
-            ->where('company_id', $user->company_id);
+        $reservations = Reservation::query()
+            ->where('company_id', $user->company_id)
+            ->get()
+            ->map(function ($reservation) {
+                // Retorna o valor como está no banco
+                $reservation->reserved_at = $reservation->getOriginal('reserved_at');
+                return $reservation;
+            });
 
-
-        return response()->json($query->get());
+        return response()->json($reservations);
     }
+
 
 
     public function store(Request $request)

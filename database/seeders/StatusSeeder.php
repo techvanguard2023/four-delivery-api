@@ -30,9 +30,13 @@ class StatusSeeder extends Seeder
         ];
 
         $comandaStatuses = [
-            ['id' => 15, 'name' => 'Comanda Aberto',             'description' => 'Status para atribuir quando a venda for presencial e o cliente estiver consumindo no estabelecimento e for fazer o pagamento somente no final.'],
-            ['id' => 16, 'name' => 'Comanda Fechada',            'description' => 'Status para atribuir quando a venda for presencial e o cliente consumiu no estabelecimento e acabou de fazer o pagamento.'],
-            ['id' => 17, 'name' => 'Comanda Finalizada',         'description' => 'Status para atribuir quando a venda for presencial e o cliente consumiu no estabelecimento e já foi embora.'],
+            ['id' => 15, 'name' => 'Comanda Aberta',                      'description' => 'Status para atribuir quando a comanda estiver aberta e o cliente consumindo no estabelecimento.'],
+            ['id' => 16, 'name' => 'Comanda Fechada',                     'description' => 'Status para atribuir quando a comanda já estiver sido pagada e o cliente já tiver saído do estabelecimento.'],
+            ['id' => 17, 'name' => 'Comanda Pendente Fechamento',         'description' => 'Status para atribuir quando o Garçom solicitar o fechamento da comanda.'],
+            ['id' => 18, 'name' => 'Comanda Pendente Pagamento',          'description' => 'Status para atribuir quando o Garçom solicitar o pagamento da comanda.'],
+            ['id' => 19, 'name' => 'Comanda Pendente Cancelamento',       'description' => 'Status para atribuir quando o Cliente solicitar o cancelamento da comanda.'],
+            ['id' => 20, 'name' => 'Comanda Cancelada',                   'description' => 'Status para atribuir a comanda for cancelada.'],
+            
         ];
 
         foreach (array_merge($deliveryStatuses, $comandaStatuses) as $status) {

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('customer_name')->nullable(); // ou um relacionamento se tiver login
             $table->string('contact_phone')->nullable(); // opcional
             $table->text('observation')->nullable(); // opcional
-            $table->dateTime('reserved_at'); // data/hora da reserva
+            $table->string('reserved_at'); // data/hora da reserva
             $table->integer('duration_minutes')->default(90); // tempo estimado da reserva
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->timestamps();

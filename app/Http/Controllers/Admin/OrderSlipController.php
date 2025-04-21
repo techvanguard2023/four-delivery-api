@@ -19,7 +19,7 @@ class OrderSlipController extends Controller
         $orderSlips = OrderSlip::query()
             ->where('company_id', $user->company_id)
             ->whereNotIn('status_id', [16, 9])
-            ->with('orderSlipItems') // Carrega os itens do pedido
+            ->with('orderSlipItems', 'user') // Carrega os itens do pedido
             ->get(); // Executa a query
 
         return response()->json($orderSlips);
@@ -107,7 +107,7 @@ class OrderSlipController extends Controller
 
     public function show($id)
     {
-        $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item'])->findOrFail($id);
+        $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item', 'user'])->findOrFail($id);
         return response()->json($orderSlip);
     }
 
