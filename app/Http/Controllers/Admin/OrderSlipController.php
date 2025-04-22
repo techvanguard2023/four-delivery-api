@@ -8,6 +8,7 @@ use App\Models\Stock;
 use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Events\NewOrderSlipCreated;
 
 class OrderSlipController extends Controller
 {
@@ -100,6 +101,8 @@ class OrderSlipController extends Controller
         });
         
 
+        
+        event(new NewOrderSlipCreated($orderSlip));
         return response()->json($orderSlip->load('orderSlipItems'), 201);
     }
 
