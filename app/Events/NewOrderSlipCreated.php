@@ -5,31 +5,35 @@ namespace App\Events;
 use App\Models\OrderSlip;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class NewOrderSlipCreated implements ShouldBroadcast
 {
-    use InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public OrderSlip $orderSlip;
+    public $orderSlip;
 
-    public function __construct(OrderSlip $orderSlip)
+    public function __construct($orderSlip)
     {
         $this->orderSlip = $orderSlip;
     }
 
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
-        return new PrivateChannel('company.' . $this->orderSlip->company_id);
-
+        return new Channel('company.' . $this->orderSlip->company_id);
     }
 
-    public function broadcastAs()
+    public function broadcastAs(): string
     {
-        return 'new-order-slip';
+        return 'new.order.slip';
+    }
+
+    public function broadcastWith(): array
+    {
+        return [
+            'orderSlip' => $this->orderSlip,
+        ];
     }
 }
