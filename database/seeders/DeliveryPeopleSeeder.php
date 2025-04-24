@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\DeliveryPerson;
 use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 class DeliveryPeopleSeeder extends Seeder
 {
@@ -14,15 +13,16 @@ class DeliveryPeopleSeeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Faker::create(); // Instância do Faker
         $vehicles = ['Carro', 'Moto', 'Bicicleta'];
 
         $deliveryPeople = [];
         for ($i = 1; $i <= 15; $i++) {
             $deliveryPeople[] = [
                 'company_id' => mt_rand(1, 2),
-                'name' => fake()->name,
-                'phone' => fake()->phoneNumber,
-                'is_whatsapp' => fake()->boolean,
+                'name' => $faker->name,
+                'phone' => $faker->phoneNumber,
+                'is_whatsapp' => $faker->boolean,
                 'vehicle' => $vehicles[array_rand($vehicles)],
                 'created_at' => now(),
             ];
