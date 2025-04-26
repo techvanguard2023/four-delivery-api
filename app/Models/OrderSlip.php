@@ -68,9 +68,4 @@ class OrderSlip extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function adjustments()
-    {
-        return $this->hasMany(OrderSlipAdjustment::class);
-    }
 }

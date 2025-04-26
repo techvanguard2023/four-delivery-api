@@ -9,6 +9,7 @@ use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Events\NewOrderSlipCreated;
+use Illuminate\Support\Arr;
 
 class OrderSlipController extends Controller
 {
@@ -16,15 +17,23 @@ class OrderSlipController extends Controller
     {
         $user = $request->user();
 
-        // Busca todos os OrderSlips da empresa do usuário autenticado
         $orderSlips = OrderSlip::query()
             ->where('company_id', $user->company_id)
             ->whereNotIn('status_id', [16, 9])
-            ->with('orderSlipItems', 'user') // Carrega os itens do pedido
-            ->get(); // Executa a query
+            ->with('orderSlipItems', 'user', 'status')
+            ->get();
 
-        return response()->json($orderSlips);
+        $pendingCloseCount = OrderSlip::query()
+            ->where('company_id', $user->company_id)
+            ->where('status_id', 17)
+            ->count();
+
+        return response()->json([
+            'orderSlips' => $orderSlips,
+            'pendingCloseCount' => $pendingCloseCount
+        ]);
     }
+
 
 
     public function store(Request $request)
@@ -124,6 +133,7 @@ class OrderSlipController extends Controller
             'customer_name' => 'nullable|string',
             'position' => 'sometimes|string',
             'status_id' => 'sometimes|exists:statuses,id',
+            'discount' => 'sometimes|numeric|min:0',
             'payment_status' => 'sometimes|string',
             'last_status_id' => 'nullable|string',
             'last_payment_status' => 'nullable|string',
@@ -137,8 +147,13 @@ class OrderSlipController extends Controller
 
         DB::transaction(function () use ($request, $orderSlip, $data) {
 
-            // Atualiza dados básicos da comanda
-            $orderSlip->update($data);
+            // Atualiza dados básicos da comanda (exceto total_price e total_price_with_discount)
+            $orderSlip->update(Arr::except($data, ['total_price', 'total_price_with_discount']));
+
+            // Valida o desconto (não pode ser maior que o total_price)
+            if (isset($data['discount']) && $data['discount'] > $orderSlip->total_price) {
+                throw new \Exception("O valor do desconto não pode ser maior que o valor do total.");
+            }
 
             if ($request->has('items')) {
                 foreach ($request->items as $itemInput) {
@@ -151,15 +166,12 @@ class OrderSlipController extends Controller
 
                     if ($existingItem) {
                         $newQty = $existingItem->quantity + $qty;
-
-                        // Verifica estoque para quantidade adicional
                         $additionalQty = $qty;
                     } else {
                         $newQty = $qty;
                         $additionalQty = $qty;
                     }
 
-                    // Controle de estoque
                     $stock = Stock::where('item_id', $item->id)->first();
 
                     if (!$stock || $stock->quantity < $additionalQty) {
@@ -172,7 +184,6 @@ class OrderSlipController extends Controller
                         $item->update(['available' => false]);
                     }
 
-                    // Recalcula preço com base na nova quantidade
                     $discount = $item->discounts
                         ->where('min_quantity', '<=', $newQty)
                         ->sortByDesc('min_quantity')
@@ -199,11 +210,16 @@ class OrderSlipController extends Controller
                     }
                 }
 
-                // Atualiza o total da comanda com base no que existe agora
-                $orderSlip->update([
-                    'total_price' => $orderSlip->orderSlipItems()->sum('total_price'),
-                ]);
+                // Recalcula total_price
+                $orderSlip->total_price = $orderSlip->orderSlipItems()->sum('total_price');
             }
+
+            // Atualiza o total_price_with_discount sempre que discount ou total_price mudar
+            $discount = $data['discount'] ?? $orderSlip->discount ?? 0;
+            $orderSlip->total_price_with_discount = max(0, $orderSlip->total_price - $discount);
+
+            // Salva as alterações finais
+            $orderSlip->save();
         });
 
         return response()->json($orderSlip->fresh('orderSlipItems'));
@@ -211,74 +227,71 @@ class OrderSlipController extends Controller
 
 
 
-
     public function adjustOrRemoveItems(Request $request, $id)
-{
-    try {
-        $data = $request->validate([
-            'items' => 'required|array',
-            'items.*.order_slip_item_id' => 'required|integer|exists:order_slip_items,id',
-            'items.*.action' => 'required|string|in:remove,adjust_quantity',
-            'items.*.quantity' => 'required_if:items.*.action,adjust_quantity|integer|min:1',
-        ]);
-
-        DB::transaction(function () use ($id, $data) {
-            $orderSlip = OrderSlip::with('orderSlipItems')->findOrFail($id);
-            $newTotal = $orderSlip->total_price;
-
-            foreach ($data['items'] as $input) {
-                $orderItem = $orderSlip->orderSlipItems()->findOrFail($input['order_slip_item_id']);
-
-                if ($input['action'] === 'remove') {
-                    // Devolve estoque
-                    $stock = Stock::where('item_id', $orderItem->item_id)->first();
-                    if ($stock) {
-                        $stock->increment('quantity', $orderItem->quantity);
-                    }
-
-                    $newTotal -= $orderItem->total_price;
-                    $orderItem->delete();
-                }
-
-                if ($input['action'] === 'adjust_quantity') {
-                    $removeQty = $input['quantity'];
-
-                    if ($removeQty >= $orderItem->quantity) {
-                        throw new \Exception("Quantidade a remover é maior ou igual à registrada.");
-                    }
-
-                    $unitPrice = $orderItem->unit_price;
-                    $totalToRemove = $unitPrice * $removeQty;
-
-                    $orderItem->quantity -= $removeQty;
-                    $orderItem->total_price -= $totalToRemove;
-                    $orderItem->save();
-
-                    // Repor estoque
-                    $stock = Stock::where('item_id', $orderItem->item_id)->first();
-                    if ($stock) {
-                        $stock->increment('quantity', $removeQty);
-                    }
-
-                    $newTotal -= $totalToRemove;
-                }
-            }
-
-            $orderSlip->update([
-                'total_price' => max($newTotal, 0),
+    {
+        try {
+            $data = $request->validate([
+                'items' => 'required|array',
+                'items.*.order_slip_item_id' => 'required|integer|exists:order_slip_items,id',
+                'items.*.action' => 'required|string|in:remove,adjust_quantity',
+                'items.*.quantity' => 'required_if:items.*.action,adjust_quantity|integer|min:1',
             ]);
-        });
 
-        return response()->json(['message' => 'Itens atualizados com sucesso']);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Erro ao ajustar/remover itens',
-            'error' => $e->getMessage(),
-        ], 400);
+            DB::transaction(function () use ($id, $data) {
+                $orderSlip = OrderSlip::with('orderSlipItems')->findOrFail($id);
+                $newTotal = $orderSlip->total_price;
+
+                foreach ($data['items'] as $input) {
+                    $orderItem = $orderSlip->orderSlipItems()->findOrFail($input['order_slip_item_id']);
+
+                    if ($input['action'] === 'remove') {
+                        // Devolve estoque
+                        $stock = Stock::where('item_id', $orderItem->item_id)->first();
+                        if ($stock) {
+                            $stock->increment('quantity', $orderItem->quantity);
+                        }
+
+                        $newTotal -= $orderItem->total_price;
+                        $orderItem->delete();
+                    }
+
+                    if ($input['action'] === 'adjust_quantity') {
+                        $removeQty = $input['quantity'];
+
+                        if ($removeQty >= $orderItem->quantity) {
+                            throw new \Exception("Quantidade a remover é maior ou igual à registrada.");
+                        }
+
+                        $unitPrice = $orderItem->unit_price;
+                        $totalToRemove = $unitPrice * $removeQty;
+
+                        $orderItem->quantity -= $removeQty;
+                        $orderItem->total_price -= $totalToRemove;
+                        $orderItem->save();
+
+                        // Repor estoque
+                        $stock = Stock::where('item_id', $orderItem->item_id)->first();
+                        if ($stock) {
+                            $stock->increment('quantity', $removeQty);
+                        }
+
+                        $newTotal -= $totalToRemove;
+                    }
+                }
+
+                $orderSlip->update([
+                    'total_price' => max($newTotal, 0),
+                ]);
+            });
+
+            return response()->json(['message' => 'Itens atualizados com sucesso']);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao ajustar/remover itens',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
     }
-}
-
-
 
 
 

@@ -27,6 +27,8 @@ class SettingSeeder extends Seeder
                 'reservation_cancellation_tolerance' => 5,
                 'reservation_cancellation_tolerance_type' => 'minutes',
                 'menu_address' => 'https://fourdelivery.com.br/digital-menu/',
+                'has_couvert_tax' => true,
+                'couvert_tax' => '10.00'
             ]),
             'created_at' => now(),
             'updated_at' => now(),
@@ -44,6 +46,8 @@ class SettingSeeder extends Seeder
                 'reservation_cancellation_tolerance' => 5,
                 'reservation_cancellation_tolerance_type' => 'minutes',
                 'menu_address' => 'https://fourdelivery.com.br/digital-menu/',
+                'has_couvert_tax' => true,
+                'couvert_tax' => '10.00'
             ]),
             'created_at' => now(),
             'updated_at' => now(),
@@ -61,6 +65,8 @@ class SettingSeeder extends Seeder
                 'reservation_cancellation_tolerance' => 5,
                 'reservation_cancellation_tolerance_type' => 'minutes',
                 'menu_address' => 'https://fourdelivery.com.br/digital-menu/',
+                'has_couvert_tax' => true,
+                'couvert_tax' => '10.00'
             ]),
             'created_at' => now(),
             'updated_at' => now(),
