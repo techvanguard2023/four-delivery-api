@@ -141,6 +141,17 @@ Route::prefix('admin-v1')->group(function () {
     });
 });
 
+// Grupo de rotas para o Cardápio
+Route::prefix('digital-menu-v1')->group(function () {
+    Route::get('status', function () {
+        return response()->json(['status' => 'API Digital Menu V1 is alive!'], 200);
+    });
+
+    // Rotas para Categorias
+    Route::apiResource('categories', AppCategoryController::class);
+});
+
+
 // Grupo de rotas para o Site
 Route::prefix('site-v1')->group(function () {
     Route::get('status', function () {

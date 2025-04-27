@@ -5,6 +5,7 @@ namespace App\Services\Reports;
 use App\Models\Setting;
 use App\Models\OrderSlip;
 use Carbon\Carbon;
+use App\Enums\PaymentStatus;
 
 class AvailableTablesReportService
 {
@@ -23,7 +24,7 @@ class AvailableTablesReportService
         // 2. Buscar todas as comandas ocupando mesas hoje
         $occupiedOrderSlips = OrderSlip::where('company_id', $companyId)
             ->whereDate('created_at', Carbon::today())
-            ->where('payment_status', '!=', 'paid')
+            ->where('payment_status', '!=', PaymentStatus::PAID)
             ->whereNotNull('position')
             ->where('position', 'like', 'Mesa %')
             ->get();

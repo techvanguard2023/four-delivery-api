@@ -4,6 +4,7 @@ namespace App\Services\Reports;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Enums\OrderStatus;
 
 class MonthlyChartTurnoverService
 {
@@ -21,7 +22,7 @@ class MonthlyChartTurnoverService
         $deliveryCounts = DB::table('orders')
             ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, SUM(total_price) as total")
             ->where('company_id', $companyId)
-            ->where('status_id', 8)
+            ->where('status_id', OrderStatus::ORDER_DELIVERED)
             ->whereYear('created_at', $currentYear)
             ->groupBy('month')
             ->pluck('total', 'month');
@@ -29,7 +30,7 @@ class MonthlyChartTurnoverService
         $storeCounts = DB::table('order_slips')
             ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, SUM(total_price) as total")
             ->where('company_id', $companyId)
-            ->where('status_id', '=', 16)
+            ->where('status_id', '=', OrderStatus::CLOSED_ORDER_SLIP)
             ->whereYear('created_at', $currentYear)
             ->groupBy('month')
             ->pluck('total', 'month');

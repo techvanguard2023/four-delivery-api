@@ -4,6 +4,7 @@ namespace App\Services\Reports;
 
 use App\Models\Order;
 use Carbon\Carbon;
+use App\Enums\OrderStatus;
 
 
 
@@ -87,7 +88,7 @@ class DeliveryReportService
     {
         $user = auth()->user();
         // Verifica se o usuário está autenticado
-        $query = Order::where('status_id', 8)
+        $query = Order::where('status_id', OrderStatus::ORDER_DELIVERED)
             ->where('company_id', $user->company_id); // <- filtro pela empresa do usuário
 
 

@@ -95,26 +95,6 @@ class CompanySeeder extends Seeder
 
         Company::create([
             'id' => 2,
-            'name' => 'Emporio do Sabor',
-            'fantasy_name' => 'Emporio do Sabor',
-            'slug' => 'emporio-do-sabor',
-            'cnpj' => $this->generateCnpj(),
-            'cpf' => $this->generateCpf(),
-            'email' => 'contato@emporiodosabor.com.br',
-            'address' => 'Rua dos Bobos',
-            'number' => '0',
-            'neighborhood' => 'Zero',
-            'city' => 'São Gonçalo',
-            'state' => 'RJ',
-            'zip_code' => '24745290',
-            'country' => 'Brasil',
-            'phone' => '21981321890',
-            'whatsapp' => '21981321890',
-            'website' => 'https://emporiodosabor.com.br',
-        ]);
-
-        Company::create([
-            'id' => 3,
             'name' => 'Point do Oásis',
             'fantasy_name' => 'Point do Oásis',
             'slug' => 'point-do-oasis',
@@ -131,6 +111,26 @@ class CompanySeeder extends Seeder
             'phone' => '21981321890',
             'whatsapp' => '21981321890',
             'website' => 'https://pointdooasis.com.br',
+        ]);
+
+        Company::create([
+            'id' => 3,
+            'name' => 'Emporio do Sabor',
+            'fantasy_name' => 'Emporio do Sabor',
+            'slug' => 'emporio-do-sabor',
+            'cnpj' => $this->generateCnpj(),
+            'cpf' => $this->generateCpf(),
+            'email' => 'contato@emporiodosabor.com.br',
+            'address' => 'Rua dos Bobos',
+            'number' => '0',
+            'neighborhood' => 'Zero',
+            'city' => 'São Gonçalo',
+            'state' => 'RJ',
+            'zip_code' => '24745290',
+            'country' => 'Brasil',
+            'phone' => '21981321890',
+            'whatsapp' => '21981321890',
+            'website' => 'https://emporiodosabor.com.br',
         ]);
     }
 }

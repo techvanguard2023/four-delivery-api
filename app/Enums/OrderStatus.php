@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Enums;
+
+enum OrderStatus: int
+{
+    case PENDING_PAYMENT = 1;
+    case CONFIRMED_PAYMENT = 2;
+    case ORDER_DELIVERY_RECEIVED = 3;
+    case ORDER_DELIVERY_IN_PREPARATION = 4;
+    case ORDER_DELIVERY_READY = 5;
+    case PENDING_DELIVERY_PERSON = 6;
+    case ORDER_DELIVERY_IN_TRANSIT = 7;
+    case ORDER_DELIVERED = 8;
+    case CANCELED_ORDER_DELIVERY = 9;
+    case NOT_DELIVERED = 10;
+    case REFUNDED = 11;
+    case ORDER_DELIVERY_ON_HOLD = 12;
+    case PENDING_ORDER_DELIVERY = 13;
+    case ORDER_REFUSED = 14;
+    case OPEN_ORDER_SLIP = 15;
+    case CLOSED_ORDER_SLIP = 16;
+    case ORDER_SLIP_PENDING_CLOSING = 17;
+    case ORDER_SLIP_PENDING_PAYMENT = 18;
+    case ORDER_SLIP_PENDING_CANCELING = 19;
+    case CANCELED_ORDER_SLIP = 20;
+}

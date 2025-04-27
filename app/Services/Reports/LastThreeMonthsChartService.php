@@ -4,6 +4,7 @@ namespace App\Services\Reports;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Enums\OrderStatus;
 
 class LastThreeMonthsChartService
 {
@@ -35,7 +36,7 @@ class LastThreeMonthsChartService
         $storeData = DB::table('order_slips')
             ->selectRaw("DATE(created_at) as date, COUNT(*) as total")
             ->where('company_id', $companyId)
-            ->where('status_id', 16)
+            ->where('status_id', OrderStatus::CLOSED_ORDER_SLIP)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy(DB::raw('DATE(created_at)'))
             ->pluck('total', 'date');

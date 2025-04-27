@@ -5,6 +5,7 @@ namespace App\Services\Reports;
 use App\Models\OrderSlip;
 use App\Models\Order;
 use Carbon\Carbon;
+use App\Enums\OrderStatus;
 
 class LastThreeMonthsTurnoverService
 {
@@ -15,7 +16,7 @@ class LastThreeMonthsTurnoverService
 
         $storeData = OrderSlip::selectRaw("DATE(created_at) as date, SUM(total_price) as total")
             ->where('company_id', $companyId)
-            ->where('status_id', 16)
+            ->where('status_id', OrderStatus::CLOSED_ORDER_SLIP)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupByRaw('DATE(created_at)')
             ->get()
@@ -23,7 +24,7 @@ class LastThreeMonthsTurnoverService
 
         $deliveryData = Order::selectRaw("DATE(created_at) as date, SUM(total_price) as total")
             ->where('company_id', $companyId)
-            ->where('status_id', 8)
+            ->where('status_id', OrderStatus::ORDER_DELIVERED)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupByRaw('DATE(created_at)')
             ->get()

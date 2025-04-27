@@ -4,6 +4,7 @@ namespace App\Services\Reports;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Enums\OrderStatus;
 
 class MonthlyChartService
 {
@@ -28,7 +29,7 @@ class MonthlyChartService
         $storeCounts = DB::table('order_slips')
             ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total")
             ->where('company_id', $companyId)
-            ->where('status_id', '=', 16)
+            ->where('status_id', '=', OrderStatus::CLOSED_ORDER_SLIP)
             ->whereYear('created_at', $currentYear)
             ->groupBy('month')
             ->pluck('total', 'month');

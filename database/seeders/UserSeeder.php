@@ -24,47 +24,12 @@ class UserSeeder extends Seeder
         ]);
 
 
-
-        User::create([
-            'name' => 'Aleksandr Calheiros',
-            'email' => 'emporiodosaborgerente@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 2
-        ]);
-
-        User::create([
-            'name' => 'Emporio do Sabor - Atendente',
-            'email' => 'emporiodosaboratendente@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 2
-        ]);
-
-        User::create([
-            'name' => 'Emporio do Sabor - Garçom',
-            'email' => 'emporiodosaborgarçom@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 2
-        ]);
-
-        User::create([
-            'name' => 'Emporio do Sabor - Entregador',
-            'email' => 'emporiodosaborentregador@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 2
-        ]);
-
-
-
         User::create([
             'name' => 'Verucia Freignan',
             'email' => 'pointdooasisgerente@gmail.com',
             'phone' => '21981321890',
             'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 3
+            'company_id' => 2
         ]);
 
         User::create([
@@ -72,7 +37,7 @@ class UserSeeder extends Seeder
             'email' => 'pointdooasisatendente@gmail.com',
             'phone' => '21981321890',
             'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 3
+            'company_id' => 2
         ]);
 
         User::create([
@@ -80,12 +45,46 @@ class UserSeeder extends Seeder
             'email' => 'pointdooasisgarçom@gmail.com',
             'phone' => '21981321890',
             'password' => static::$password ??= Hash::make('Rm@150917'),
-            'company_id' => 3
+            'company_id' => 2
         ]);
 
         User::create([
             'name' => 'Point do Oásis - Entregador',
             'email' => 'pointdooasisentregador@gmail.com',
+            'phone' => '21981321890',
+            'password' => static::$password ??= Hash::make('Rm@150917'),
+            'company_id' => 2
+        ]);
+
+
+
+        User::create([
+            'name' => 'Aleksandr Calheiros',
+            'email' => 'emporiodosaborgerente@gmail.com',
+            'phone' => '21981321890',
+            'password' => static::$password ??= Hash::make('Rm@150917'),
+            'company_id' => 3
+        ]);
+
+        User::create([
+            'name' => 'Emporio do Sabor - Atendente',
+            'email' => 'emporiodosaboratendente@gmail.com',
+            'phone' => '21981321890',
+            'password' => static::$password ??= Hash::make('Rm@150917'),
+            'company_id' => 3
+        ]);
+
+        User::create([
+            'name' => 'Emporio do Sabor - Garçom',
+            'email' => 'emporiodosaborgarçom@gmail.com',
+            'phone' => '21981321890',
+            'password' => static::$password ??= Hash::make('Rm@150917'),
+            'company_id' => 3
+        ]);
+
+        User::create([
+            'name' => 'Emporio do Sabor - Entregador',
+            'email' => 'emporiodosaborentregador@gmail.com',
             'phone' => '21981321890',
             'password' => static::$password ??= Hash::make('Rm@150917'),
             'company_id' => 3

@@ -19,6 +19,7 @@ class CreateItemsTable extends Migration
             $table->foreignId('category_id')->constrained('categories');
             $table->boolean('available')->default(true);
             $table->boolean('show_in_menu')->default(true);
+            $table->boolean('highlighted')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

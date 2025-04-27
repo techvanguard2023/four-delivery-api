@@ -4,6 +4,7 @@ namespace App\Services\Reports;
 
 use App\Models\OrderSlip;
 use Carbon\Carbon;
+use App\Enums\PaymentStatus;
 
 class OrderSlipReportService
 {
@@ -85,7 +86,7 @@ class OrderSlipReportService
     {
         $user = auth()->user();
         // Verifica se o usuário está autenticado
-        $query = OrderSlip::where('payment_status', 'paid')
+        $query = OrderSlip::where('payment_status', PaymentStatus::PAID)
             ->where('company_id', $user->company_id); // <- filtro pela empresa do usuário
 
 
