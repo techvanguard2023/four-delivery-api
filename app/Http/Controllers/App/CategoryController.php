@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Services\UserRoleService;
+use App\Models\Item;
+use App\Models\Company;
 
 
 class CategoryController extends Controller
@@ -79,4 +81,40 @@ class CategoryController extends Controller
 
         return response()->json(null, 204);
     }
+
+
+    public function getCategoriesWithItemsByCompany($companyId, $slug)
+    {
+        // Verifica se a empresa existe e se o slug corresponde ao ID
+        $company = Company::where('id', $companyId)
+            ->where('slug', $slug)
+            ->whereNull('deleted_at')
+            ->first();
+
+        if (!$company) {
+            return response()->json([
+                'message' => 'Empresa não encontrada ou dados inválidos.'
+            ], 404);
+        }
+
+        // Busca apenas categorias que possuem pelo menos 1 item disponível e que deve ser exibido no menu
+        $categories = Category::whereNull('deleted_at')
+            ->whereHas('items', function ($query) use ($companyId) {
+                $query->where('company_id', $companyId)
+                    ->where('available', true)
+                    ->where('show_in_menu', true)
+                    ->whereNull('deleted_at');
+            })
+            ->with(['items' => function ($query) use ($companyId) {
+                $query->where('company_id', $companyId)
+                    ->where('available', true)
+                    ->where('show_in_menu', true)
+                    ->whereNull('deleted_at');
+            }])
+            ->orderBy('name')
+            ->get();
+
+        return response()->json($categories);
+    }
+
 }

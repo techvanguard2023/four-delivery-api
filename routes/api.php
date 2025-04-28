@@ -149,6 +149,7 @@ Route::prefix('digital-menu-v1')->group(function () {
 
     // Rotas para Categorias
     Route::apiResource('categories', AppCategoryController::class);
+    Route::get('/categories-with-company-items', [AppCategoryController::class, 'listCategoriesWithCompanyItems']);
 });
 
 
@@ -178,4 +179,5 @@ Route::prefix('app-v1')->group(function () {
 
     // Rotas para Categorias
     Route::apiResource('categories', AppCategoryController::class);
+    Route::get('/categories-with-items/{companyId}/{slug}', [AppCategoryController::class, 'getCategoriesWithItemsByCompany']);
 });
