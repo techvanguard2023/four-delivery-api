@@ -136,9 +136,9 @@ class OrderSlipController extends Controller
     }
 
 
-    public function update(Request $request, OrderSlip $orderSlip)
+    public function update(Request $request, $id)
     {
-        $user = $request->user();
+        $orderSlip = OrderSlip::with('orderSlipItems')->findOrFail($id);
 
         $data = $request->validate([
             'company_id' => 'sometimes|exists:companies,id',
@@ -157,83 +157,89 @@ class OrderSlipController extends Controller
             'items.*.observation' => 'nullable|string',
         ]);
 
-        $data['company_id'] = $user->company_id;
+        DB::transaction(function () use ($request, $orderSlip, $data) {
 
-        DB::transaction(function () use ($orderSlip, $data, $request) {
-            $totalPrice = 0;
-            $orderItems = [];
+            $orderSlip->update(Arr::except($data, ['total_price', 'total_price_with_discount']));
 
-            // Repor estoque dos itens antigos
-            foreach ($orderSlip->orderSlipItems as $oldItem) {
-                $stock = Stock::where('item_id', $oldItem->item_id)->first();
-                if ($stock) {
-                    $stock->increment('quantity', $oldItem->quantity);
-                }
+            if (isset($data['discount']) && $data['discount'] > $orderSlip->total_price) {
+                throw new \Exception("O valor do desconto não pode ser maior que o valor do total.");
             }
 
-            // Deleta os itens antigos
-            $orderSlip->orderSlipItems()->delete();
+            if ($request->has('items')) {
+                foreach ($request->items as $itemInput) {
+                    $item = Item::with('discounts')->findOrFail($itemInput['item_id']);
+                    $qty = $itemInput['quantity'];
 
-            // Cadastra os novos itens
-            foreach ($request->items as $itemInput) {
-                $item = Item::with('discounts')->findOrFail($itemInput['item_id']);
-                $qty = $itemInput['quantity'];
+                    $existingItem = $orderSlip->orderSlipItems()
+                        ->where('item_id', $item->id)
+                        ->first();
 
-                // Controle de estoque
-                $stock = Stock::where('item_id', $item->id)->first();
+                    if ($existingItem) {
+                        $newQty = $existingItem->quantity + $qty;
+                        $additionalQty = $qty;
+                    } else {
+                        $newQty = $qty;
+                        $additionalQty = $qty;
+                    }
 
-                if (!$stock || $stock->quantity < $qty) {
-                    throw new \Exception("Estoque insuficiente para o item ID: {$item->id}");
+                    $stock = Stock::where('item_id', $item->id)->first();
+
+                    if (!$stock || $stock->quantity < $additionalQty) {
+                        throw new \Exception("Estoque insuficiente para o item ID: {$item->id}");
+                    }
+
+                    $stock->decrement('quantity', $additionalQty);
+
+                    if ($stock->quantity <= 0) {
+                        $item->update(['available' => false]);
+                    }
+
+                    $discount = $item->discounts
+                        ->where('min_quantity', '<=', $newQty)
+                        ->sortByDesc('min_quantity')
+                        ->first();
+
+                    if ($discount) {
+                        $groupSize = $discount->min_quantity;
+                        $discountedUnits = intdiv($newQty, $groupSize) * $groupSize;
+                        $fullPriceUnits = $newQty - $discountedUnits;
+
+                        $total = ($discountedUnits * $discount->discounted_price) + ($fullPriceUnits * $item->price);
+                        $unitPrice = $total / $newQty;
+                    } else {
+                        $unitPrice = $item->price;
+                        $total = $newQty * $unitPrice;
+                    }
+
+                    if ($existingItem) {
+                        $existingItem->update([
+                            'quantity' => $newQty,
+                            'unit_price' => round($unitPrice, 2),
+                            'total_price' => round($total, 2),
+                            'observation' => $itemInput['observation'] ?? $existingItem->observation,
+                        ]);
+                    } else {
+                        $orderSlip->orderSlipItems()->create([
+                            'item_id' => $item->id,
+                            'quantity' => $qty,
+                            'unit_price' => round($unitPrice, 2),
+                            'total_price' => round($unitPrice * $qty, 2),
+                            'observation' => $itemInput['observation'] ?? null,
+                        ]);
+                    }
                 }
 
-                $stock->decrement('quantity', $qty);
-
-                if ($stock->quantity <= 0) {
-                    $item->update(['available' => false]);
-                }
-
-                $unitPrice = $item->price;
-                $totalItemPrice = 0;
-
-                // Verifica se existe alguma configuração de desconto
-                $discount = $item->discounts
-                    ->sortByDesc('min_quantity')
-                    ->first();
-
-                if ($discount) {
-                    $groupSize = $discount->min_quantity;
-                    $discountedUnits = intdiv($qty, $groupSize) * $groupSize;
-                    $fullPriceUnits = $qty - $discountedUnits;
-
-                    $totalItemPrice = ($discountedUnits * $discount->discounted_price) + ($fullPriceUnits * $item->price);
-
-                    // Importante: o valor unitário que vamos salvar é o valor *médio* por unidade
-                    $unitPrice = $totalItemPrice / $qty;
-                } else {
-                    $totalItemPrice = $item->price * $qty;
-                }
-
-                $totalPrice += $totalItemPrice;
-
-                $orderItems[] = [
-                    'item_id' => $item->id,
-                    'quantity' => $qty,
-                    'unit_price' => round($unitPrice, 2),
-                    'total_price' => round($totalItemPrice, 2),
-                    'observation' => $itemInput['observation'] ?? null,
-                ];
+                $orderSlip->total_price = $orderSlip->orderSlipItems()->sum('total_price');
             }
 
-            $orderSlip->update(array_merge($data, [
-                'total_price' => round($totalPrice, 2),
-            ]));
+            $discount = $data['discount'] ?? $orderSlip->discount ?? 0;
+            $orderSlip->total_price_with_discount = max(0, $orderSlip->total_price - $discount);
 
-            $orderSlip->orderSlipItems()->createMany($orderItems);
+            $orderSlip->save();
         });
 
-        return response()->json($orderSlip->load('orderSlipItems'));
+        return response()->json($orderSlip->fresh('orderSlipItems'));
     }
-
 
 
 
