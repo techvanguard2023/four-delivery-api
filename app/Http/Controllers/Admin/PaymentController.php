@@ -18,7 +18,8 @@ class PaymentController extends Controller
         $validatedData = $request->validate([
             'order_id' => 'required|exists:orders,id',
             'payment_method_id' => 'required|exists:payment_methods,id',
-            'amount' => 'required|numeric|min:0'
+            'amount' => 'required|numeric|min:0',
+            'status' =>'required|in:pending,completed,cancelled'
         ]);
 
         $payment = Payment::create($validatedData);
@@ -36,7 +37,8 @@ class PaymentController extends Controller
         $validatedData = $request->validate([
             'order_id' => 'sometimes|exists:orders,id',
             'payment_method_id' => 'sometimes|exists:payment_methods,id',
-            'amount' => 'sometimes|numeric|min:0'
+            'amount' => 'sometimes|numeric|min:0',
+            'status' =>'sometimes|in:pending,completed,cancelled'
         ]);
 
         $payment->update($validatedData);
