@@ -89,5 +89,13 @@ class UserSeeder extends Seeder
             'password' => static::$password ??= Hash::make('Rm@150917'),
             'company_id' => 3
         ]);
+
+        User::create([
+            'name' => 'Bot Whatsapp',
+            'email' => 'botpointdooasis@gmail.com',
+            'phone' => '21981321890',
+            'password' => static::$password ??= Hash::make('Rm@150917'),
+            'company_id' => 2
+        ]);
     }
 }

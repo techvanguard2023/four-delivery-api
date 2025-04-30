@@ -62,6 +62,7 @@ class ItemController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image_url' => 'nullable|string',
+            'original_price' => 'nullable|numeric|min:0',
             'price' => 'required|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'available' => 'required|boolean',
@@ -123,31 +124,49 @@ class ItemController extends Controller
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
             'image_url' => 'nullable|string',
+            'original_price' => 'sometimes|numeric|min:0',
             'price' => 'sometimes|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'available' => 'sometimes|boolean',
-            'quantity' => 'sometimes|integer|min:0'
+            'show_in_menu' => 'sometimes|boolean',
+            'quantity' => 'sometimes|integer|min:0',
+            'discounts' => 'nullable|array',
+            'discounts.*.min_quantity' => 'required_with:discounts|integer|min:1',
+            'discounts.*.discounted_price' => 'required_with:discounts|numeric|min:0',
         ]);
 
-        // Atualiza o slug se o nome for alterado
-        if (isset($validatedData['name'])) {
-            $validatedData['slug'] = Str::slug($validatedData['name']) . '-' . time();
-        }
-
-        $item->update($validatedData);
-
-        // Atualiza a quantidade do estoque, se fornecida
-        if (isset($validatedData['quantity'])) {
-            if ($item->stock) {
-                $item->stock->update(['quantity' => $validatedData['quantity']]);
-            } else {
-                // Caso não tenha stock ainda (raro, mas possível)
-                $item->stock()->create(['quantity' => $validatedData['quantity']]);
+        return DB::transaction(function () use ($item, $validatedData) {
+            // Atualiza o slug se o nome for alterado
+            if (isset($validatedData['name'])) {
+                $validatedData['slug'] = Str::slug($validatedData['name']) . '-' . time();
             }
-        }
 
-        return response()->json($item->load('stock'), 200);
+            $item->update($validatedData);
+
+            // Atualiza a quantidade do estoque, se fornecida
+            if (isset($validatedData['quantity'])) {
+                if ($item->stock) {
+                    $item->stock->update(['quantity' => $validatedData['quantity']]);
+                } else {
+                    $item->stock()->create(['quantity' => $validatedData['quantity']]);
+                }
+            }
+
+            // Atualiza os descontos
+            if (isset($validatedData['discounts'])) {
+                // Remove os descontos antigos
+                $item->discounts()->delete();
+
+                // Insere os novos
+                foreach ($validatedData['discounts'] as $discount) {
+                    $item->discounts()->create($discount);
+                }
+            }
+
+            return response()->json($item->load(['stock', 'discounts']), 200);
+        });
     }
+
 
 
     public function destroy(Request $request, Item $item)
@@ -198,5 +217,4 @@ class ItemController extends Controller
             'item' => $item
         ]);
     }
-
 }

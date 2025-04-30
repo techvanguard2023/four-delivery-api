@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('instance_name')->unique();
             $table->string('bot_name');
             $table->string('description')->nullable();
+            $table->text('prompt_bot')->nullable();
             $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
