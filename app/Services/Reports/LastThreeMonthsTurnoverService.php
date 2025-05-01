@@ -14,13 +14,13 @@ class LastThreeMonthsTurnoverService
         $startDate = Carbon::now()->subDays(89)->startOfDay(); // últimos 90 dias corridos
         $endDate = Carbon::now()->endOfDay();
 
-        $storeData = OrderSlip::selectRaw("DATE(created_at) as date, SUM(total_price) as total")
+        $storeData = OrderSlip::selectRaw("DATE(created_at) as date, SUM(total_price_with_discount) as total")
             ->where('company_id', $companyId)
             ->where('status_id', OrderStatus::CLOSED_ORDER_SLIP)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupByRaw('DATE(created_at)')
             ->get()
-            ->mapWithKeys(fn ($item) => [$item->date => $item->total]);
+            ->mapWithKeys(fn($item) => [$item->date => $item->total]);
 
         $deliveryData = Order::selectRaw("DATE(created_at) as date, SUM(total_price) as total")
             ->where('company_id', $companyId)
@@ -28,7 +28,7 @@ class LastThreeMonthsTurnoverService
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupByRaw('DATE(created_at)')
             ->get()
-            ->mapWithKeys(fn ($item) => [$item->date => $item->total]);
+            ->mapWithKeys(fn($item) => [$item->date => $item->total]);
 
         $result = [];
 

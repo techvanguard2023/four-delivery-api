@@ -20,7 +20,7 @@ class OrderController extends Controller
         $user = $request->user();
         $userRoleId = UserRoleService::getUserRoleId($user);
 
-        $query = Order::with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])
+        $query = Order::with(['customer', 'status', 'orderItems', 'deliveryPerson'])
             ->where(function ($q) {
                 $q->whereNull('location')
                     ->orWhere('location', '');
@@ -61,7 +61,7 @@ class OrderController extends Controller
         $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
 
         // Query base filtrando pedidos onde 'location' não é nulo nem vazio
-        $query = Order::with(['customer', 'status', 'orderItems', 'payment', 'deliveryPerson'])
+        $query = Order::with(['customer', 'status', 'orderItems', 'deliveryPerson'])
             ->whereNotNull('location')
             ->where('location', '!=', '');
 

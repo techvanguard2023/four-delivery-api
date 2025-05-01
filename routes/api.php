@@ -40,6 +40,8 @@ Route::prefix('admin-v1')->group(function () {
     Route::get('/print-order/{order}', [OrderSlipController::class, 'printView']);
     Route::get('/order-slip/print-close/{id}', [OrderSlipController::class, 'printCloseView']);
 
+    Route::get('/order-slip/view', [OrderSlipController::class, 'publicView']);
+
 
 
     // Rotas públicas

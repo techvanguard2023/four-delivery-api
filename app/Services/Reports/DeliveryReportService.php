@@ -43,34 +43,34 @@ class DeliveryReportService
 
 
     public function getOrdersCount(): array
-        {
-            return [
-                [
-                    'key' => 'daily_orders',
-                    'title' => 'Pedidos do Dia',
-                    'description' => 'Total de pedidos realizados hoje.',
-                    'value' => $this->countOrdersForPeriod('day'),
-                ],
-                [
-                    'key' => 'weekly_orders',
-                    'title' => 'Pedidos da Semana',
-                    'description' => 'Total de pedidos realizados nesta semana.',
-                    'value' => $this->countOrdersForPeriod('week'),
-                ],
-                [
-                    'key' => 'monthly_orders',
-                    'title' => 'Pedidos do Mês',
-                    'description' => 'Total de pedidos realizados neste mês.',
-                    'value' => $this->countOrdersForPeriod('month'),
-                ],
-                [
-                    'key' => 'yearly_orders',
-                    'title' => 'Pedidos do Ano',
-                    'description' => 'Total de pedidos realizados neste ano.',
-                    'value' => $this->countOrdersForPeriod('year'),
-                ],
-            ];
-        }
+    {
+        return [
+            [
+                'key' => 'daily_orders',
+                'title' => 'Pedidos do Dia',
+                'description' => 'Total de pedidos realizados hoje.',
+                'value' => $this->countOrdersForPeriod('day'),
+            ],
+            [
+                'key' => 'weekly_orders',
+                'title' => 'Pedidos da Semana',
+                'description' => 'Total de pedidos realizados nesta semana.',
+                'value' => $this->countOrdersForPeriod('week'),
+            ],
+            [
+                'key' => 'monthly_orders',
+                'title' => 'Pedidos do Mês',
+                'description' => 'Total de pedidos realizados neste mês.',
+                'value' => $this->countOrdersForPeriod('month'),
+            ],
+            [
+                'key' => 'yearly_orders',
+                'title' => 'Pedidos do Ano',
+                'description' => 'Total de pedidos realizados neste ano.',
+                'value' => $this->countOrdersForPeriod('year'),
+            ],
+        ];
+    }
 
 
 

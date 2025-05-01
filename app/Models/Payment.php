@@ -10,11 +10,11 @@ class Payment extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['order_id', 'payment_method_id', 'amount', 'status'];
+    protected $fillable = ['order_slip_id', 'payment_method_id', 'amount', 'status'];
 
-    public function order()
+    public function order_slip()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(OrderSlip::class);
     }
 
     public function paymentMethod()

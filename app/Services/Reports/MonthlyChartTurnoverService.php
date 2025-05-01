@@ -28,7 +28,7 @@ class MonthlyChartTurnoverService
             ->pluck('total', 'month');
 
         $storeCounts = DB::table('order_slips')
-            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, SUM(total_price) as total")
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, SUM(total_price_with_discount) as total")
             ->where('company_id', $companyId)
             ->where('status_id', '=', OrderStatus::CLOSED_ORDER_SLIP)
             ->whereYear('created_at', $currentYear)
@@ -48,5 +48,4 @@ class MonthlyChartTurnoverService
             'data' => $data,
         ];
     }
-
 }

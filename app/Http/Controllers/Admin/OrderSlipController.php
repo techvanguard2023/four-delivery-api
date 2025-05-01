@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\OrderSlip;
 use App\Models\Stock;
@@ -129,9 +130,13 @@ class OrderSlipController extends Controller
 
 
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item', 'user'])->findOrFail($id);
+        $user = $request->user();
+
+        $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item', 'user', 'payments.paymentMethod'])
+            ->where('company_id', $user->company_id)
+            ->findOrFail($id);
         return response()->json($orderSlip);
     }
 
@@ -332,21 +337,17 @@ class OrderSlipController extends Controller
         return view('print.orderslip_close', compact('orderSlip'));
     }
 
+    public function publicView(Request $request)
+    {
+        $customerName = $request->query('name');
+        $position = $request->query('position');
 
+        $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item', 'user', 'payments.paymentMethod'])
+            ->where('status_id', OrderStatus::OPEN_ORDER_SLIP)
+            ->where('customer_name', $customerName)
+            ->where('position', $position)
+            ->firstOrFail();
 
-    //Cálculo do total final (exemplo no controller ou service)
-
-    // $total = $orderSlip->total_price;
-
-    // foreach ($orderSlip->adjustments as $adj) {
-    //     $adjustmentValue = $adj->value_type === 'percentage'
-    //         ? ($total * ($adj->value / 100))
-    //         : $adj->value;
-
-    //     if ($adj->type === 'discount') {
-    //         $total -= $adjustmentValue;
-    //     } else {
-    //         $total += $adjustmentValue;
-    //     }
-    // }
+        return response()->json($orderSlip);
+    }
 }

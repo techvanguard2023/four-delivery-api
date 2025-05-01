@@ -44,9 +44,9 @@ class OrderSlip extends Model
         return $this->hasMany(OrderSlipItem::class);
     }
 
-    public function payment()
+    public function payments()
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasMany(Payment::class);
     }
 
     public function orderType()

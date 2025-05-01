@@ -74,7 +74,7 @@ class OrderSlipReportService
 
     protected function sumOrderSlipForPeriod(string $period)
     {
-        return $this->queryByPeriod($period)->sum('total_price');
+        return $this->queryByPeriod($period)->sum('total_price_with_discount' ? 'total_price_with_discount' : 'total_price');
     }
 
     protected function countOrderSlipForPeriod(string $period)

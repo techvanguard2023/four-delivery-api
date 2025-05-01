@@ -24,7 +24,7 @@ class ListOrdersResource extends JsonResource
             'status' => $this->status->name ?? 'Pending',
             'status_id' => $this->status_id,
             'payment_status' => $this->payment_status ?? 'Unpaid',
-            'payment_method' => $this->payment_method ?? '',
+            //'payment_method' => $this->payment_method ?? '',
             'total_items' => $this->orderItems->count(),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'delivery_person' => $this->deliveryPerson->name ?? 'Not assigned',
