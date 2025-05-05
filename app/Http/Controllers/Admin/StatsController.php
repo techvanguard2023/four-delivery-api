@@ -63,6 +63,7 @@ class StatsController extends Controller
                 'orderslip' => $this->orderSlipService->getOrderSlipCount(),
                 'tables' => $this->availableTablesService->getAvailableTables(),
                 'reservations' => $this->reservationReportService->getTodayReservations(),
+
             ],
             'delivery' => [
                 'delivery_turnover' => $this->deliveryService->getTurnover(),

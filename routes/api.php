@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\N8nBotControlController;
 use App\Http\Controllers\Site\BannerController;
 
 use App\Http\Controllers\App\CategoryController as AppCategoryController;
+use App\Http\Controllers\App\OrderController as AppOrderController;
 
 // Grupo de rotas para o Admin
 Route::prefix('admin-v1')->group(function () {
@@ -40,7 +41,7 @@ Route::prefix('admin-v1')->group(function () {
     Route::get('/print-order/{order}', [OrderSlipController::class, 'printView']);
     Route::get('/order-slip/print-close/{id}', [OrderSlipController::class, 'printCloseView']);
 
-    Route::get('/order-slip/view', [OrderSlipController::class, 'publicView']);
+    Route::get('/order-slip/{companyId}/{slug}', [OrderSlipController::class, 'publicView']);
 
 
 
@@ -182,4 +183,5 @@ Route::prefix('app-v1')->group(function () {
     // Rotas para Categorias
     Route::apiResource('categories', AppCategoryController::class);
     Route::get('/categories-with-items/{companyId}/{slug}', [AppCategoryController::class, 'getCategoriesWithItemsByCompany']);
+    Route::post('/public/orders', [AppOrderController::class, 'store']);
 });

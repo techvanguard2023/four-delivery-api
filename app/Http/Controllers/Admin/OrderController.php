@@ -18,23 +18,12 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $userRoleId = UserRoleService::getUserRoleId($user);
 
-        $query = Order::with(['customer', 'status', 'orderItems', 'deliveryPerson'])
-            ->where(function ($q) {
-                $q->whereNull('location')
-                    ->orWhere('location', '');
-            });
+        $orders = Order::with(['customer', 'status', 'orderItems', 'deliveryPerson'])
+            ->where('company_id', $user->company_id)
+            ->get();
 
-        if ($userRoleId != 1) {
-            $query->where('company_id', $user->company_id);
-        }
-
-        $query->orderBy('position', 'asc');
-
-        $orders = $query->get();
-
-        // Contagens por status_id (ajuste conforme seus IDs)
+        // Contagens por status_id (ajuste conforme seus IDs reais)
         $summary = [
             'received' => $orders->where('status_id', 3)->count(),
             'pending' => $orders->where('status_id', 13)->count(),
@@ -50,29 +39,6 @@ class OrderController extends Controller
         ]);
     }
 
-
-
-
-
-    public function orderByLocation(Request $request)
-    {
-
-        $user = $request->user();
-        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
-
-        // Query base filtrando pedidos onde 'location' não é nulo nem vazio
-        $query = Order::with(['customer', 'status', 'orderItems', 'deliveryPerson'])
-            ->whereNotNull('location')
-            ->where('location', '!=', '');
-
-        // Verifica o role do usuário para determinar se retorna todos os pedidos ou somente da empresa específica
-        if ($roleId != 1) {
-            $query->where('company_id', $user->company_id);
-        }
-
-        // Ordena pelos valores de 'location' e retorna a coleção paginada com 25 por página
-        return ListOrdersResource::collection($query->orderBy('location')->paginate(25));
-    }
 
 
 

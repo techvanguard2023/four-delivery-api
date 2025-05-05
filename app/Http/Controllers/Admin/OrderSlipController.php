@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Events\NewOrderSlipCreated;
 use Illuminate\Support\Arr;
+use App\Models\Company;
 
 class OrderSlipController extends Controller
 {
@@ -302,6 +303,7 @@ class OrderSlipController extends Controller
 
                 $orderSlip->update([
                     'total_price' => max($newTotal, 0),
+                    'total_price_with_discount' => max($newTotal - ($orderSlip->discount ?? 0), 0),
                 ]);
             });
 
@@ -337,8 +339,21 @@ class OrderSlipController extends Controller
         return view('print.orderslip_close', compact('orderSlip'));
     }
 
-    public function publicView(Request $request)
+    public function publicView($companyId, $slug, Request $request)
     {
+
+        // Verifica se a empresa existe e se o slug corresponde ao ID
+        $company = Company::where('id', $companyId)
+            ->where('slug', $slug)
+            ->whereNull('deleted_at')
+            ->first();
+
+        if (!$company) {
+            return response()->json([
+                'message' => 'Empresa não encontrada ou dados inválidos.'
+            ], 404);
+        }
+
         $customerName = $request->query('name');
         $position = $request->query('position');
 
@@ -346,6 +361,7 @@ class OrderSlipController extends Controller
             ->where('status_id', OrderStatus::OPEN_ORDER_SLIP)
             ->where('customer_name', $customerName)
             ->where('position', $position)
+            ->where('company_id', $companyId)
             ->firstOrFail();
 
         return response()->json($orderSlip);
