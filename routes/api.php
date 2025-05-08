@@ -123,6 +123,9 @@ Route::prefix('admin-v1')->group(function () {
         // Rotas de configuração
         Route::apiResource('settings', SettingController::class);
 
+        // Rota extra para atualização por chave
+        Route::put('settings-key/{key}', [SettingController::class, 'updateByKey']);
+
         // Rotas para Empresas
         Route::apiResource('companies', CompanyController::class);
 

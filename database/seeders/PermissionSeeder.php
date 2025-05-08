@@ -37,6 +37,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'Visualizar Pedidos Atribuídos', 'description' => 'Permite ver a lista de pedidos que deve entregar.', 'tag' => 'view-assigned-orders'],
             ['name' => 'Atualizar Status de Entrega', 'description' => 'Permite marcar pedidos como entregues.', 'tag' => 'update-delivery-status'],
             ['name' => 'Gerenciar Permissões', 'description' => 'Permite gerenciar as permissões de usuários e funções.', 'tag' => 'manage-permissions'],
+            ['name' => 'Gerenciar Venda de Balcão', 'description' => 'Permite gerenciar as vendas de balcão.', 'tag' => 'manager-counter-order'],
         ];
 
         foreach ($permissions as $permission) {

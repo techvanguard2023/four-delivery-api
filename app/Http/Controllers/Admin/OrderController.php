@@ -129,7 +129,8 @@ class OrderController extends Controller
             'customer_id' => 'sometimes|exists:customers,id',
             'total_price' => 'sometimes|numeric|min:0',
             'status_id' => 'sometimes|exists:statuses,id',
-            'payment_status' => 'sometimes|string'
+            'payment_status' => 'sometimes|string',
+            'delivery_person_id' => 'sometimes|exists:delivery_people,id',
         ]);
 
         $order->update($validatedData);

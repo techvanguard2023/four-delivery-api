@@ -29,6 +29,7 @@ class RolePermissionSeeder extends Seeder
                 'manage-settings',
                 'manage-permissions',
                 'manage-reservations',
+                'manager-counter-order'
             ],
             'Gerente' => [
                 'view-reports',
@@ -44,6 +45,7 @@ class RolePermissionSeeder extends Seeder
                 'manage-settings',
                 'manage-permissions',
                 'manage-reservations',
+                'manager-counter-order'
             ],
             'Atendente' => [
                 'manage-orders',
@@ -51,6 +53,7 @@ class RolePermissionSeeder extends Seeder
                 'manage-customers',
                 'manage-delivery-person',
                 'manage-reservations',
+                'manager-counter-order'
             ],
             'Garçom' => [
                 'manage-orders-store',

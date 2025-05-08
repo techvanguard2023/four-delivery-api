@@ -63,7 +63,6 @@ class OrderSeeder extends Seeder
             'position' => 4,
             'created_at' => now(),
             'updated_at' => now(),
-            'location' => 'Mesa 1'
         ]);
 
         Order::create([

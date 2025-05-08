@@ -41,16 +41,25 @@ class SettingController extends Controller
     }
 
     // Método para atualizar uma configuração específica por chave
-    public function update(Request $request, $key)
+    public function updateByKey(Request $request, $key)
     {
+        $user = $request->user();
+
         $request->validate([
-            'value' => 'required', // Validar que o valor é obrigatório
+            'value' => 'required', // Pode ser valor simples ou array (ajuste conforme o tipo)
         ]);
 
-        $setting = Setting::updateOrCreate(
-            ['key' => $key],
-            ['value' => $request->input('value')]
-        );
+        $setting = Setting::where('company_id', $user->company_id)->first();
+
+        if (!$setting) {
+            return response()->json(['message' => 'Setting not found'], 404);
+        }
+
+        $data = json_decode($setting->data, true); // Decodifica JSON atual
+        $data[$key] = $request->input('value');    // Altera só a chave desejada
+
+        $setting->data = json_encode($data);       // Codifica novamente
+        $setting->save();
 
         return response()->json($setting, 200);
     }
