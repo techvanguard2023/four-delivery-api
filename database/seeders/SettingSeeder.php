@@ -18,6 +18,8 @@ class SettingSeeder extends Seeder
         DB::table('settings')->insert([
             'company_id' => 1,
             'data' => json_encode([
+                'start_week_day' => 'Quarta-feira',
+                'end_week_day' => 'Domingo',
                 'start_time' => '18:00:00',
                 'end_time' => '23:59:59',
                 'total_tables' => 20,
@@ -37,6 +39,8 @@ class SettingSeeder extends Seeder
         DB::table('settings')->insert([
             'company_id' => 2,
             'data' => json_encode([
+                'start_week_day' => 'Quarta-feira',
+                'end_week_day' => 'Sábado',
                 'start_time' => '18:00:00',
                 'end_time' => '23:59:59',
                 'total_tables' => 20,
@@ -56,8 +60,14 @@ class SettingSeeder extends Seeder
         DB::table('settings')->insert([
             'company_id' => 3,
             'data' => json_encode([
+                'start_week_day' => 'Quarta-feira',
+                'end_week_day' => 'Domingo',
                 'start_time' => '18:00:00',
                 'end_time' => '23:59:59',
+                'alternative_start_week_day' => 'Sábado',
+                'alternative_end_week_day' => 'Domingo',
+                'alternative_start_time' => '23:59:59',
+                'alternative_end_time' => '00:00:00',
                 'total_tables' => 20,
                 'stock_alert' => 20,
                 'stock_danger' => 10,
