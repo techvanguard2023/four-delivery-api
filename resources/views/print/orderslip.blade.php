@@ -7,8 +7,9 @@
     <style>
         body {
             font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
+            font-size: 16px;
             width: 58mm;
+            margin-bottom: 20px;
         }
 
         .center {
