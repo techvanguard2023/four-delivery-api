@@ -476,4 +476,10 @@ class OrderController extends Controller
 
         return response()->json(['message' => 'Posições atualizadas com sucesso!'], 200);
     }
+
+    public function printReceipt(Order $order)
+    {
+        $orderReceipt = Order::with('orderItems', 'customer.deliveryAddresses')->findOrFail($order->id);
+        return view('orders.receipt', compact('order')); // Substitua 'order-receipt' pelo nome da sua view de impressão de recibo    
+    }
 }

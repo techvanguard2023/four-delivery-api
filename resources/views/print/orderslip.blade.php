@@ -6,7 +6,7 @@
     <title>Comanda #{{ $orderSlip->id }}</title>
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace;1
             font-size: 16px;
             width: 58mm;
             margin-bottom: 20px;
