@@ -5,8 +5,8 @@
     <title>Recibo Pedido #{{ $order->id }}</title>
     <style>
         * {
-            font-size: 12px;
-            font-family: monospace;
+            font-size: 16px;
+            font-family: 'Courier New', Courier, monospace;1
         }
         body {
             margin: 0;
@@ -40,42 +40,56 @@
         <div>{{ $order->customer->name }}</div>
         <div>{{ $order->customer->phone }}</div>
     </div>
+    
+    <div class="line"></div>
 
-    {{-- @php $address = $order->delivery_addresses[0]; @endphp
+    
     <div class="mb-2">
-        <div class="bold">Endereço:</div>
-        <div>{{ $address->address }}, {{ $address->number }}</div>
-        @if ($address->complement)
-            <div>{{ $address->complement }}</div>
-        @endif
-        @if ($address->reference_point)
-            <div>Ponto Ref: {{ $address->reference_point }}</div>
-        @endif
-        <div>{{ $address->neighborhood }} - {{ $address->city }}/{{ $address->state }}</div>
-        <div>CEP: {{ $address->zip_code }}</div>
-    </div> --}}
+        @foreach ($order->customer->deliveryAddresses as $address)
+            <div class="bold">Endereço:</div>
+            <div>{{ $address->address }}, {{ $address->number }}</div>
+            @if ($address->complement)
+                <div>{{ $address->complement }}</div>
+            @endif
+            @if ($address->reference_point)
+                <div>Ponto Ref: {{ $address->reference_point }}</div>
+            @endif
+            <div>{{ $address->neighborhood }} - {{ $address->city }}/{{ $address->state }}</div>
+            <div>CEP: {{ $address->zip_code }}</div>
+        @endforeach
+    </div>
+
+
+    
 
     <div class="line"></div>
 
-    {{-- <div class="bold mb-2">Itens:</div>
-    @foreach ($order->order_items as $item)
+    <div class="bold mb-2">Itens:</div>
+    @foreach ($order->orderItems as $item)
         <div>
-            {{ $item->quantity }}x {{ $item->item_name }}
+            {{ $item->quantity }}x {{ $item->item->name }}
         </div>
-        @if ($item->item_description)
-            <div>{{ $item->item_description }}</div>
-        @endif
+        {{-- @if ($item->item->description)
+            <div>{{ $item->item->description }}</div>
+        @endif --}}
         @if ($item->observation)
             <div>Obs: {{ $item->observation }}</div>
         @endif
         <div class="mb-2">R$ {{ number_format($item->price, 2, ',', '.') }}</div>
-    @endforeach --}}
+    @endforeach
+
+    <div class="line"></div>
+
+    <div>
+        <div class="bold">Taxa de entrega:</div>
+        <div>R$ 5,00</div>
+    </div>
 
     <div class="line"></div>
 
     <div>
         <div class="bold">Status do Pedido:</div>
-        <div>{{ ucfirst($order->status) }}</div>
+        <div>{{ ucfirst($order->status->name) }}</div>
     </div>
 
     <div>
@@ -92,6 +106,10 @@
     <div class="line"></div>
 
     <div class="center">Obrigado pela preferência!</div>
+
+    <script>
+        window.onload = () => window.print();
+    </script>
 
 </body>
 </html>
