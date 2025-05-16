@@ -51,4 +51,9 @@ class Order extends Model
     {
         return $query->orderBy('position', 'asc');
     }
+
+    public function deliveryLocation()
+    {
+        return $this->belongsTo(DeliveryLocation::class);
+    }
 }

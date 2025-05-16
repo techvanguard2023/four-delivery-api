@@ -31,6 +31,7 @@ class ListOrdersResource extends JsonResource
             //'location' => $this->location ?? null,
             'position' => $this->position ?? null,
             'status_id' => $this->status_id,
+            'delivery_location_id' => $this->delivery_location_id,
         ];
     }
 }

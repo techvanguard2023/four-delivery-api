@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\OrderType;
 
 class OrderTypeSeeder extends Seeder
 {
@@ -19,7 +20,7 @@ class OrderTypeSeeder extends Seeder
         ];
 
         foreach ($orderTypes as $orderType) {
-            \App\Models\OrderType::create($orderType);
+            OrderType::create($orderType);
         }
     }
 }

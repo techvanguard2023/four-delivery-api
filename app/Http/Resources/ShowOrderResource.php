@@ -49,6 +49,9 @@ class ShowOrderResource extends JsonResource
                     'total' => $orderItem->quantity * $orderItem->price,
                 ];
             }),
+            'delivery_location_id' => $this->delivery_location_id,
+            'delivery_location' => $this->deliveryLocation->name?? null,
+            'delivery_tax' => $this->deliveryLocation->tax?? null,
             'total_price' => $this->total_price,
             'status' => $this->status->name ?? null,
             'payment_status' => $this->payment_status ?? null,
@@ -56,6 +59,7 @@ class ShowOrderResource extends JsonResource
             'delivery_person' => $this->deliveryPerson->name ?? null,
             'location' => $this->location ?? null,
             'order_origin' => $this->orderOrigin->name ?? null,
+        
         ];
     }
 }

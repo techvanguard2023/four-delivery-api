@@ -19,7 +19,7 @@ class OrderController extends Controller
     {
         $user = $request->user();
 
-        $orders = Order::with(['customer', 'status', 'orderItems', 'deliveryPerson'])
+        $orders = Order::with(['customer', 'status', 'orderItems', 'deliveryPerson', 'deliveryLocation'])
             ->where('company_id', $user->company_id)
             ->get();
 
@@ -108,7 +108,7 @@ class OrderController extends Controller
 
         if ($roleId == 1) {
             // Retorna um único recurso, não uma coleção
-            return new ShowOrderResource($order->load(['customer', 'orderItems', 'customer.deliveryAddresses']));
+            return new ShowOrderResource($order->load(['customer', 'orderItems', 'customer.deliveryAddresses', 'deliveryLocation']));
         } else {
             $order = Order::where('company_id', $user->company_id)
                 ->with(['customer', 'orderItems'])
