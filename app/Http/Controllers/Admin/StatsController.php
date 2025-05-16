@@ -13,6 +13,7 @@ use App\Services\Reports\ReservationReportService;
 use App\Services\Reports\LastThreeMonthsChartService;
 use App\Services\Reports\LastThreeMonthsTurnoverService;
 use App\Services\Reports\MonthlyChartTurnoverService;
+use App\Services\Reports\CounterSaleReportService;
 
 use Illuminate\Http\Request;
 
@@ -28,6 +29,7 @@ class StatsController extends Controller
     protected LastThreeMonthsChartService $lastThreeMonthsChartService;
     protected LastThreeMonthsTurnoverService $lastThreeMonthsTurnoverService;
     protected MonthlyChartTurnoverService $monthlyChartTurnoverService;
+    protected CounterSaleReportService $counterSaleReportService;
 
     public function __construct(
         DeliveryReportService $deliveryService,
@@ -39,7 +41,8 @@ class StatsController extends Controller
         ReservationReportService $reservationReportService,
         LastThreeMonthsChartService $lastThreeMonthsChartService,
         LastThreeMonthsTurnoverService $lastThreeMonthsTurnoverService,
-        MonthlyChartTurnoverService $monthlyChartTurnoverService
+        MonthlyChartTurnoverService $monthlyChartTurnoverService,
+        CounterSaleReportService $counterSaleReportService
     ) {
         $this->deliveryService = $deliveryService;
         $this->orderSlipService = $orderSlipService;
@@ -51,6 +54,7 @@ class StatsController extends Controller
         $this->lastThreeMonthsChartService = $lastThreeMonthsChartService;
         $this->lastThreeMonthsTurnoverService = $lastThreeMonthsTurnoverService;
         $this->monthlyChartTurnoverService = $monthlyChartTurnoverService;
+        $this->counterSaleReportService = $counterSaleReportService;
     }
 
     public function index()
@@ -63,7 +67,8 @@ class StatsController extends Controller
                 'orderslip' => $this->orderSlipService->getOrderSlipCount(),
                 'tables' => $this->availableTablesService->getAvailableTables(),
                 'reservations' => $this->reservationReportService->getTodayReservations(),
-
+                'counter_sales' => $this->counterSaleReportService->getCounterSalesTurnover(),
+                'counter_turnover' => $this->counterSaleReportService->getCounterSaleCount(),
             ],
             'delivery' => [
                 'delivery_turnover' => $this->deliveryService->getTurnover(),
