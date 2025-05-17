@@ -14,15 +14,10 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $roleId = UserRoleService::getUserRoleId($user); // Chama a função do serviço
 
-        if ($roleId == 1) {
-            return Customer::paginate(25); // Paginação direta
-        } else {
-            return Customer::where('company_id', $user->company_id)
+        return Customer::where('company_id', $user->company_id)
                 ->with('deliveryAddresses') // Carrega os endereços de entrega
                 ->paginate(25); // Paginação após a query
-        }
     }
 
 
@@ -126,10 +121,7 @@ class CustomerController extends Controller
 
     public function SearchCustomer(Request $request)
     {
-        var_dump('ok');
-
         $user = $request->user();
-        $roleId = UserRoleService::getUserRoleId($user);
 
         // Verifica se o campo 'name' ou 'phone' foi passado na requisição
         $query = Customer::query();
@@ -142,11 +134,6 @@ class CustomerController extends Controller
             $query->orWhere('phone', 'like', '%' . $request->phone . '%');
         }
 
-        // Se o usuário não for um admin, filtra também pela empresa
-        if ($roleId != 1) {
-            $query->where('company_id', $user->company_id);
-        }
-
-        return $query->paginate(25);
+        return $query->where('company_id', $user->company_id)->get();
     }
 }
