@@ -134,6 +134,7 @@ class CustomerController extends Controller
             $query->orWhere('phone', 'like', '%' . $request->phone . '%');
         }
 
-        return $query->where('company_id', $user->company_id)->get();
+        return $query->with('deliveryAddresses')
+        ->where('company_id', $user->company_id)->get();
     }
 }
