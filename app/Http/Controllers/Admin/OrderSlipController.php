@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Events\NewOrderSlipCreated;
 use Illuminate\Support\Arr;
 use App\Models\Company;
+use App\Models\OrderSlipItem;
 
 class OrderSlipController extends Controller
 {
@@ -55,6 +56,7 @@ class OrderSlipController extends Controller
             'items' => 'array|required',
             'items.*.item_id' => 'required|exists:items,id',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.is_complimentary' => 'boolean',
             'items.*.observation' => 'nullable|string',
         ]);
 
@@ -68,6 +70,7 @@ class OrderSlipController extends Controller
             foreach ($request->items as $itemInput) {
                 $item = Item::with('discounts')->findOrFail($itemInput['item_id']);
                 $qty = $itemInput['quantity'];
+                $isComplimentary = $itemInput['is_complimentary'] ?? false;
 
                 // Controle de estoque
                 $stock = Stock::where('item_id', $item->id)->first();
@@ -82,10 +85,23 @@ class OrderSlipController extends Controller
                     $item->update(['available' => false]);
                 }
 
+                if ($isComplimentary) {
+                    // Brinde: valores zerados, mas ainda decrementa estoque
+                    $orderItems[] = [
+                        'item_id' => $item->id,
+                        'quantity' => $qty,
+                        'unit_price' => 0,
+                        'total_price' => 0,
+                        'observation' => $itemInput['observation'] ?? null,
+                        'is_complimentary' => true,
+                    ];
+                    continue;
+                }
+
+                // Caso normal: aplica desconto se houver
                 $unitPrice = $item->price;
                 $totalItemPrice = 0;
 
-                // Verifica se existe alguma configuração de desconto
                 $discount = $item->discounts
                     ->sortByDesc('min_quantity')
                     ->first();
@@ -96,8 +112,6 @@ class OrderSlipController extends Controller
                     $fullPriceUnits = $qty - $discountedUnits;
 
                     $totalItemPrice = ($discountedUnits * $discount->discounted_price) + ($fullPriceUnits * $item->price);
-
-                    // Importante: o valor unitário que vamos salvar é o valor *médio* por unidade
                     $unitPrice = $totalItemPrice / $qty;
                 } else {
                     $totalItemPrice = $item->price * $qty;
@@ -111,6 +125,7 @@ class OrderSlipController extends Controller
                     'unit_price' => round($unitPrice, 2),
                     'total_price' => round($totalItemPrice, 2),
                     'observation' => $itemInput['observation'] ?? null,
+                    'is_complimentary' => false,
                 ];
             }
 
@@ -127,6 +142,7 @@ class OrderSlipController extends Controller
 
         return response()->json($orderSlip->load('orderSlipItems'), 201);
     }
+
 
 
 
@@ -160,6 +176,7 @@ class OrderSlipController extends Controller
             'items' => 'sometimes|array',
             'items.*.item_id' => 'required_with:items|exists:items,id',
             'items.*.quantity' => 'required_with:items|integer|min:1',
+            'items.*.is_complimentary' => 'boolean',
             'items.*.observation' => 'nullable|string',
         ]);
 
@@ -175,9 +192,39 @@ class OrderSlipController extends Controller
                 foreach ($request->items as $itemInput) {
                     $item = Item::with('discounts')->findOrFail($itemInput['item_id']);
                     $qty = $itemInput['quantity'];
+                    $isComplimentary = $itemInput['is_complimentary'] ?? false;
 
+                    // Controle de estoque
+                    $stock = Stock::where('item_id', $item->id)->first();
+                    if (!$stock || $stock->quantity < $qty) {
+                        throw new \Exception("Estoque insuficiente para o item ID: {$item->id}");
+                    }
+
+                    $stock->decrement('quantity', $qty);
+
+                    if ($stock->quantity <= 0) {
+                        $item->update(['available' => false]);
+                    }
+
+                    if ($isComplimentary) {
+                        // Brinde: não junta com existentes, cria novo com valor zerado
+                        $orderSlip->orderSlipItems()->create([
+                            'item_id' => $item->id,
+                            'quantity' => $qty,
+                            'unit_price' => 0,
+                            'total_price' => 0,
+                            'observation' => $itemInput['observation'] ?? null,
+                            'is_complimentary' => true,
+                        ]);
+                        continue;
+                    }
+
+                    // Itens normais: soma quantidade se já existir
                     $existingItem = $orderSlip->orderSlipItems()
                         ->where('item_id', $item->id)
+                        ->where(function ($q) {
+                            $q->whereNull('is_complimentary')->orWhere('is_complimentary', false);
+                        })
                         ->first();
 
                     if ($existingItem) {
@@ -188,18 +235,7 @@ class OrderSlipController extends Controller
                         $additionalQty = $qty;
                     }
 
-                    $stock = Stock::where('item_id', $item->id)->first();
-
-                    if (!$stock || $stock->quantity < $additionalQty) {
-                        throw new \Exception("Estoque insuficiente para o item ID: {$item->id}");
-                    }
-
-                    $stock->decrement('quantity', $additionalQty);
-
-                    if ($stock->quantity <= 0) {
-                        $item->update(['available' => false]);
-                    }
-
+                    // Aplica desconto se houver
                     $discount = $item->discounts
                         ->where('min_quantity', '<=', $newQty)
                         ->sortByDesc('min_quantity')
@@ -231,11 +267,16 @@ class OrderSlipController extends Controller
                             'unit_price' => round($unitPrice, 2),
                             'total_price' => round($unitPrice * $qty, 2),
                             'observation' => $itemInput['observation'] ?? null,
+                            'is_complimentary' => false,
                         ]);
                     }
                 }
 
-                $orderSlip->total_price = $orderSlip->orderSlipItems()->sum('total_price');
+                $orderSlip->total_price = $orderSlip->orderSlipItems()
+                    ->where(function ($q) {
+                        $q->whereNull('is_complimentary')->orWhere('is_complimentary', false);
+                    })
+                    ->sum('total_price');
             }
 
             $discount = $data['discount'] ?? $orderSlip->discount ?? 0;
@@ -246,6 +287,7 @@ class OrderSlipController extends Controller
 
         return response()->json($orderSlip->fresh('orderSlipItems'));
     }
+
 
 
 

@@ -15,6 +15,7 @@ class OrderSlipItem extends Model
         'quantity',
         'unit_price',
         'total_price',
+        'is_complimentary',
         'observation',
     ];
     protected $casts = [

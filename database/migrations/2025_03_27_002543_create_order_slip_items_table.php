@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->decimal('unit_price', 8, 2);
             $table->decimal('total_price', 8, 2);
+            $table->boolean('is_complimentary')->default(false);
             $table->string('observation')->nullable();
             $table->timestamps();
             $table->softDeletes();
