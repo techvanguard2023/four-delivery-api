@@ -10,6 +10,7 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->constrained('companies');
             $table->foreignId('order_slip_id')->constrained('order_slips')->onDelete('cascade');
             $table->foreignId('payment_method_id')->constrained('payment_methods');
             $table->decimal('amount', 8, 2);

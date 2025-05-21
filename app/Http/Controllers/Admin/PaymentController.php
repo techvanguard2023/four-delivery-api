@@ -15,12 +15,16 @@ class PaymentController extends Controller
 
     public function store(Request $request)
     {
+        $user = $request->user();
+
         $validatedData = $request->validate([
             'order_slip_id' => 'required|exists:order_slips,id',
             'payment_method_id' => 'required|exists:payment_methods,id',
             'amount' => 'required|numeric|min:0',
             'status' => 'required|in:pending,completed,cancelled'
         ]);
+
+        $validatedData['company_id'] = $user->company_id;
 
         $payment = Payment::create($validatedData);
 
@@ -34,12 +38,16 @@ class PaymentController extends Controller
 
     public function update(Request $request, Payment $payment)
     {
+        $user = $request->user();
+
         $validatedData = $request->validate([
             'order_slip_id' => 'sometimes|exists:order_slips,id',
             'payment_method_id' => 'sometimes|exists:payment_methods,id',
             'amount' => 'sometimes|numeric|min:0',
             'status' => 'sometimes|in:pending,completed,cancelled'
         ]);
+
+        $validatedData['company_id'] = $user->company_id;
 
         $payment->update($validatedData);
 

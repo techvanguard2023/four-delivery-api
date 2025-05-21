@@ -16,24 +16,28 @@ class OrderSlipReportService
                 'title' => 'Faturamento Diário',
                 'description' => 'Faturamento total das comandas do dia atual.',
                 'value' => $this->sumOrderSlipForPeriod('day'),
+                'net_profit' => '100'
             ],
             [
                 'key' => 'weekly_turnover',
                 'title' => 'Faturamento Semanal',
                 'description' => 'Faturamento total das comandas da semana atual.',
                 'value' => $this->sumOrderSlipForPeriod('week'),
+                'net_profit' => '100'
             ],
             [
                 'key' => 'monthly_turnover',
                 'title' => 'Faturamento Mensal',
                 'description' => 'Faturamento total das comandas do mês atual.',
                 'value' => $this->sumOrderSlipForPeriod('month'),
+                'net_profit' => '100'
             ],
             [
                 'key' => 'yearly_turnover',
                 'title' => 'Faturamento Anual',
                 'description' => 'Faturamento total das comandas do ano atual.',
                 'value' => $this->sumOrderSlipForPeriod('year'),
+                'net_profit' => '100'
             ],
         ];
     }

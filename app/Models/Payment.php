@@ -10,7 +10,7 @@ class Payment extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['order_slip_id', 'payment_method_id', 'amount', 'status'];
+    protected $fillable = ['company_id', 'order_slip_id', 'payment_method_id', 'amount', 'status'];
 
     public function order_slip()
     {

@@ -14,6 +14,7 @@ use App\Services\Reports\LastThreeMonthsChartService;
 use App\Services\Reports\LastThreeMonthsTurnoverService;
 use App\Services\Reports\MonthlyChartTurnoverService;
 use App\Services\Reports\CounterSaleReportService;
+use App\Services\Reports\PaymentMethodReportService;
 
 use Illuminate\Http\Request;
 
@@ -30,6 +31,7 @@ class StatsController extends Controller
     protected LastThreeMonthsTurnoverService $lastThreeMonthsTurnoverService;
     protected MonthlyChartTurnoverService $monthlyChartTurnoverService;
     protected CounterSaleReportService $counterSaleReportService;
+    protected PaymentMethodReportService $paymentMethodReportService;
 
     public function __construct(
         DeliveryReportService $deliveryService,
@@ -42,7 +44,8 @@ class StatsController extends Controller
         LastThreeMonthsChartService $lastThreeMonthsChartService,
         LastThreeMonthsTurnoverService $lastThreeMonthsTurnoverService,
         MonthlyChartTurnoverService $monthlyChartTurnoverService,
-        CounterSaleReportService $counterSaleReportService
+        CounterSaleReportService $counterSaleReportService,
+        PaymentMethodReportService $paymentMethodReportService
     ) {
         $this->deliveryService = $deliveryService;
         $this->orderSlipService = $orderSlipService;
@@ -55,6 +58,7 @@ class StatsController extends Controller
         $this->lastThreeMonthsTurnoverService = $lastThreeMonthsTurnoverService;
         $this->monthlyChartTurnoverService = $monthlyChartTurnoverService;
         $this->counterSaleReportService = $counterSaleReportService;
+        $this->paymentMethodReportService = $paymentMethodReportService;
     }
 
     public function index()
@@ -69,6 +73,8 @@ class StatsController extends Controller
                 'reservations' => $this->reservationReportService->getTodayReservations(),
                 'counter_sales' => $this->counterSaleReportService->getCounterSalesTurnover(),
                 'counter_turnover' => $this->counterSaleReportService->getCounterSaleCount(),
+                'payment_method_turnover' => $this->paymentMethodReportService->getMonthlyPaymentMethod(),
+                'payment_method_count' => $this->paymentMethodReportService->getMonthlyPaymentMethodCount(),
             ],
             'delivery' => [
                 'delivery_turnover' => $this->deliveryService->getTurnover(),
