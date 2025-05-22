@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
         $categories = [
             [
                 'id' => 1,
-                'name' => 'Bebidas Frias',
+                'name' => 'Bebidas NÃO Alcoólicas',
                 'description' => 'Refrigerantes, sucos, água mineral, chá gelado, bebidas energéticas, água de coco.',
                 'image_url' => 'https://centraldebebidas.com.br/wp-content/uploads/2020/05/refrigerantes.jpg'
             ],
@@ -71,7 +71,7 @@ class CategorySeeder extends Seeder
             ],
             [
                 'id' => 10,
-                'name' => 'Vegetarianas/Veganas',
+                'name' => 'Vegetarianas / Veganas',
                 'description' => 'Hambúrguer vegetariano, sanduíches veganos, saladas veganas.',
                 'image_url' => 'https://i0.wp.com/www.vidanatural.org.br/wp-content/uploads/2020/02/0_dieta-vegetariana.jpg'
             ],

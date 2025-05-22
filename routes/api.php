@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\OrderSlipController;
 use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\N8nBotControlController;
 use App\Http\Controllers\Admin\DeliveryLocationController;
+use App\Http\Controllers\Admin\SalesReportController;
 
 use App\Http\Controllers\Site\BannerController;
 
@@ -148,6 +149,9 @@ Route::prefix('admin-v1')->group(function () {
         Route::apiResource('n8n-bot-controls', N8nBotControlController::class);
 
         Route::apiResource('delivery-locations', DeliveryLocationController::class);
+
+        Route::get('/item-sales', [SalesReportController::class, 'getItemSales']);
+        Route::get('/sales-report', [SalesReportController::class, 'getSalesReport']);
     });
 });
 
