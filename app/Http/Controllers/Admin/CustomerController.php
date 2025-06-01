@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 use App\Services\UserRoleService;
 
@@ -38,30 +39,39 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-        $user = $request->user(); // Obtém o usuário autenticado
+        $user = $request->user(); // Usuário autenticado
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|unique:customers,phone',
             'is_whatsapp' => 'boolean',
+            'address' => 'required|string|max:255',
+            'number' => 'string|max:10',
+            'complement' => 'string|max:255|nullable',
+            'neighborhood' => 'required|string|max:255',
+            'reference_point' => 'string|max:255|nullable',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'zip_code' => 'required|string|max:10'
         ]);
 
-        $validatedData['company_id'] = $user->company_id; // Adiciona o company_id do usuário autenticado
+        $validatedData['company_id'] = $user->company_id;
 
-        // Inicia a transação
-        $customer = DB::transaction(function () use ($validatedData, $request) {
-            // Cria o cliente
-            $customer = Customer::create($validatedData);
+        // Separar dados do cliente e do endereço
+        $customerData = Arr::only($validatedData, ['company_id', 'name', 'phone', 'is_whatsapp']);
+        $addressData = Arr::only($validatedData, [
+            'address', 'number', 'complement', 'neighborhood', 'reference_point', 'city', 'state', 'zip_code'
+        ]);
 
-            // Verifica se o request possui o campo 'address' e cria o endereço de entrega
-            if ($request->has('address')) {
-                $customer->deliveryAddresses()->create($request->address);
-            }
-
+        $customer = DB::transaction(function () use ($customerData, $addressData) {
+            $customer = Customer::create($customerData);
+            $customer->deliveryAddresses()->create($addressData);
             return $customer;
         });
 
         return response()->json($customer, 201);
     }
+
 
 
     public function show(Customer $customer)
