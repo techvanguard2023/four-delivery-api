@@ -15,6 +15,7 @@ use App\Services\Reports\LastThreeMonthsTurnoverService;
 use App\Services\Reports\MonthlyChartTurnoverService;
 use App\Services\Reports\CounterSaleReportService;
 use App\Services\Reports\PaymentMethodReportService;
+use App\Services\Reports\DailyReportService;
 
 use Illuminate\Http\Request;
 
@@ -32,6 +33,7 @@ class StatsController extends Controller
     protected MonthlyChartTurnoverService $monthlyChartTurnoverService;
     protected CounterSaleReportService $counterSaleReportService;
     protected PaymentMethodReportService $paymentMethodReportService;
+    protected DailyReportService $dailyReportService;
 
     public function __construct(
         DeliveryReportService $deliveryService,
@@ -45,7 +47,8 @@ class StatsController extends Controller
         LastThreeMonthsTurnoverService $lastThreeMonthsTurnoverService,
         MonthlyChartTurnoverService $monthlyChartTurnoverService,
         CounterSaleReportService $counterSaleReportService,
-        PaymentMethodReportService $paymentMethodReportService
+        PaymentMethodReportService $paymentMethodReportService,
+        DailyReportService $dailyReportService
     ) {
         $this->deliveryService = $deliveryService;
         $this->orderSlipService = $orderSlipService;
@@ -59,6 +62,7 @@ class StatsController extends Controller
         $this->monthlyChartTurnoverService = $monthlyChartTurnoverService;
         $this->counterSaleReportService = $counterSaleReportService;
         $this->paymentMethodReportService = $paymentMethodReportService;
+        $this->dailyReportService = $dailyReportService;
     }
 
     public function index()
@@ -66,6 +70,7 @@ class StatsController extends Controller
         $companyId = auth()->user()->company_id;
 
         return [
+            'daily_report' => $this->dailyReportService->getReport($companyId, now()->toDateString()),
             'store' => [
                 'orderslip_turnover' => $this->orderSlipService->getOrderSlipsTurnover(),
                 'orderslip' => $this->orderSlipService->getOrderSlipCount(),

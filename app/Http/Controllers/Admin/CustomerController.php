@@ -85,40 +85,49 @@ class CustomerController extends Controller
 
     public function update(Request $request, Customer $customer)
     {
-        // Validação dos dados do cliente
+        // Validação dos dados do cliente e dos endereços
         $validatedData = $request->validate([
             'name' => 'sometimes|string|max:255',
             'phone' => 'sometimes|string|unique:customers,phone,' . $customer->id,
+            'is_whatsapp' => 'sometimes|boolean',
             'addresses' => 'sometimes|array',
-            'addresses.*.id' => 'sometimes|exists:delivery_addresses,id', // Validação de cada endereço
-            'addresses.*.address' => 'sometimes|string|max:255',
-            'addresses.*.number' => 'sometimes|string|max:20',
-            'addresses.*.complement' => 'sometimes|string|max:255',
-            'addresses.*.neighborhood' => 'sometimes|string|max:255',
-            'addresses.*.reference_point' => 'sometimes|string|max:255',
-            'addresses.*.city' => 'sometimes|string|max:255',
-            'addresses.*.state' => 'sometimes|string|max:255',
-            'addresses.*.zip_code' => 'sometimes|string|max:20',
+            'addresses.*.id' => 'sometimes|exists:delivery_addresses,id',
+            'addresses.*.address' => 'required_with:addresses|string|max:255',
+            'addresses.*.number' => 'nullable|string|max:20',
+            'addresses.*.complement' => 'nullable|string|max:255',
+            'addresses.*.neighborhood' => 'nullable|string|max:255',
+            'addresses.*.reference_point' => 'nullable|string|max:255',
+            'addresses.*.city' => 'nullable|string|max:255',
+            'addresses.*.state' => 'nullable|string|max:255',
+            'addresses.*.zip_code' => 'nullable|string|max:20',
         ]);
 
-        // Atualiza os dados do cliente
-        $customer->update($validatedData);
+        // Separa os dados do cliente dos dados de endereço
+        $customerData = collect($validatedData)->except('addresses')->toArray();
 
-        // Verifica se existem endereços para serem atualizados
-        if ($request->has('addresses')) {
-            foreach ($request->input('addresses') as $addressData) {
-                if (isset($addressData['id'])) {
-                    // Atualiza o endereço existente
-                    $customer->deliveryAddresses()->where('id', $addressData['id'])->update($addressData);
-                } else {
-                    // Cria um novo endereço se não houver ID
-                    $customer->deliveryAddresses()->create($addressData);
+        DB::transaction(function () use ($customer, $customerData, $request) {
+            // Atualiza os dados do cliente
+            $customer->update($customerData);
+
+            // Atualiza ou cria endereços, se houver
+            if ($request->has('addresses')) {
+                foreach ($request->input('addresses') as $addressData) {
+                    if (isset($addressData['id'])) {
+                        // Remove o ID antes de atualizar
+                        $id = $addressData['id'];
+                        unset($addressData['id']);
+                        $customer->deliveryAddresses()->where('id', $id)->update($addressData);
+                    } else {
+                        // Cria novo endereço
+                        $customer->deliveryAddresses()->create($addressData);
+                    }
                 }
             }
-        }
+        });
 
         return response()->json($customer->load('deliveryAddresses'), 200);
     }
+
 
 
     public function destroy(Customer $customer)
