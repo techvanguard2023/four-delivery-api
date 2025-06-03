@@ -19,24 +19,24 @@ class UserSeeder extends Seeder
             'name' => 'Administrador do Sistema',
             'email' => 'admin@techvanguard.com.br',
             'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
+            'password' => static::$password ??= Hash::make('Ve151180@'),
             'company_id' => 1
         ]);
 
 
         User::create([
             'name' => 'Verucia Freignan',
-            'email' => 'pointdooasisgerente@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
+            'email' => 'veruciafreignan@hotmail.com',
+            'phone' => '2175239483',
+            'password' => static::$password ??= Hash::make(''),
             'company_id' => 2
         ]);
 
         User::create([
-            'name' => 'Point do Oásis - Atendente',
-            'email' => 'pointdooasisatendente@gmail.com',
-            'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Rm@150917'),
+            'name' => 'Alessandro Reis',
+            'email' => 'ale.reis1@gmail.com',
+            'phone' => '21964611084',
+            'password' => static::$password ??= Hash::make('Reis@132333'),
             'company_id' => 2
         ]);
 
