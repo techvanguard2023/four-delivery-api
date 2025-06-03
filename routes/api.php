@@ -51,8 +51,6 @@ Route::prefix('admin-v1')->group(function () {
     // Rotas públicas
     Route::post('login', [AuthController::class, 'login']);
 
-    Route::apiResource('delivery-locations', DeliveryLocationController::class);
-
     // Rotas privadas
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/check-token-validity', [AuthController::class, 'checkTokenValidity']);
