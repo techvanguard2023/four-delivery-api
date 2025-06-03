@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'name' => 'Administrador do Sistema',
             'email' => 'admin@techvanguard.com.br',
             'phone' => '21981321890',
-            'password' => static::$password ??= Hash::make('Ve151180@'),
+            'password' => static::$password ??= Hash::make('Rm@150917'),
             'company_id' => 1
         ]);
 
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
             'name' => 'Verucia Freignan',
             'email' => 'veruciafreignan@hotmail.com',
             'phone' => '2175239483',
-            'password' => static::$password ??= Hash::make(''),
+            'password' => static::$password ??= Hash::make('Ve151180@'),
             'company_id' => 2
         ]);
 
