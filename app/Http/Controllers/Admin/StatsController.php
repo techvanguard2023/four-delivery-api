@@ -65,12 +65,13 @@ class StatsController extends Controller
         $this->dailyReportService = $dailyReportService;
     }
 
-    public function index()
+    public function index(Request $request, $date = null)
     {
         $companyId = auth()->user()->company_id;
+        $reportDate = $request->query('date', now()->toDateString());
 
         return [
-            'daily_report' => $this->dailyReportService->getReport($companyId, now()->toDateString()),
+            'daily_report' => $this->dailyReportService->getReport($companyId, $reportDate),
             'store' => [
                 'orderslip_turnover' => $this->orderSlipService->getOrderSlipsTurnover(),
                 'orderslip' => $this->orderSlipService->getOrderSlipCount(),
