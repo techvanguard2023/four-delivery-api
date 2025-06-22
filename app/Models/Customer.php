@@ -5,12 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 
-class Customer extends Model
+class Customer extends Authenticatable
 {
-    use HasFactory, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
-    protected $fillable = ['company_id', 'name', 'phone', 'is_whatsapp', 'status'];
+    protected $table = 'customers';
+
+    protected $fillable = ['company_id', 'name', 'phone', 'email', 'password', 'is_whatsapp', 'status'];
+
+    protected $hidden = [
+        'password',
+    ];
 
     public function orders()
     {

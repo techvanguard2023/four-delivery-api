@@ -28,5 +28,9 @@ class PaymentMethodSeeder extends Seeder
         PaymentMethod::create([
             'name' => 'Pix'
         ]);
+
+        PaymentMethod::create([
+            'name' => 'Outro'
+        ]);
     }
 }

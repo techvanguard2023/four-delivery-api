@@ -28,10 +28,15 @@ use App\Http\Controllers\Admin\N8nBotControlController;
 use App\Http\Controllers\Admin\DeliveryLocationController;
 use App\Http\Controllers\Admin\SalesReportController;
 
+use App\Http\Controllers\CustomerAuthController;
+
 use App\Http\Controllers\Site\BannerController;
 
 use App\Http\Controllers\App\CategoryController as AppCategoryController;
 use App\Http\Controllers\App\OrderController as AppOrderController;
+
+
+
 
 // Grupo de rotas para o Admin
 Route::prefix('admin-v1')->group(function () {
@@ -69,6 +74,7 @@ Route::prefix('admin-v1')->group(function () {
         // Rotas para Itens
         Route::apiResource('items', ItemController::class);
         Route::get('/items/category/{categoryId}', [ItemController::class, 'showByCategoryId']);
+        Route::get('/items-all', [ItemController::class, 'allItemsWithoutPaginate']);
         Route::get('/items-only-available/category/{categoryId}', [ItemController::class, 'getOnlyAvailableItems']);
         Route::patch('/items/{item}/available', [ItemController::class, 'updateAvailable']);
         Route::patch('/items/{item}/show-in-menu', [ItemController::class, 'updateShowInMenu']);
@@ -161,9 +167,17 @@ Route::prefix('digital-menu-v1')->group(function () {
         return response()->json(['status' => 'API Digital Menu V1 is alive!'], 200);
     });
 
+    Route::post('/login', [CustomerAuthController::class, 'login']);
+
     // Rotas para Categorias
     Route::apiResource('categories', AppCategoryController::class);
     Route::get('/categories-with-company-items', [AppCategoryController::class, 'listCategoriesWithCompanyItems']);
+
+    Route::middleware('auth:customer')->group(function () {
+        Route::get('/customer/profile', function (Request $request) {
+            return $request->user(); // Retorna o customer autenticado
+        });
+    });
 });
 
 

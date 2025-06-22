@@ -29,6 +29,19 @@ class ItemController extends Controller
         }
     }
 
+    public function allItemsWithoutPaginate(Request $request)
+    {
+        $user = $request->user();
+
+        return ItemResource::collection(
+            Item::where('company_id', $user->company_id)
+                ->where('available', 1)
+                ->with(['stock', 'category'])
+                ->get()
+        );
+    }
+
+
 
     public function showByCategoryId(Request $request, $categoryId)
     {

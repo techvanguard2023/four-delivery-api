@@ -44,6 +44,8 @@ class CustomerController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|unique:customers,phone',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:customers'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
             'is_whatsapp' => 'boolean',
             'address' => 'required|string|max:255',
             'number' => 'string|max:10',
@@ -58,7 +60,9 @@ class CustomerController extends Controller
         $validatedData['company_id'] = $user->company_id;
 
         // Separar dados do cliente e do endereço
-        $customerData = Arr::only($validatedData, ['company_id', 'name', 'phone', 'is_whatsapp']);
+        $customerData = Arr::only($validatedData, ['company_id', 'name', 'phone', 'email', 'is_whatsapp']);
+        $customerData['password'] = bcrypt($validatedData['password']);
+
         $addressData = Arr::only($validatedData, [
             'address', 'number', 'complement', 'neighborhood', 'reference_point', 'city', 'state', 'zip_code'
         ]);
@@ -71,6 +75,7 @@ class CustomerController extends Controller
 
         return response()->json($customer, 201);
     }
+
 
 
 
