@@ -21,8 +21,11 @@ class DailyReportService
 
         // === OrderSlips (Mesa / Balcão) ===
         $orderSlipQuery = OrderSlip::whereBetween('created_at', [$start, $end]);
-        $orderslipCount = (clone $orderSlipQuery)->count();
-        $orderslipTurnover = (clone $orderSlipQuery)->sum('total_price_with_discount');
+
+        // Mesa
+        $counterOrdersSlip = (clone $orderSlipQuery)->where('position', '!=', 'counter-sale');
+        $orderslipCount = (clone $counterOrdersSlip)->count();
+        $orderslipTurnover = (clone $counterOrdersSlip)->sum('total_price_with_discount');
 
         // === Orders (Delivery / Balcão) ===
         $orderQuery = Order::whereBetween('created_at', [$start, $end]);
@@ -36,6 +39,11 @@ class DailyReportService
         $counterOrders = (clone $orderSlipQuery)->where('position', 'counter-sale');
         $counterCount = (clone $counterOrders)->count();
         $counterTurnover = (clone $counterOrders)->sum('total_price');
+
+        // Count Complimentary
+        $complimentaryCount = OrderSlipItem::whereHas('orderSlip', fn ($q) => $q->whereBetween('created_at', [$start, $end]))
+            ->where('is_complimentary', true)
+            ->count();
 
         // === Pagamentos ===
         $payments = Payment::whereBetween('created_at', [$start, $end])->get();
@@ -102,6 +110,7 @@ class DailyReportService
                     'list' => $itemsSold,
                     'list_items_sold_turnover' => number_format($totalItemRevenue, 2, '.', ''),
                 ],
+                'complimentary' => $complimentaryCount,
         ];
     }
 }
