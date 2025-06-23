@@ -168,6 +168,8 @@ class OrderSlipController extends Controller
             'position' => 'sometimes|string',
             'status_id' => 'sometimes|exists:statuses,id',
             'discount' => 'sometimes|numeric|min:0',
+            'couvert' =>'sometimes|numeric|min:0',
+            'percentage_tax' =>'sometimes|numeric|min:0',
             'payment_status' => 'sometimes|string',
             'last_status_id' => 'nullable|string',
             'last_payment_status' => 'nullable|string',
@@ -279,16 +281,38 @@ class OrderSlipController extends Controller
                     ->sum('total_price');
             }
 
-            $discount = $data['discount'] ?? $orderSlip->discount ?? 0;
-            $orderSlip->total_price_with_discount = max(0, $orderSlip->total_price - $discount);
+            // $discount = $data['discount'] ?? $orderSlip->discount ?? 0;
+            // $orderSlip->total_price_with_discount = max(0, $orderSlip->total_price - $discount);
 
+            $orderSlip->applyAdjustments();
             $orderSlip->save();
+
         });
 
         return response()->json($orderSlip->fresh('orderSlipItems'));
     }
 
 
+    public function removeDiscountOnOrderSlip(Request $request, $id)
+    {
+        $orderSlip = OrderSlip::findOrFail($id);
+        $orderSlip->removeDiscount();
+        $orderSlip->save();
+    }
+
+    public function removeCouvertOnOrderSlip(Request $request, $id)
+    {
+        $orderSlip = OrderSlip::findOrFail($id);
+        $orderSlip->removeCouvert();
+        $orderSlip->save();
+    }
+
+    public function removePercentageTaxOnOrderSlip(Request $request, $id)
+    {
+        $orderSlip = OrderSlip::findOrFail($id);
+        $orderSlip->removePercentageTax();
+        $orderSlip->save();
+    }
 
 
     public function adjustOrRemoveItems(Request $request, $id)
@@ -357,9 +381,6 @@ class OrderSlipController extends Controller
             ], 400);
         }
     }
-
-
-
 
     public function destroy($id)
     {

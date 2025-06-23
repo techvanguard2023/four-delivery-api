@@ -17,6 +17,7 @@ class OrderSlip extends Model
         'total_price',
         'discount',
         'couvert',
+        'percentage_tax',
         'total_price_with_discount',
         'status_id',
         'payment_status',
@@ -67,5 +68,40 @@ class OrderSlip extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function applyAdjustments(): void
+    {
+        $discount = $this->discount ?? 0;
+        $couvert = $this->couvert ?? 0;
+        $percentageTax = $this->percentage_tax ?? 0;
+
+        $priceAfterDiscount = max(0, $this->total_price - $discount);
+        $priceWithCouvert = $priceAfterDiscount + $couvert;
+        $taxAmount = ($percentageTax / 100) * $priceWithCouvert;
+
+        $this->total_price_with_discount = round($priceWithCouvert + $taxAmount, 2);
+    }
+
+    public function removeDiscount(): void
+    {
+        $this->total_price_with_discount += $this->discount ?? 0;
+        $this->discount = null;
+    }
+
+    public function removeCouvert(): void
+    {
+        $this->total_price_with_discount -= $this->couvert ?? 0;
+        $this->couvert = null;
+    }
+
+    public function removePercentageTax(): void
+    {
+        if ($this->percentage_tax && $this->total_price_with_discount > 0) {
+            $base = $this->total_price_with_discount / (1 + ($this->percentage_tax / 100));
+            $taxAmount = $this->total_price_with_discount - $base;
+            $this->total_price_with_discount -= $taxAmount;
+            $this->percentage_tax = null;
+        }
     }
 }

@@ -148,6 +148,9 @@ Route::prefix('admin-v1')->group(function () {
 
         Route::apiResource('order-slips', OrderSlipController::class);
         Route::patch('/order-slips/{id}/items', [OrderSlipController::class, 'adjustOrRemoveItems']);
+        Route::put('/order-slips/{id}/remove-discount', [OrderSlipController::class, 'removeDiscountOnOrderSlip']);
+        Route::put('/order-slips/{id}/remove-couvert', [OrderSlipController::class, 'removeCouvertOnOrderSlip']);
+        Route::put('/order-slips/{id}/remove-tax', [OrderSlipController::class, 'removePercentageTaxOnOrderSlip']);
 
         // Rota de Relatorios
         Route::get('stats', [StatsController::class, 'index']);
