@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             'status' => $this->status,
             'company' => $this->company->name,
             'fantasy_name' => $this->company->fantasy_name,
+            'logo_url' => $this->company->logo_url,
             'company_id' => $this->company->id,
             'user_role' => $this->roles[0]->name,
             'roles' => $this->roles->map(function ($role) {

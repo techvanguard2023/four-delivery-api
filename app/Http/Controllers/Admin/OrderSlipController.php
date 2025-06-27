@@ -162,14 +162,20 @@ class OrderSlipController extends Controller
     {
         $orderSlip = OrderSlip::with('orderSlipItems')->findOrFail($id);
 
+        $request->merge([
+            'discount' => $request->discount !== null ? str_replace(',', '.', $request->discount) : $orderSlip->discount,
+            'couvert' => $request->couvert !== null ? str_replace(',', '.', $request->couvert) : $orderSlip->couvert,
+            'percentage_tax' => $request->percentage_tax !== null ? str_replace(',', '.', $request->percentage_tax) : $orderSlip->percentage_tax,
+        ]);
+
         $data = $request->validate([
             'company_id' => 'sometimes|exists:companies,id',
             'customer_name' => 'nullable|string',
             'position' => 'sometimes|string',
             'status_id' => 'sometimes|exists:statuses,id',
-            'discount' => ['sometimes', 'nullable', 'numeric', 'regex:/^\d{1,8}(\.\d{1,2})?$/'],
-            'couvert' => ['sometimes', 'nullable', 'numeric', 'regex:/^\d{1,8}(\.\d{1,2})?$/'],
-            'percentage_tax' =>'sometimes|numeric|min:0',
+            'discount' => ['nullable', 'numeric'],
+            'couvert' => ['nullable', 'numeric'],
+            'percentage_tax' => ['nullable', 'numeric'],
             'payment_status' => 'sometimes|string',
             'last_status_id' => 'nullable|string',
             'last_payment_status' => 'nullable|string',

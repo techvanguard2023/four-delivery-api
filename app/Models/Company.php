@@ -14,6 +14,7 @@ class Company extends Model
         'name',
         'fantasy_name',
         'slug',
+        'logo_url',
         'cnpj',
         'cpf',
         'email',
