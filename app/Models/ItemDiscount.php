@@ -9,11 +9,12 @@ class ItemDiscount extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['item_id', 'min_quantity', 'discounted_price'];
     protected $casts = [
         'min_quantity' => 'integer',
         'discounted_price' => 'decimal:2',
     ];
+
+    protected $fillable = ['item_id', 'min_quantity', 'discounted_price'];
 
     public function item()
     {

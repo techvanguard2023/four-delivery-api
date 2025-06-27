@@ -9,6 +9,10 @@ class Plan extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'price' => 'decimal:2',
+    ];
+
     protected $fillable = ['name', 'description', 'slug', 'price', 'duration', 'status'];
 
     public function features()

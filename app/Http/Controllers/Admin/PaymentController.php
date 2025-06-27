@@ -16,6 +16,11 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
+        
+        $request->merge([
+            'amount' => $request->amount ? str_replace(',', '.', $request->amount) : null,
+        ]);
+
 
         $validatedData = $request->validate([
             'order_slip_id' => 'required|exists:order_slips,id',

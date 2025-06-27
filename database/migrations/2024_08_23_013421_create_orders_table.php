@@ -13,9 +13,9 @@ class CreateOrdersTable extends Migration
             $table->foreignId('company_id')->constrained('companies');
             $table->foreignId('customer_id')->nullable();
             $table->integer('delivery_person_id')->nullable();
-            $table->decimal('total_price', 8, 2);
-            $table->decimal('discount', 8, 2)->nullable();
-            $table->decimal('total_price_with_discount', 8, 2)->nullable();
+            $table->decimal('total_price', 10, 2);
+            $table->decimal('discount', 10, 2)->nullable();
+            $table->decimal('total_price_with_discount', 10, 2)->nullable();
             $table->foreignId('status_id')->constrained('statuses');
             $table->string('payment_status');
             $table->string('last_status_id')->nullable();

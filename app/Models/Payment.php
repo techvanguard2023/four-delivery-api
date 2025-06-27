@@ -10,6 +10,10 @@ class Payment extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'amount' => 'decimal:2',
+    ];
+
     protected $fillable = ['company_id', 'order_slip_id', 'payment_method_id', 'amount', 'status'];
 
     public function order_slip()

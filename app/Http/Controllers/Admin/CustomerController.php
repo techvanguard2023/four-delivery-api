@@ -44,8 +44,8 @@ class CustomerController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|unique:customers,phone',
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:customers'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'email' => ['string', 'email', 'max:255', 'unique:customers'],
+            'password' => ['string', 'min:6', 'confirmed'],
             'is_whatsapp' => 'boolean',
             'address' => 'required|string|max:255',
             'number' => 'string|max:10',

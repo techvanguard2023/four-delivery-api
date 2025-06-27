@@ -10,6 +10,12 @@ class Item extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'price' => 'decimal:2',
+        'original_price' => 'decimal:2',
+    ];
+    
+
     protected $fillable = ['company_id', 'name', 'slug', 'description', 'image_url', 'original_price', 'price', 'category_id', 'available', 'show_in_menu', 'highlighted'];
 
     public function category()

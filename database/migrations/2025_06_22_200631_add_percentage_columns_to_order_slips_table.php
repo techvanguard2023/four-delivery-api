@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('order_slips', function (Blueprint $table) {
-            $table->decimal('couvert', 8, 2)->nullable()->after('discount');
+            $table->decimal('couvert', 10, 2)->nullable()->after('discount');
             $table->string('percentage_tax')->nullable()->after('couvert');
         });
     }

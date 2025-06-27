@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
             $table->string('name');
-            $table->decimal('tax', 8, 2);
+            $table->decimal('tax', 10, 2);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -9,6 +9,7 @@ use App\Http\Resources\ItemResource;
 use App\Models\Stock;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 use App\Services\UserRoleService;
@@ -71,20 +72,45 @@ class ItemController extends Controller
     {
         $user = $request->user();
 
+        // Converte campos monetários para o formato correto (ponto decimal)
+        $request->merge([
+            'original_price' => $request->original_price ? str_replace(',', '.', $request->original_price) : null,
+            'price' => str_replace(',', '.', $request->price),
+        ]);
+
+        // Converte os preços dentro do array de descontos (se houver)
+        if ($request->has('discounts')) {
+            $discounts = collect($request->discounts)->map(function ($discount) {
+                $discount['discounted_price'] = str_replace(',', '.', $discount['discounted_price']);
+                return $discount;
+            });
+
+            $request->merge(['discounts' => $discounts->toArray()]);
+        }
+
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image_url' => 'nullable|string',
-            'original_price' => 'nullable|numeric|min:0',
-            'price' => 'required|numeric|min:0',
+        
+            // Valores monetários — aceitam ponto como separador decimal
+            'original_price' => ['nullable', 'numeric', 'min:0'],
+            'price' => ['required', 'numeric', 'min:0'],
+        
             'category_id' => 'nullable|exists:categories,id',
             'available' => 'required|boolean',
             'show_in_menu' => 'required|boolean',
             'quantity' => 'required|integer|min:0',
+        
+            // Descontos
             'discounts' => 'nullable|array',
             'discounts.*.min_quantity' => 'required|integer|min:1',
-            'discounts.*.discounted_price' => 'required|numeric|min:0',
+            'discounts.*.discounted_price' => ['required', 'numeric', 'min:0'],
         ]);
+        
+        
+        
 
         return DB::transaction(function () use ($validatedData, $user) {
             $validatedData['company_id'] = $user->company_id;
@@ -128,15 +154,16 @@ class ItemController extends Controller
 
     public function update(Request $request, Item $item)
     {
-        // Verifica se o usuário tem permissão para atualizar o item
+        // Verifica se o usuário pertence à mesma empresa do item
         if ($request->user()->company_id !== $item->company_id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
+        // Validação dos dados recebidos
         $validatedData = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
-            'image_url' => 'nullable|string',
+            'image_url' => 'nullable|url',
             'original_price' => 'sometimes|numeric|min:0',
             'price' => 'sometimes|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
@@ -148,36 +175,41 @@ class ItemController extends Controller
             'discounts.*.discounted_price' => 'required_with:discounts|numeric|min:0',
         ]);
 
-        return DB::transaction(function () use ($item, $validatedData) {
+        try {
+            DB::beginTransaction();
+
             // Atualiza o slug se o nome for alterado
-            if (isset($validatedData['name'])) {
-                $validatedData['slug'] = Str::slug($validatedData['name']) . '-' . time();
+            if (isset($validatedData['name']) && $validatedData['name'] !== $item->name) {
+                $validatedData['slug'] = Str::slug($validatedData['name']) . '-' . uniqid();
             }
 
+            // Atualiza o item
             $item->update($validatedData);
 
-            // Atualiza a quantidade do estoque, se fornecida
+            // Atualiza a quantidade do estoque
             if (isset($validatedData['quantity'])) {
-                if ($item->stock) {
-                    $item->stock->update(['quantity' => $validatedData['quantity']]);
-                } else {
-                    $item->stock()->create(['quantity' => $validatedData['quantity']]);
-                }
+                $item->stock()->updateOrCreate([], [
+                    'quantity' => $validatedData['quantity']
+                ]);
             }
 
             // Atualiza os descontos
             if (isset($validatedData['discounts'])) {
-                // Remove os descontos antigos
-                $item->discounts()->delete();
-
-                // Insere os novos
-                foreach ($validatedData['discounts'] as $discount) {
-                    $item->discounts()->create($discount);
-                }
+                $item->discounts()->delete(); // Remove os antigos
+                $item->discounts()->createMany($validatedData['discounts']); // Adiciona os novos
             }
 
+            DB::commit();
+
+            // Retorna o item atualizado com os relacionamentos
             return response()->json($item->load(['stock', 'discounts']), 200);
-        });
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erro ao atualizar item: ' . $e->getMessage());
+
+            return response()->json(['error' => 'Erro interno ao atualizar item'], 500);
+        }
     }
 
 

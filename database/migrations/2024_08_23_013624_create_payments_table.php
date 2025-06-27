@@ -13,7 +13,7 @@ class CreatePaymentsTable extends Migration
             $table->foreignId('company_id')->constrained('companies');
             $table->foreignId('order_slip_id')->constrained('order_slips')->onDelete('cascade');
             $table->foreignId('payment_method_id')->constrained('payment_methods');
-            $table->decimal('amount', 8, 2);
+            $table->decimal('amount', 10, 2);
             $table->string('status');
             $table->timestamps();
             $table->softDeletes();

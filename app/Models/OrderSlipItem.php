@@ -10,6 +10,11 @@ class OrderSlipItem extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'unit_price' => 'decimal:2',
+        'total_price' => 'decimal:2',
+    ];
+
     protected $fillable = [
         'item_id',
         'quantity',
@@ -18,10 +23,7 @@ class OrderSlipItem extends Model
         'is_complimentary',
         'observation',
     ];
-    protected $casts = [
-        'unit_price' => 'decimal:2',
-        'total_price' => 'decimal:2',
-    ];    
+        
 
     public function orderSlip()
     {

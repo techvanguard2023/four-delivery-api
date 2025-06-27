@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('item_discounts', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-            $table->integer('min_quantity');
-            $table->decimal('discounted_price', 10, 2);
-            $table->timestamps();
+        Schema::table('delivery_locations', function (Blueprint $table) {
+            $table->boolean('is_active')->default(true)->after('tax');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('item_discounts');
+        Schema::table('delivery_locations', function (Blueprint $table) {
+            $table->dropColumn('is_active');
+        });
     }
 };

@@ -10,6 +10,8 @@ class OrderItem extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = ['price' => 'decimal:2'];
+
     protected $fillable = ['order_id', 'item_id', 'quantity', 'price', 'observation'];
 
     public function order()

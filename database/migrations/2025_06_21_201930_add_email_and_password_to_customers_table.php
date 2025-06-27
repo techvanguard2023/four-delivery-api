@@ -9,8 +9,8 @@ class AddEmailAndPasswordToCustomersTable extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->string('email')->unique()->after('name');
-            $table->string('password')->after('email');
+            $table->string('email')->nullable()->unique()->after('name');
+            $table->string('password')->nullable()->after('email');
         });
     }
 

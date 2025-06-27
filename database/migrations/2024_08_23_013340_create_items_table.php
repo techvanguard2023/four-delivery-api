@@ -15,8 +15,8 @@ class CreateItemsTable extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->text('image_url')->nullable();
-            $table->decimal('original_price', 8, 2)->nullable();
-            $table->decimal('price', 8, 2);
+            $table->decimal('original_price', 10, 2)->nullable();
+            $table->decimal('price', 10, 2);
             $table->foreignId('category_id')->constrained('categories');
             $table->boolean('available')->default(true);
             $table->boolean('show_in_menu')->default(true);

@@ -10,6 +10,12 @@ class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'total_price' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'total_price_with_discount' => 'decimal:2',
+    ];
+
     protected $fillable = ['company_id', 'customer_id', 'delivery_person_id', 'total_price', 'discount', 'total_price_with_discount', 'status_id', 'payment_status', 'last_status_id', 'last_payment_status', 'order_type_id', 'order_origin_id', 'position'];
 
     public function customer()

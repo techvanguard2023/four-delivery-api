@@ -10,10 +10,16 @@ class DeliveryLocation extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'tax' => 'decimal:2',
+        'is_active' => 'boolean'
+    ];
+
     protected $fillable = [
         'company_id',
         'name',
         'tax',
+        'is_active'
     ];
 
     public function company()

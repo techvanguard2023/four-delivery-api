@@ -10,6 +10,13 @@ class OrderSlip extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $casts = [
+        'total_price' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'couvert' => 'decimal:2',
+        'total_price_with_discount' => 'decimal:2',
+    ];
+
     protected $fillable = [
         'company_id',
         'customer_name',
