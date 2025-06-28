@@ -397,6 +397,7 @@ class OrderSlipController extends Controller
     public function printView($id)
     {
         $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item', 'user', 'payments.paymentMethod'])->findOrFail($id);
+        //die($orderSlip);
         return view('print.orderslip', compact('orderSlip'));
     }
 

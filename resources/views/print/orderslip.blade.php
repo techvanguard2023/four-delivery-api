@@ -25,7 +25,7 @@
             font-weight: bold;
         }
 
-        .item {
+        .item_card {
             margin-bottom: 4px;
         }
         .item_list {
@@ -33,6 +33,11 @@
             flex-direction: row;
             justify-content: space-between;
             gap: 2rem;
+        }
+        .item_value {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
         }
         .session_values {
             display: flex;
@@ -45,6 +50,12 @@
             display: flex;
             flex-direction: row;
             justify-content: space-between;
+        }
+        .divider_list {
+            display: flex;
+            justify-content: center;
+            margin-bottom: .5rem;
+            margin-top: .5rem;
         }
     </style>
 </head>
@@ -80,20 +91,33 @@
 
     <div class="session_values">
         @foreach ($orderSlip->orderSlipItems as $item)
-            <div class="item">
+            <div class="item_card">
                 <div class='item_list'>
                     <div>
-                        <span class="bold">{{ $item->quantity }}x</span>
+                        <span>{{ $item->item->name ?? 'Produto' }}</span>
+                        @if($item->is_complimentary)
+                            <small><strong>Cortesia</strong></small>
+                        @endif
+                        
+                        @if ($item->observation)
+                            <small><em>Obs: {{ $item->observation }}</em></small>
+                        @endif
                     </div>
-                     
-                    <span>{{ $item->item->name ?? 'Produto' }}</span>
+                    
+                    <div class='item_value'>
+                        <span class="bold">{{ $item->quantity }}x</span>
+                        <span style="{{ $item->is_complimentary ? 'text-decoration: line-through;' : '' }}">
+                            R${{ $item->unit_price }}
+                        </span>
+                        <span class="bold" style="{{ $item->is_complimentary ? 'text-decoration: line-through;' : '' }}">
+                            R${{ $item->total_price }}
+                        </span>
+                    </div>
                 </div>
-                
-                @if ($item->observation)
-                    <small><em>Obs: {{ $item->observation }}</em></small>
-                @endif
+                <div class='divider_list'><span>----//----</span></div>
             </div>
         @endforeach
+
     </div>
 
     <div class="line"></div>
