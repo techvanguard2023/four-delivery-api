@@ -28,6 +28,16 @@ class ItemResource extends JsonResource
             'show_in_menu' => $this->show_in_menu,
             'highlighted' => $this->highlighted,
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'discounts' => $this->discounts->map(function ($discount) {
+                return [
+                    'id' => $discount->id,
+                    'item_id' => $discount->item_id,
+                    'min_quantity' => $discount->min_quantity,
+                    'discounted_price' => $discount->discounted_price,
+                ];
+            }),
         ];
     }
+
 }

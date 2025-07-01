@@ -148,7 +148,7 @@ class ItemController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        return new ItemResource($item->load('stock', 'category'));
+        return new ItemResource($item->load('stock', 'category', 'discounts'));
     }
 
 
@@ -159,12 +159,30 @@ class ItemController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
+
+        // Converte campos monetários para o formato correto (ponto decimal)
+        $request->merge([
+            'original_price' => $request->original_price ? str_replace(',', '.', $request->original_price) : null,
+            'price' => str_replace(',', '.', $request->price),
+        ]);
+
+        // Converte os preços dentro do array de descontos (se houver)
+        if ($request->has('discounts')) {
+            $discounts = collect($request->discounts)->map(function ($discount) {
+                $discount['discounted_price'] = str_replace(',', '.', $discount['discounted_price']);
+                return $discount;
+            });
+
+            $request->merge(['discounts' => $discounts->toArray()]);
+        }
+
+
         // Validação dos dados recebidos
         $validatedData = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
-            'image_url' => 'nullable|url',
-            'original_price' => 'sometimes|numeric|min:0',
+            'image_url' => 'nullable|string',
+            'original_price' => 'nullable|numeric|min:0',
             'price' => 'sometimes|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
             'available' => 'sometimes|boolean',
