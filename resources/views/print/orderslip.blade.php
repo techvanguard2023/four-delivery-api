@@ -63,20 +63,29 @@
 <body>
 
     <div class="center">
-        <div class="bold">COMANDA</div>
-        <div>Pedido #{{ $orderSlip->id }}</div>
-        <div class="line"></div>
+        @if ($orderSlip->position === 'counter-sale') 
+            <div class="bold">VENDA</div>
+            <div>Ordem número #{{ $orderSlip->id }}</div>
+            <div class="line"></div>
+        @else
+            <div class="bold">COMANDA</div>
+            <div>Pedido #{{ $orderSlip->id }}</div>
+            <div class="line"></div>
+        @endif
     </div>
 
     <div class="session_values">
-        <div class="container_items_values">
-            <span><strong>Mesa:</strong></span>
-            <span>{{ $orderSlip->position ?? '—' }}</span>
-        </div>
-        <div class="container_items_values">
-            <span><strong>Cliente:</strong></span>
-            <span>{{ $orderSlip->customer_name ?? '—' }}</span>
-        </div>
+        @if ($orderSlip->position !== 'counter-sale') 
+            <div class="container_items_values">
+                <span><strong>Mesa:</strong></span>
+                <span>{{ $orderSlip->position ?? '—' }}</span>
+            </div>
+
+            <div class="container_items_values">
+                <span><strong>Cliente:</strong></span>
+                <span>{{ $orderSlip->customer_name ?? '—' }}</span>
+            </div>
+        @endif
         <div class="container_items_values">
             <span><strong>Atend.:</strong></span>
             <span>{{ isset($orderSlip->user->name) ? Str::before($orderSlip->user->name, ' ') : '—' }}</span>
