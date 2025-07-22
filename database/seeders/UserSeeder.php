@@ -38,6 +38,7 @@ class UserSeeder extends Seeder
                 'email' => 'ale.reis1@gmail.com',
                 'phone' => '21964611084',
                 'password' => 'Reis@132333',
+                'status' => 'inactive',
                 'company_id' => 2,
             ],
             [

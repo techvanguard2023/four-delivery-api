@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CustomerController;
@@ -28,8 +28,6 @@ use App\Http\Controllers\Admin\N8nBotControlController;
 use App\Http\Controllers\Admin\DeliveryLocationController;
 use App\Http\Controllers\Admin\SalesReportController;
 
-use App\Http\Controllers\CustomerAuthController;
-
 use App\Http\Controllers\Site\BannerController;
 
 use App\Http\Controllers\App\CategoryController as AppCategoryController;
@@ -54,10 +52,12 @@ Route::prefix('admin-v1')->group(function () {
 
 
     // Rotas públicas
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('/user/login', [AuthController::class, 'loginUser']);
 
     // Rotas privadas
     Route::middleware('auth:sanctum')->group(function () {
+
+
         Route::get('/check-token-validity', [AuthController::class, 'checkTokenValidity']);
 
         // Rotas para autenticação
@@ -170,7 +170,7 @@ Route::prefix('digital-menu-v1')->group(function () {
         return response()->json(['status' => 'API Digital Menu V1 is alive!'], 200);
     });
 
-    Route::post('/login', [CustomerAuthController::class, 'login']);
+    Route::post('/customer/login', [AuthController::class, 'loginCustomer']);
 
     // Rotas para Categorias
     Route::apiResource('categories', AppCategoryController::class);
