@@ -14,6 +14,10 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $activePlan = $this->company?->companyPlans
+            ?->sortByDesc('start_date')
+            ->first();
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -38,22 +42,19 @@ class UserResource extends JsonResource
                     }),
                 ];
             }),
-            'plans' => $this->company?->companyPlans?->map(function ($companyPlan) {
-                    return [
-                        'id' => $companyPlan->plan?->id,
-                        'name' => $companyPlan->plan?->name,
-                        'features' => $companyPlan->plan?->features?->map(function ($feature) {
-                                return [
-                                    'id' => $feature->id,
-                                    'name' => $feature->name,
-                                    'description' => $feature->description,
-                                ];
-                            }) ?? [], // Se features for null, retorna um array vazio
-                    ];
-                }) ?? [], // Se companyPlans for null, retorna um array vazio
+            'plan' => $activePlan ? [
+                'id' => $activePlan->plan?->id,
+                'name' => $activePlan->plan?->name,
+                'features' => $activePlan->plan?->features?->map(function ($feature) {
+                        return [
+                            'id' => $feature->id,
+                            'name' => $feature->name,
+                            'description' => $feature->description,
+                        ];
+                    }) ?? [],
+            ] : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
-
     }
 }

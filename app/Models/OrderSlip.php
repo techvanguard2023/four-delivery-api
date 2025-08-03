@@ -111,4 +111,9 @@ class OrderSlip extends Model
             $this->percentage_tax = null;
         }
     }
+
+    public function couponUsage()
+    {
+        return $this->morphOne(CouponUsage::class, 'orderable');
+    }
 }

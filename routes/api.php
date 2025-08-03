@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\OrderController;
@@ -62,6 +64,11 @@ Route::prefix('admin-v1')->group(function () {
 
         // Rotas para autenticação
         Route::post('logout', [AuthController::class, 'logout']);
+
+        Route::apiResource('/coupons', CouponController::class);
+        Route::post('/coupons/apply', [CouponController::class, 'applyCoupon']);
+        Route::patch('/coupons/{id}/deactivate', [CouponController::class, 'deactivate']); // desativar
+        Route::patch('/coupons/{id}/activate', [CouponController::class, 'activate']); // reativar
 
         //Rotas de Roles e permissons
         Route::apiResource('permissions', PermissionController::class);

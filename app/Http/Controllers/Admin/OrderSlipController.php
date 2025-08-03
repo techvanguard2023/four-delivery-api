@@ -149,7 +149,7 @@ class OrderSlipController extends Controller
     {
         $user = $request->user();
 
-        $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item', 'user', 'payments.paymentMethod'])
+        $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item', 'user', 'payments.paymentMethod', 'couponUsage.coupon'])
             ->where('company_id', $user->company_id)
             ->findOrFail($id);
         return response()->json($orderSlip);

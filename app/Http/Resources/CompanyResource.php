@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use function PHPSTORM_META\map;
 
 class CompanyResource extends JsonResource
 {
@@ -15,6 +14,10 @@ class CompanyResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $activeSubscription = $this->plans
+            ?->sortByDesc('start_date')
+            ->first();
+
         return [
             "id" => $this->id,
             "name"  => $this->name,
@@ -36,39 +39,37 @@ class CompanyResource extends JsonResource
             "created_at"    => $this->created_at,
             "updated_at"    => $this->updated_at,
             "deleted_at"    => $this->deleted_at,
-            "subscription" => $this->plans->map(function ($plan) {
-                return [
-                    "id" => $plan->id,
-                    "plan_id" => $plan->id,
-                    "company_id" => $plan->company_id,
-                    "start_date" => $plan->start_date,
-                    "end_date" => $plan->end_date,
-                    "status" => $plan->status,
-                    "created_at"    => $plan->created_at,
-                    "updated_at"    => $plan->updated_at,
-                    "plan" => [
-                        "id" => $plan->plan_id,
-                        "name" => $plan->plan->name,
-                        "description" => $plan->plan->description,
-                        "price" => $plan->plan->price,
-                        "slug" => $plan->plan->slug,
-                        "duration" => $plan->plan->duration,
-                        "status" => $plan->plan->status,
-                        "created_at" => $plan->plan->created_at,
-                        "updated_at" => $plan->plan->updated_at,
-                        "features" => $plan->plan->features->map(function ($feature) {
-                            return [
-                                "id" => $feature->id,
-                                "name" => $feature->name,
-                                "description" => $feature->description,
-                                "slug" => $feature->slug,
-                                "created_at" => $feature->created_at,
-                                "updated_at" => $feature->updated_at,
-                            ];
-                        })
-                    ]
-                ];
-            })
+            "subscription" => $activeSubscription ? [
+                "id" => $activeSubscription->id,
+                "plan_id" => $activeSubscription->plan_id,
+                "company_id" => $activeSubscription->company_id,
+                "start_date" => $activeSubscription->start_date,
+                "end_date" => $activeSubscription->end_date,
+                "status" => $activeSubscription->status,
+                "created_at" => $activeSubscription->created_at,
+                "updated_at" => $activeSubscription->updated_at,
+                "plan" => [
+                    "id" => $activeSubscription->plan->id,
+                    "name" => $activeSubscription->plan->name,
+                    "description" => $activeSubscription->plan->description,
+                    "price" => $activeSubscription->plan->price,
+                    "slug" => $activeSubscription->plan->slug,
+                    "duration" => $activeSubscription->plan->duration,
+                    "status" => $activeSubscription->plan->status,
+                    "created_at" => $activeSubscription->plan->created_at,
+                    "updated_at" => $activeSubscription->plan->updated_at,
+                    "features" => $activeSubscription->plan->features->map(function ($feature) {
+                        return [
+                            "id" => $feature->id,
+                            "name" => $feature->name,
+                            "description" => $feature->description,
+                            "slug" => $feature->slug,
+                            "created_at" => $feature->created_at,
+                            "updated_at" => $feature->updated_at,
+                        ];
+                    }),
+                ]
+            ] : null,
         ];
     }
 }

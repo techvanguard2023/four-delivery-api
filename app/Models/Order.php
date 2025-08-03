@@ -62,4 +62,9 @@ class Order extends Model
     {
         return $this->belongsTo(DeliveryLocation::class);
     }
+
+    public function couponUsage()
+    {
+        return $this->morphOne(CouponUsage::class, 'orderable');
+    }
 }
