@@ -13,28 +13,28 @@ class OrderSlipReportService
         return [
             [
                 'key' => 'daily_turnover',
-                'title' => 'Faturamento Diário',
+                'title' => 'Diário',
                 'description' => 'Faturamento total das comandas do dia atual.',
                 'value' => $this->sumOrderSlipForPeriod('day'),
                 'net_profit' => '100'
             ],
             [
                 'key' => 'weekly_turnover',
-                'title' => 'Faturamento Semanal',
+                'title' => 'Semanal',
                 'description' => 'Faturamento total das comandas da semana atual.',
                 'value' => $this->sumOrderSlipForPeriod('week'),
                 'net_profit' => '100'
             ],
             [
                 'key' => 'monthly_turnover',
-                'title' => 'Faturamento Mensal',
+                'title' => 'Mensal',
                 'description' => 'Faturamento total das comandas do mês atual.',
                 'value' => $this->sumOrderSlipForPeriod('month'),
                 'net_profit' => '100'
             ],
             [
                 'key' => 'yearly_turnover',
-                'title' => 'Faturamento Anual',
+                'title' => 'Anual',
                 'description' => 'Faturamento total das comandas do ano atual.',
                 'value' => $this->sumOrderSlipForPeriod('year'),
                 'net_profit' => '100'
@@ -49,25 +49,25 @@ class OrderSlipReportService
         return [
             [
                 'key' => 'daily_orders_slip',
-                'title' => 'Comandas do Dia',
+                'title' => 'Diário',
                 'description' => 'Quantidade de comandas criadas hoje.',
                 'value' => $this->countOrderSlipForPeriod('day'),
             ],
             [
                 'key' => 'weekly_orders_slip',
-                'title' => 'Comandas da Semana',
+                'title' => 'Semanal',
                 'description' => 'Quantidade de comandas criadas nesta semana.',
                 'value' => $this->countOrderSlipForPeriod('week'),
             ],
             [
                 'key' => 'monthly_orders_slip',
-                'title' => 'Comandas do Mês',
+                'title' => 'Mensal',
                 'description' => 'Quantidade de comandas criadas neste mês.',
                 'value' => $this->countOrderSlipForPeriod('month'),
             ],
             [
                 'key' => 'yearly_orders_slip',
-                'title' => 'Comandas do Ano',
+                'title' => 'Anual',
                 'description' => 'Quantidade de comandas criadas neste ano.',
                 'value' => $this->countOrderSlipForPeriod('year'),
             ],

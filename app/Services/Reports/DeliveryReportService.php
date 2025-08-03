@@ -15,25 +15,25 @@ class DeliveryReportService
         return [
             [
                 'key' => 'daily_turnover',
-                'title' => 'Faturamento Diário',
+                'title' => 'Diário',
                 'description' => 'Total faturado com entregas no dia atual.',
                 'value' => $this->sumOrdersForPeriod('day'),
             ],
             [
                 'key' => 'weekly_turnover',
-                'title' => 'Faturamento Semanal',
+                'title' => 'Semanal',
                 'description' => 'Total faturado com entregas na semana atual.',
                 'value' => $this->sumOrdersForPeriod('week'),
             ],
             [
                 'key' => 'monthly_turnover',
-                'title' => 'Faturamento Mensal',
+                'title' => 'Mensal',
                 'description' => 'Total faturado com entregas no mês atual.',
                 'value' => $this->sumOrdersForPeriod('month'),
             ],
             [
                 'key' => 'yearly_turnover',
-                'title' => 'Faturamento Anual',
+                'title' => 'Anual',
                 'description' => 'Total faturado com entregas no ano atual.',
                 'value' => $this->sumOrdersForPeriod('year'),
             ],
@@ -47,25 +47,25 @@ class DeliveryReportService
         return [
             [
                 'key' => 'daily_orders',
-                'title' => 'Pedidos do Dia',
+                'title' => 'Diário',
                 'description' => 'Total de pedidos realizados hoje.',
                 'value' => $this->countOrdersForPeriod('day'),
             ],
             [
                 'key' => 'weekly_orders',
-                'title' => 'Pedidos da Semana',
+                'title' => 'Semanal',
                 'description' => 'Total de pedidos realizados nesta semana.',
                 'value' => $this->countOrdersForPeriod('week'),
             ],
             [
                 'key' => 'monthly_orders',
-                'title' => 'Pedidos do Mês',
+                'title' => 'Mensal',
                 'description' => 'Total de pedidos realizados neste mês.',
                 'value' => $this->countOrdersForPeriod('month'),
             ],
             [
                 'key' => 'yearly_orders',
-                'title' => 'Pedidos do Ano',
+                'title' => 'Anual',
                 'description' => 'Total de pedidos realizados neste ano.',
                 'value' => $this->countOrdersForPeriod('year'),
             ],

@@ -13,25 +13,25 @@ class CounterSaleReportService
         return [
             [
                 'key' => 'daily_turnover',
-                'title' => 'Faturamento Diário',
+                'title' => 'Diário',
                 'description' => 'Faturamento total das vendas do dia atual.',
                 'value' => $this->sumCounterSaleForPeriod('day'),
             ],
             [
                 'key' => 'weekly_turnover',
-                'title' => 'Faturamento Semanal',
+                'title' => 'Semanal',
                 'description' => 'Faturamento total das vendas da semana atual.',
                 'value' => $this->sumCounterSaleForPeriod('week'),
             ],
             [
                 'key' => 'monthly_turnover',
-                'title' => 'Faturamento Mensal',
+                'title' => 'Mensal',
                 'description' => 'Faturamento total das vendas do mês atual.',
                 'value' => $this->sumCounterSaleForPeriod('month'),
             ],
             [
                 'key' => 'yearly_turnover',
-                'title' => 'Faturamento Anual',
+                'title' => 'Anual',
                 'description' => 'Faturamento total das vendas do ano atual.',
                 'value' => $this->sumCounterSaleForPeriod('year'),
             ]
@@ -43,25 +43,25 @@ class CounterSaleReportService
         return [
             [
                 'key' => 'daily_orders_slip',
-                'title' => 'Vendas do Dia',
+                'title' => 'Diário',
                 'description' => 'Quantidade de Vendas criadas hoje.',
                 'value' => $this->countCounterSaleForPeriod('day'),
             ],
             [
                 'key' => 'weekly_orders_slip',
-                'title' => 'Vendas da Semana',
+                'title' => 'Semanal',
                 'description' => 'Quantidade de Vendas criadas nesta semana.',
                 'value' => $this->countCounterSaleForPeriod('week'),
             ],
             [
                 'key' => 'monthly_orders_slip',
-                'title' => 'Vendas do Mês',
+                'title' => 'Mensal',
                 'description' => 'Quantidade de Vendas criadas neste mês.',
                 'value' => $this->countCounterSaleForPeriod('month'),
             ],
             [
                 'key' => 'yearly_orders_slip',
-                'title' => 'Vendas do Ano',
+                'title' => 'Anual',
                 'description' => 'Quantidade de Vendas criadas neste ano.',
                 'value' => $this->countCounterSaleForPeriod('year'),
             ],
