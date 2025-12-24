@@ -12,6 +12,15 @@ use App\Services\UserRoleService;
 
 class CustomerController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/customers",
+     *     summary="Listar clientes da empresa (paginado)",
+     *     tags={"Clientes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="Lista paginada de clientes")
+     * )
+     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -22,6 +31,15 @@ class CustomerController extends Controller
     }
 
 
+    /**
+     * @OA\Get(
+     *     path="/customers-all",
+     *     summary="Listar todos os clientes (com ou sem paginação dependendo do cargo)",
+     *     tags={"Clientes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="Lista de clientes")
+     * )
+     */
     public function getCustomerWithoutPaginate(Request $request)
     {
         $user = $request->user();
@@ -37,6 +55,31 @@ class CustomerController extends Controller
     }
 
 
+    /**
+     * @OA\Post(
+     *     path="/customers",
+     *     summary="Cadastrar novo cliente",
+     *     tags={"Clientes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","phone","address","neighborhood","city","state","zip_code"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="phone", type="string"),
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="password", type="string"),
+     *             @OA\Property(property="password_confirmation", type="string"),
+     *             @OA\Property(property="address", type="string"),
+     *             @OA\Property(property="neighborhood", type="string"),
+     *             @OA\Property(property="city", type="string"),
+     *             @OA\Property(property="state", type="string"),
+     *             @OA\Property(property="zip_code", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Cliente cadastrado")
+     * )
+     */
     public function store(Request $request)
     {
         $user = $request->user(); // Usuário autenticado
@@ -79,6 +122,16 @@ class CustomerController extends Controller
 
 
 
+    /**
+     * @OA\Get(
+     *     path="/customers/{id}",
+     *     summary="Mostrar detalhes de um cliente",
+     *     tags={"Clientes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Detalhes do cliente")
+     * )
+     */
     public function show(Customer $customer)
     {
         // Carrega os endereços de entrega do cliente
@@ -88,6 +141,16 @@ class CustomerController extends Controller
     }
 
 
+    /**
+     * @OA\Put(
+     *     path="/customers/{id}",
+     *     summary="Atualizar um cliente",
+     *     tags={"Clientes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Cliente atualizado")
+     * )
+     */
     public function update(Request $request, Customer $customer)
     {
         // Validação dos dados do cliente e dos endereços
@@ -135,6 +198,16 @@ class CustomerController extends Controller
 
 
 
+    /**
+     * @OA\Delete(
+     *     path="/customers/{id}",
+     *     summary="Excluir um cliente",
+     *     tags={"Clientes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=204, description="Cliente excluído")
+     * )
+     */
     public function destroy(Customer $customer)
     {
         $customer->delete();
@@ -143,6 +216,17 @@ class CustomerController extends Controller
     }
 
 
+    /**
+     * @OA\Get(
+     *     path="/customers/search",
+     *     summary="Pesquisar clientes por nome ou telefone",
+     *     tags={"Clientes"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="name", in="query", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="phone", in="query", required=false, @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="Resultados da pesquisa")
+     * )
+     */
     public function SearchCustomer(Request $request)
     {
         $user = $request->user();

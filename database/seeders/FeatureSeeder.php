@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Feature;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class FeatureSeeder extends Seeder
 {
@@ -12,32 +13,156 @@ class FeatureSeeder extends Seeder
      */
     public function run(): void
     {
+         $now = now();
+
         $features = [
-            // Essencial plan features
-            ['name' => 'Dashboard Financeiro', 'description' => 'Financial dashboard', 'slug' => 'financial-dashboard'],
-            ['name' => 'Menu Digital', 'description' => 'Digital menu', 'slug' => 'digital-menu'],
-            ['name' => 'Cadastro de Clientes', 'description' => 'Customer registration', 'slug' => 'customer-registration'],
-            ['name' => 'Gerenciar pedidos delivery', 'description' => 'Manage delivery orders', 'slug' => 'manage-delivery-orders'],
+            //Essencial
+            [
+                'name' => 'Cadastro de até 30 produtos',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Controler de comandas por mesas',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Dashboard Quantitativo',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Controle de estoque',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Cadastro de usuários com permissões',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Suporte por email no horário comercial',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
 
-            // Professional plan features
-            ['name' => 'Gerenciar pedidos pelo Whatsapp', 'description' => 'Manage Whatsapp orders', 'slug' => 'manage-whatsapp-orders'],
-            ['name' => 'Gerenciar pedidos no local', 'description' => 'Manage local orders', 'slug' => 'manage-local-orders'],
-            ['name' => 'Gerenciar Comanda Digital', 'description' => 'Manage order slip', 'slug' => 'manage-order-slip'],
+            //Profissional
+            [
+                'name' => 'Cadastro de até 100 produtos',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Controler de comandas por mesas',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Dashboard Quantitativo',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Dashboard Financeiro',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Relatórios de vendas',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Cardápio digital',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Comanda digital',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Pedidos feitos no local',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Controle de estoque',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Cadastro de usuários com permissões',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Cadastro de Clientes',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Suporte por chat no horário comercial',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
 
-            // Premium plan features
-            ['name' => 'Controle de Estoque', 'description' => 'Stock management', 'slug' => 'stock-management'],
-            ['name' => 'Cadastro de Entregadores', 'description' => 'Delivery person registration', 'slug' => 'delivery-person-registration'],
-            ['name' => 'Site de apresentação', 'description' => 'Presentation site', 'slug' => 'site-management'],
-
-            // Todos os planos
-            ['name' => 'Suporte 24/7', 'description' => '24/7 support', 'slug' => 'support'],
+            //Premium
+            [
+                'name' => 'Cadastro de até 300 produtos',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Controler de comandas por mesas',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Dashboard Quantitativo',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Dashboard Financeiro',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Relatórios de vendas',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Cardápio digital',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Comanda digital',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Pedidos feitos no local',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Controle de estoque',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Cadastro de usuários com permissões',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Cadastro de Clientes',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Controle de entregadores',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Tela de pedidos',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Pedidos pelo WhatsApp',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Bot de atendimento',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
+            [
+                'name' => 'Suporte 24/7*',
+                'created_at' => $now, 'updated_at' => $now,
+            ],
         ];
 
-        foreach ($features as $feature) {
-            Feature::updateOrCreate(
-                ['slug' => $feature['slug']], // Verifica se já existe pelo slug
-                $feature
-            );
-        }
+        DB::table('features')->upsert(
+            $features,
+            ['name'],
+            ['updated_at']
+        );
     }
 }

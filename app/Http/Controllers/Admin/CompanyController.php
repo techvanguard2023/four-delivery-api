@@ -13,6 +13,15 @@ use App\Services\UserRoleService;
 
 class CompanyController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/companies",
+     *     summary="Listar empresa(s) vinculada(s) ao usuário",
+     *     tags={"Empresa"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="Dados da empresa")
+     * )
+     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -21,12 +30,33 @@ class CompanyController extends Controller
         if ($roleId == 1) {
             return CompanyResource::collection(Company::paginate(25)->get());
         } else {
-            return CompanyResource::collection(Company::where('id', $user->company_id)->with(['plans.plan.features'])->get());
+            return CompanyResource::collection(Company::where('id', $user->company_id)->with(['subscriptions'])->get());
             //return Company::where('id', $user->company_id)->with(['plans.plan.features'])->firstOrFail();
         }
     }
 
 
+    /**
+     * @OA\Post(
+     *     path="/companies",
+     *     summary="Criar nova empresa",
+     *     tags={"Empresa"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","fantasy_name","cnpj","email","address","phone"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="fantasy_name", type="string"),
+     *             @OA\Property(property="cnpj", type="string"),
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="address", type="string"),
+     *             @OA\Property(property="phone", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Empresa criada")
+     * )
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -64,6 +94,16 @@ class CompanyController extends Controller
     }
 
 
+    /**
+     * @OA\Get(
+     *     path="/companies/{id}",
+     *     summary="Mostrar detalhes de uma empresa",
+     *     tags={"Empresa"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Detalhes da empresa")
+     * )
+     */
     public function show(Company $company)
     {
         $company = Company::find($company->id);
@@ -75,6 +115,16 @@ class CompanyController extends Controller
         return response()->json($company);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/companies/{id}",
+     *     summary="Atualizar dados da empresa",
+     *     tags={"Empresa"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Empresa atualizada")
+     * )
+     */
     public function update(Request $request, Company $company)
     {
         $validatedData = $request->validate([
@@ -98,6 +148,16 @@ class CompanyController extends Controller
         return response()->json($company);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/companies/{id}",
+     *     summary="Excluir uma empresa",
+     *     tags={"Empresa"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Empresa excluída")
+     * )
+     */
     public function destroy(Company $company)
     {
         $company->delete();

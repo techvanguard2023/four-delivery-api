@@ -14,7 +14,7 @@ class CompanyResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $activeSubscription = $this->plans
+        $activeSubscription = $this->subscriptions
             ?->sortByDesc('start_date')
             ->first();
 
@@ -43,6 +43,8 @@ class CompanyResource extends JsonResource
                 "id" => $activeSubscription->id,
                 "plan_id" => $activeSubscription->plan_id,
                 "company_id" => $activeSubscription->company_id,
+                "stripe_subscription_id" => $activeSubscription->stripe_subscription_id,
+                "price" => $activeSubscription->price,
                 "start_date" => $activeSubscription->start_date,
                 "end_date" => $activeSubscription->end_date,
                 "status" => $activeSubscription->status,

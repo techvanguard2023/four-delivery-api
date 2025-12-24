@@ -29,6 +29,7 @@ class User extends Authenticatable
         'company_id',
         'permission_id',
         'status',
+        'stripe_customer_id',
     ];
 
     /**

@@ -16,6 +16,15 @@ use App\Services\UserRoleService;
 
 class ItemController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/items",
+     *     summary="Listar itens da empresa (paginado)",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="Lista paginada de itens")
+     * )
+     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -30,6 +39,15 @@ class ItemController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/items-all",
+     *     summary="Listar todos os itens disponíveis (sem paginação)",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="Lista de itens")
+     * )
+     */
     public function allItemsWithoutPaginate(Request $request)
     {
         $user = $request->user();
@@ -44,6 +62,16 @@ class ItemController extends Controller
 
 
 
+    /**
+     * @OA\Get(
+     *     path="/items/category/{categoryId}",
+     *     summary="Listar itens por categoria",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="categoryId", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Lista de itens")
+     * )
+     */
     public function showByCategoryId(Request $request, $categoryId)
     {
         $user = $request->user();
@@ -56,6 +84,16 @@ class ItemController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/items-only-available/category/{categoryId}",
+     *     summary="Listar apenas itens disponíveis por categoria",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="categoryId", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Lista de itens disponíveis")
+     * )
+     */
     public function getOnlyAvailableItems(Request $request, $categoryId)
     {
         $user = $request->user();
@@ -68,6 +106,25 @@ class ItemController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/items",
+     *     summary="Criar novo item",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","price","quantity","available","show_in_menu"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="price", type="number"),
+     *             @OA\Property(property="quantity", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Item criado")
+     * )
+     */
     public function store(Request $request)
     {
         $user = $request->user();
@@ -111,6 +168,7 @@ class ItemController extends Controller
         
         
         
+        
 
         return DB::transaction(function () use ($validatedData, $user) {
             $validatedData['company_id'] = $user->company_id;
@@ -139,6 +197,16 @@ class ItemController extends Controller
     }
 
 
+    /**
+     * @OA\Get(
+     *     path="/items/{id}",
+     *     summary="Mostrar detalhes de um item",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Detalhes do item")
+     * )
+     */
     public function show(Item $item, Request $request)
     {
         $user = $request->user();
@@ -152,6 +220,16 @@ class ItemController extends Controller
     }
 
 
+    /**
+     * @OA\Put(
+     *     path="/items/{id}",
+     *     summary="Atualizar um item",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Item atualizado")
+     * )
+     */
     public function update(Request $request, Item $item)
     {
         // Verifica se o usuário pertence à mesma empresa do item
@@ -232,6 +310,16 @@ class ItemController extends Controller
 
 
 
+    /**
+     * @OA\Delete(
+     *     path="/items/{id}",
+     *     summary="Excluir um item",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Item excluído")
+     * )
+     */
     public function destroy(Request $request, Item $item)
     {
         // Verifica se o usuário tem permissão para deletar o item
@@ -251,6 +339,23 @@ class ItemController extends Controller
     }
 
 
+    /**
+     * @OA\Patch(
+     *     path="/items/{item}/available",
+     *     summary="Atualizar disponibilidade do item",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="item", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"available"},
+     *             @OA\Property(property="available", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Disponibilidade atualizada")
+     * )
+     */
     public function updateAvailable(Request $request, Item $item)
     {
         $request->validate([
@@ -266,6 +371,23 @@ class ItemController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Patch(
+     *     path="/items/{item}/show-in-menu",
+     *     summary="Atualizar visibilidade no menu",
+     *     tags={"Itens"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="item", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"show_in_menu"},
+     *             @OA\Property(property="show_in_menu", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Visibilidade atualizada")
+     * )
+     */
     public function updateShowInMenu(Request $request, Item $item)
     {
         $request->validate([

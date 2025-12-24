@@ -38,4 +38,10 @@ return [
         'endpoint' => \Gabrielmoura\LaravelCep\EndpointOption::POSTMON, // Example: Change to your preferred provider
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+    ],
+
 ];

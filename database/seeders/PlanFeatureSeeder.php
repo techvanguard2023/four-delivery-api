@@ -2,37 +2,102 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\PlanFeature;
-use App\Models\Plan;
-use App\Models\Feature;
+use Illuminate\Support\Facades\DB;
 
 class PlanFeatureSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $plans = [
-            1 => [1, 2, 3, 4, 11],             // Essencial
-            2 => [1, 2, 3, 4, 5, 6, 7, 11],    // Professional
-            3 => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], // Premium
+        $now = now();
+
+        $map = [
+            'Essencial' => [
+                'Cadastro de até 30 produtos',
+                'Controler de comandas por mesas',
+                'Dashboard Quantitativo',
+                'Controle de estoque',
+                'Cadastro de usuários com permissões',
+                'Suporte por email no horário comercial',
+            ],
+            'Profissional' => [
+                'Cadastro de até 100 produtos',
+                'Controler de comandas por mesas',
+                'Dashboard Quantitativo',
+                'Dashboard Financeiro',
+                'Relatórios de vendas',
+                'Cardápio digital',
+                'Comanda digital',
+                'Pedidos feitos no local',
+                'Controle de estoque',
+                'Cadastro de usuários com permissões',
+                'Cadastro de Clientes',
+                'Suporte por chat no horário comercial',
+
+            ],
+            'Premium' => [
+                'Cadastro de até 300 produtos',
+                'Controler de comandas por mesas',
+                'Dashboard Quantitativo',
+                'Dashboard Financeiro',
+                'Relatórios de vendas',
+                'Cardápio digital',
+                'Comanda digital',
+                'Pedidos feitos no local',
+                'Controle de estoque',
+                'Cadastro de usuários com permissões',
+                'Cadastro de Clientes',
+                'Controle de entregadores',
+                'Tela de pedidos',
+                'Pedidos pelo WhatsApp',
+                'Bot de atendimento',
+                'Suporte 24/7*',
+            ],
         ];
 
-        foreach ($plans as $planId => $features) {
-            $plan = Plan::find($planId);
-            if (!$plan) continue; // Se o plano não existir, pula para o próximo
+        // Busca IDs dos planos pelo nome
+        $planIds = DB::table('plans')
+            ->whereIn('name', array_keys($map))
+            ->pluck('id', 'name');
 
-            foreach ($features as $featureId) {
-                $feature = Feature::find($featureId);
-                if (!$feature) continue; // Se a feature não existir, pula
+        // Busca IDs das features pelo nome (únicas no seu seeder)
+        $allFeatureNames = collect($map)->flatten()->unique()->values()->all();
+        $featureIds = DB::table('features')
+            ->whereIn('name', $allFeatureNames)
+            ->pluck('id', 'name'); 
 
-                PlanFeature::updateOrCreate(
-                    ['plan_id' => $plan->id, 'feature_id' => $feature->id],
-                    [] // Sem necessidade de valores adicionais
-                );
+        // Monta linhas do pivot
+        $rows = [];
+        foreach ($map as $planName => $features) {
+            $planId = $planIds[$planName] ?? null;
+            if (!$planId) {
+                continue;
+            }
+
+            foreach ($features as $featureName) {
+                $featureId = $featureIds[$featureName] ?? null;
+                if (!$featureId) {
+                    continue; // feature não encontrada
+                }
+
+                $rows[] = [
+                    'plan_id'    => $planId,
+                    'feature_id' => $featureId,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
             }
         }
+
+        if (empty($rows)) {
+            return;
+        }
+
+        // Remove vínculos antigos desses planos (evita lixo ao re-seedar)
+        DB::table('plan_features')->whereIn('plan_id', $planIds->values())->delete();
+
+        // Insere vínculos
+        DB::table('plan_features')->insert($rows);
     }
 }

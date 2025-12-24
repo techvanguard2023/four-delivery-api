@@ -13,6 +13,15 @@ use App\Services\UserRoleService;
 
 class UserController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/users",
+     *     summary="Listar todos os usuários do sistema",
+     *     tags={"Usuários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="Lista de usuários")
+     * )
+     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -32,6 +41,17 @@ class UserController extends Controller
     }
 
 
+    /**
+     * @OA\Get(
+     *     path="/users/{id}",
+     *     summary="Mostrar detalhes de um usuário",
+     *     tags={"Usuários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Detalhes do usuário"),
+     *     @OA\Response(response=404, description="Não encontrado")
+     * )
+     */
     public function show(User $user)
     {
         $user = User::with('company')->find($user->id);
@@ -43,6 +63,15 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/me",
+     *     summary="Mostrar dados do usuário logado",
+     *     tags={"Usuários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response=200, description="Dados do usuário logado")
+     * )
+     */
     public function showLoggedUser(Request $request)
     {
         $user = $request->user();
@@ -52,6 +81,27 @@ class UserController extends Controller
     }
 
 
+    /**
+     * @OA\Post(
+     *     path="/users",
+     *     summary="Criar novo usuário no sistema",
+     *     tags={"Usuários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","email","phone","password","password_confirmation","role_id"},
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="phone", type="string"),
+     *             @OA\Property(property="password", type="string", format="password"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password"),
+     *             @OA\Property(property="role_id", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Usuário criado")
+     * )
+     */
     public function store(Request $request)
     {
 
@@ -86,6 +136,16 @@ class UserController extends Controller
 
 
 
+    /**
+     * @OA\Put(
+     *     path="/users/{id}",
+     *     summary="Atualizar um usuário",
+     *     tags={"Usuários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Usuário atualizado")
+     * )
+     */
     public function update(Request $request, User $user)
     {
         $input = $request->validate([
@@ -125,6 +185,16 @@ class UserController extends Controller
         return response()->json(['message' => 'User updated successfully.'], 200);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/users/{id}",
+     *     summary="Excluir um usuário",
+     *     tags={"Usuários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Usuário excluído")
+     * )
+     */
     public function destroy($id)
     {
         $user = User::find($id);

@@ -29,6 +29,8 @@ use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\Admin\N8nBotControlController;
 use App\Http\Controllers\Admin\DeliveryLocationController;
 use App\Http\Controllers\Admin\SalesReportController;
+use App\Http\Controllers\Admin\PlanController;
+use App\Http\Controllers\StripeController;
 
 use App\Http\Controllers\Site\BannerController;
 
@@ -44,6 +46,7 @@ Route::prefix('admin-v1')->group(function () {
         return response()->json(['status' => 'API Admin V1 is alive!'], 200);
     });
 
+    // Rotas públicas
     Route::post('/send-message', [App\Http\Controllers\BroadcastTestController::class, 'send']);
     Route::get('/print-order/{order}', [OrderSlipController::class, 'printView']);
     Route::get('/print-order-delivery/{order}', [OrderController::class, 'printReceipt']);
@@ -51,10 +54,14 @@ Route::prefix('admin-v1')->group(function () {
 
     Route::get('/order-slip/{companyId}/{slug}', [OrderSlipController::class, 'publicView']);
 
-
-
-    // Rotas públicas
     Route::post('/user/login', [AuthController::class, 'loginUser']);
+    Route::post('/user/register', [AuthController::class, 'register']);
+    
+    // Stripe Webhook (must be public for Stripe to call it)
+    Route::post('/stripe/webhook', [StripeController::class, 'webhook']);
+
+    // Rotas para Planos
+    Route::get('show-plans', [PlanController::class, 'showPlans']);
 
     // Rotas privadas
     Route::middleware('auth:sanctum')->group(function () {
@@ -133,6 +140,9 @@ Route::prefix('admin-v1')->group(function () {
         // Rotas para Métodos de Pagamento
         Route::apiResource('payment-methods', PaymentMethodController::class);
 
+        // Rotas para Planos
+        Route::apiResource('plans', PlanController::class);
+
         // Rotas para Pagamentos
         Route::apiResource('payments', PaymentController::class);
 
@@ -168,6 +178,9 @@ Route::prefix('admin-v1')->group(function () {
 
         Route::get('/item-sales', [SalesReportController::class, 'getItemSales']);
         Route::get('/sales-report', [SalesReportController::class, 'getSalesReport']);
+        
+        // Stripe Checkout (protected)
+        Route::post('/stripe/checkout/{plan_id}', [StripeController::class, 'createCheckoutSession']);
     });
 });
 

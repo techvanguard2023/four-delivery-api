@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Subscription;
 
 class Company extends Model
 {
@@ -30,14 +31,19 @@ class Company extends Model
         'website'
     ];
 
-    public function plans()
+    public function subscriptions()
     {
-        return $this->hasMany(CompanyPlan::class);
+        return $this->hasMany(Subscription::class);
     }
 
-    public function companyPlans()
+    // Assinatura atual (ativa e com maior end_date)
+    public function currentSubscription()
     {
-        return $this->hasMany(CompanyPlan::class);
+        return $this->hasOne(Subscription::class)
+            ->where('status', 'active')
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->latestOfMany('end_date'); // pega a de maior end_date
     }
 
 }

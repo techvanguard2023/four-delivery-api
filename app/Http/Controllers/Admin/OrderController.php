@@ -15,6 +15,19 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/orders",
+     *     summary="Listar todos os pedidos da empresa",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de pedidos e resumo por status",
+     *         @OA\JsonContent(type="object")
+     *     )
+     * )
+     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -40,8 +53,27 @@ class OrderController extends Controller
     }
 
 
-
-
+    /**
+     * @OA\Post(
+     *     path="/orders",
+     *     summary="Criar novo pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"total_price","status_id","payment_status","order_type_id"},
+     *             @OA\Property(property="customer_id", type="integer"),
+     *             @OA\Property(property="total_price", type="number"),
+     *             @OA\Property(property="status_id", type="integer"),
+     *             @OA\Property(property="payment_status", type="string"),
+     *             @OA\Property(property="order_type_id", type="integer"),
+     *             @OA\Property(property="items", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Pedido criado")
+     * )
+     */
     public function store(Request $request)
     {
         $user = $request->user(); // Obtém o usuário autenticado
@@ -101,6 +133,16 @@ class OrderController extends Controller
 
 
 
+    /**
+     * @OA\Get(
+     *     path="/orders/{id}",
+     *     summary="Mostrar detalhes de um pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Detalhes do pedido")
+     * )
+     */
     public function show(Request $request, Order $order)
     {
         $user = $request->user();
@@ -123,6 +165,16 @@ class OrderController extends Controller
     }
 
 
+    /**
+     * @OA\Put(
+     *     path="/orders/{id}",
+     *     summary="Atualizar um pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Pedido atualizado")
+     * )
+     */
     public function update(Request $request, Order $order)
     {
         $validatedData = $request->validate([
@@ -138,6 +190,16 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/orders/{id}",
+     *     summary="Excluir um pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=204, description="Excluído")
+     * )
+     */
     public function destroy(Order $order)
     {
         $order->delete();
@@ -147,6 +209,23 @@ class OrderController extends Controller
 
 
 
+    /**
+     * @OA\Put(
+     *     path="/orders/{id}/update-status",
+     *     summary="Atualizar status do pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"status_id"},
+     *             @OA\Property(property="status_id", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Status atualizado")
+     * )
+     */
     public function updateStatus(Request $request, Order $order)
     {
         $validatedData = $request->validate([
@@ -183,6 +262,23 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/orders/{id}/update-payment-status",
+     *     summary="Atualizar status de pagamento",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"payment_status"},
+     *             @OA\Property(property="payment_status", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Status de pagamento atualizado")
+     * )
+     */
     public function updatePaymentStatus(Request $request, Order $order)
     {
         $validatedData = $request->validate([
@@ -195,6 +291,22 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/orders/get-last-status-and-reativate",
+     *     summary="Recuperar último status e reativar pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"order_id"},
+     *             @OA\Property(property="order_id", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Pedido reativado")
+     * )
+     */
     public function getLastStatusAndReativate(Request $request)
     {
         $validatedData = $request->validate([
@@ -209,6 +321,23 @@ class OrderController extends Controller
         return response()->json($order, 200);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/orders/{id}/set-delivery-person",
+     *     summary="Atribuir entregador ao pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"delivery_person_id"},
+     *             @OA\Property(property="delivery_person_id", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Entregador atribuído")
+     * )
+     */
     public function setDeliveryPerson(Request $request, Order $order)
     {
         $validatedData = $request->validate([
@@ -222,6 +351,25 @@ class OrderController extends Controller
     }
 
 
+    /**
+     * @OA\Post(
+     *     path="/orders/{id}/add-item",
+     *     summary="Adicionar item ao pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"item_id","quantity"},
+     *             @OA\Property(property="item_id", type="integer"),
+     *             @OA\Property(property="quantity", type="integer"),
+     *             @OA\Property(property="observation", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="Item adicionado")
+     * )
+     */
     public function addItem(Request $request, Order $order)
     {
         // Validação dos dados recebidos
@@ -297,6 +445,23 @@ class OrderController extends Controller
 
 
 
+    /**
+     * @OA\Post(
+     *     path="/orders/{id}/remove-item",
+     *     summary="Remover item do pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"item_id"},
+     *             @OA\Property(property="item_id", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=204, description="Item removido")
+     * )
+     */
     public function removeItem(Request $request, Order $order)
     {
         $validatedData = $request->validate([
@@ -341,6 +506,24 @@ class OrderController extends Controller
 
 
 
+    /**
+     * @OA\Post(
+     *     path="/orders/{id}/update-item-quantity",
+     *     summary="Atualizar quantidade de um item no pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"item_id","quantity"},
+     *             @OA\Property(property="item_id", type="integer"),
+     *             @OA\Property(property="quantity", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Quantidade atualizada")
+     * )
+     */
     public function updateItemQuantity(Request $request, Order $order)
     {
         $validatedData = $request->validate([
@@ -409,6 +592,25 @@ class OrderController extends Controller
 
 
 
+    /**
+     * @OA\Post(
+     *     path="/orders/{id}/update-item",
+     *     summary="Atualizar detalhes de um item no pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"item_id","quantity","price"},
+     *             @OA\Property(property="item_id", type="integer"),
+     *             @OA\Property(property="quantity", type="integer"),
+     *             @OA\Property(property="price", type="number")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Item atualizado")
+     * )
+     */
     public function updateItem(Request $request, Order $order)
     {
         $validatedData = $request->validate([
@@ -431,6 +633,24 @@ class OrderController extends Controller
     }
 
 
+    /**
+     * @OA\Post(
+     *     path="/orders/{id}/update-item-price",
+     *     summary="Atualizar preço de um item no pedido",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"item_id","price"},
+     *             @OA\Property(property="item_id", type="integer"),
+     *             @OA\Property(property="price", type="number")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Preço atualizado")
+     * )
+     */
     public function updateItemPrice(Request $request, Order $order)
     {
         $validatedData = $request->validate([
@@ -450,6 +670,22 @@ class OrderController extends Controller
         return response()->json($orderItem, 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/orders/update-order-positions",
+     *     summary="Atualizar posições dos pedidos",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"orders"},
+     *             @OA\Property(property="orders", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Posições atualizadas")
+     * )
+     */
     public function updateOrderPositions(Request $request)
     {
         $orders = $request->input('orders');
@@ -477,6 +713,16 @@ class OrderController extends Controller
         return response()->json(['message' => 'Posições atualizadas com sucesso!'], 200);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/print-order-delivery/{id}",
+     *     summary="Visualizar impressão do pedido de entrega",
+     *     tags={"Pedidos"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="HTML da impressão")
+     * )
+     */
     public function printReceipt(Order $order)
     {
         $orderReceipt = Order::with('orderItems', 'customer.deliveryAddresses')->findOrFail($order->id);

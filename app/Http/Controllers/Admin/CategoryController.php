@@ -11,12 +11,37 @@ use App\Services\UserRoleService;
 class CategoryController extends Controller
 {
 
-
+    /**
+     * @OA\Get(
+     *     path="/categories",
+     *     summary="Listar todas as categorias",
+     *     tags={"Categorias"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de categorias",
+     *         @OA\JsonContent(type="array", @OA\Items(type="object"))
+     *     )
+     * )
+     */
     public function index()
     {
         return Category::orderBy('name', 'asc')->get();
     }
 
+    /**
+     * @OA\Get(
+     *     path="/categories-with-total-items",
+     *     summary="Listar categorias com total de itens e resumo de estoque",
+     *     tags={"Categorias"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de categorias com detalhes",
+     *         @OA\JsonContent(type="array", @OA\Items(type="object"))
+     *     )
+     * )
+     */
     public function listCategoriesWithTotalItems(Request $request)
     {
         $user = $request->user();
@@ -64,6 +89,19 @@ class CategoryController extends Controller
 
 
 
+    /**
+     * @OA\Get(
+     *     path="/categories-with-company-items",
+     *     summary="Listar categorias com itens da empresa",
+     *     tags={"Categorias"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de categorias e seus itens",
+     *         @OA\JsonContent(type="array", @OA\Items(type="object"))
+     *     )
+     * )
+     */
     public function listCategoriesWithCompanyItems(Request $request)
     {
         $user = $request->user();
@@ -81,6 +119,30 @@ class CategoryController extends Controller
 
 
 
+    /**
+     * @OA\Post(
+     *     path="/categories",
+     *     summary="Criar nova categoria",
+     *     tags={"Categorias"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"company_id","name","slug","description","image_url"},
+     *             @OA\Property(property="company_id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Combos"),
+     *             @OA\Property(property="slug", type="string", example="combos"),
+     *             @OA\Property(property="description", type="string", example="Melhores combos da região"),
+     *             @OA\Property(property="image_url", type="string", example="http://example.com/image.jpg")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Categoria criada",
+     *         @OA\JsonContent(type="object")
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -96,6 +158,27 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/categories/{id}",
+     *     summary="Mostrar detalhes de uma categoria",
+     *     tags={"Categorias"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID da categoria",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes da categoria e itens paginados",
+     *         @OA\JsonContent(type="object")
+     *     ),
+     *     @OA\Response(response=404, description="Não encontrado")
+     * )
+     */
     public function show(Category $category, Request $request)
     {
         $user = $request->user();
@@ -117,6 +200,32 @@ class CategoryController extends Controller
     }
 
 
+    /**
+     * @OA\Put(
+     *     path="/categories/{id}",
+     *     summary="Atualizar uma categoria",
+     *     tags={"Categorias"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="image_url", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Categoria atualizada",
+     *         @OA\JsonContent(type="object")
+     *     )
+     * )
+     */
     public function update(Request $request, Category $category)
     {
         $validatedData = $request->validate([
@@ -136,6 +245,21 @@ class CategoryController extends Controller
     }
 
 
+    /**
+     * @OA\Delete(
+     *     path="/categories/{id}",
+     *     summary="Excluir uma categoria",
+     *     tags={"Categorias"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response=204, description="Excluído com sucesso")
+     * )
+     */
     public function destroy(Category $category)
     {
         $category->delete();

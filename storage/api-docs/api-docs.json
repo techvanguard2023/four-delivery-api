@@ -2,379 +2,40 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Four Delivery API",
+        "description": "API para o sistema de delivery Four Delivery",
+        "contact": {
+            "email": "suporte@fourdelivery.com"
+        },
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "http://localhost/api/admin-v1"
+            "url": "/api/admin-v1",
+            "description": "Admin API V1"
+        },
+        {
+            "url": "/api/app-v1",
+            "description": "App API V1"
         }
     ],
     "paths": {
-        "/login": {
-            "post": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Login Admin route",
-                "description": "Authenticates a user and returns an access token",
-                "operationId": "8e69a7ae8d3accebb23bbdc7e9ff8749",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "example": "user@example.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "password123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Authorized"
-                                        },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTYyMjYyNjIyMiwiZXhwIjoxNjIyNjI5ODIyLCJ0eXBlIjoiQVBJIn0.6_R4g5XjXv3g4y5XjXv3g4y5XjXv3g4y5XjXv3g4"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "user": {
-                                                    "properties": {
-                                                        "id": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        },
-                                                        "name": {
-                                                            "type": "string",
-                                                            "example": "John Doe"
-                                                        },
-                                                        "email": {
-                                                            "type": "string",
-                                                            "example": "user@example.com"
-                                                        },
-                                                        "phone": {
-                                                            "type": "string",
-                                                            "example": "1234567890"
-                                                        },
-                                                        "status": {
-                                                            "type": "string",
-                                                            "example": "active"
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/logout": {
-            "post": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Logout Admin route",
-                "description": "End the admin session",
-                "operationId": "250b899f3e4cb34ad9dd85617606e4f8",
-                "responses": {
-                    "200": {
-                        "description": "Logout bem-sucedido",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Logout realizado com sucesso"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Não autorizado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Não autorizado"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/check-token-validity": {
-            "get": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Verificar Token",
-                "description": "Verifica a validade do token de acesso",
-                "operationId": "8361a9f0219ab9dab989da30a6aad7e6",
-                "responses": {
-                    "200": {
-                        "description": "Token válido",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Token válido"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "user": {
-                                                    "properties": {
-                                                        "id": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        },
-                                                        "name": {
-                                                            "type": "string",
-                                                            "example": "John Doe"
-                                                        },
-                                                        "email": {
-                                                            "type": "string",
-                                                            "example": "user@example.com"
-                                                        },
-                                                        "phone": {
-                                                            "type": "string",
-                                                            "example": "1234567890"
-                                                        },
-                                                        "status": {
-                                                            "type": "string",
-                                                            "example": "active"
-                                                        }
-                                                    },
-                                                    "type": "object"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Não autorizado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Não autorizado"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/forgot-password": {
-            "post": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Esqueci a Senha",
-                "description": "Envia um e-mail com instruções para redefinir a senha",
-                "operationId": "464c430bd1aa18ba1f42336f4356d390",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "example": "user@example.com"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "E-mail enviado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "E-mail de redefinição de senha enviado"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "E-mail não encontrado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "E-mail não encontrado"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/categories": {
             "get": {
                 "tags": [
-                    "Categories"
+                    "Categorias"
                 ],
-                "summary": "Listar Categorias",
-                "description": "Retorna uma lista de todas as categorias",
-                "operationId": "785bfc51c3c8c217c9f3175c722b483f",
+                "summary": "Listar todas as categorias",
+                "operationId": "0d9f6f774f1b480b5318196b0ce0dc72",
                 "responses": {
                     "200": {
                         "description": "Lista de categorias",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "Eletrônicos"
-                                                    },
-                                                    "description": {
-                                                        "type": "string",
-                                                        "example": "Produtos eletrônicos em geral"
-                                                    },
-                                                    "created_at": {
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    },
-                                                    "updated_at": {
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Não autorizado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Não autorizado"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
                                 }
                             }
                         }
@@ -388,23 +49,42 @@
             },
             "post": {
                 "tags": [
-                    "Categories"
+                    "Categorias"
                 ],
-                "summary": "Criar Categoria",
-                "description": "Cria uma nova categoria",
-                "operationId": "61c955d0281838ed1cc895d401c7ce62",
+                "summary": "Criar nova categoria",
+                "operationId": "d566fee2a2234738bf97d6ef32889c37",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "company_id",
+                                    "name",
+                                    "slug",
+                                    "description",
+                                    "image_url"
+                                ],
                                 "properties": {
+                                    "company_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
                                     "name": {
                                         "type": "string",
-                                        "example": "Móveis"
+                                        "example": "Combos"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "example": "combos"
                                     },
                                     "description": {
                                         "type": "string",
-                                        "example": "Móveis para casa e escritório"
+                                        "example": "Melhores combos da região"
+                                    },
+                                    "image_url": {
+                                        "type": "string",
+                                        "example": "http://example.com/image.jpg"
                                     }
                                 },
                                 "type": "object"
@@ -414,65 +94,69 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Categoria criada com sucesso",
+                        "description": "Categoria criada",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 201
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Categoria criada com sucesso"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 2
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Móveis"
-                                                },
-                                                "description": {
-                                                    "type": "string",
-                                                    "example": "Móveis para casa e escritório"
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
                                     "type": "object"
                                 }
                             }
                         }
-                    },
-                    "422": {
-                        "description": "Erro de validação",
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categories-with-total-items": {
+            "get": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Listar categorias com total de itens e resumo de estoque",
+                "operationId": "0ced9750d0a45b2e16c0dddaa817d2ff",
+                "responses": {
+                    "200": {
+                        "description": "Lista de categorias com detalhes",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Os dados fornecidos são inválidos."
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/categories-with-company-items": {
+            "get": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Listar categorias com itens da empresa",
+                "operationId": "ea2d95d02dc6260c53890004796ed896",
+                "responses": {
+                    "200": {
+                        "description": "Lista de categorias e seus itens",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
                                 }
                             }
                         }
@@ -488,11 +172,10 @@
         "/categories/{id}": {
             "get": {
                 "tags": [
-                    "Categories"
+                    "Categorias"
                 ],
-                "summary": "Detalhes da Categoria",
-                "description": "Retorna os detalhes de uma categoria específica",
-                "operationId": "a0e6a2bab8da8b4d34ab45f9716a2767",
+                "summary": "Mostrar detalhes de uma categoria",
+                "operationId": "875d4f0851994f12ca2b94f007a0a874",
                 "parameters": [
                     {
                         "name": "id",
@@ -506,61 +189,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Detalhes da categoria",
+                        "description": "Detalhes da categoria e itens paginados",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Eletrônicos"
-                                                },
-                                                "description": {
-                                                    "type": "string",
-                                                    "example": "Produtos eletrônicos em geral"
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
                                     "type": "object"
                                 }
                             }
                         }
                     },
                     "404": {
-                        "description": "Categoria não encontrada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Categoria não encontrada"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Não encontrado"
                     }
                 },
                 "security": [
@@ -571,16 +210,14 @@
             },
             "put": {
                 "tags": [
-                    "Categories"
+                    "Categorias"
                 ],
-                "summary": "Atualizar Categoria",
-                "description": "Atualiza os dados de uma categoria existente",
-                "operationId": "db45ef522fcf8ff69576aa7af1fc4332",
+                "summary": "Atualizar uma categoria",
+                "operationId": "d2c95300f3f0e703cd4d4b3763e6e010",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID da categoria",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -593,12 +230,13 @@
                             "schema": {
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Eletrônicos Atualizados"
+                                        "type": "string"
                                     },
                                     "description": {
-                                        "type": "string",
-                                        "example": "Produtos eletrônicos atualizados"
+                                        "type": "string"
+                                    },
+                                    "image_url": {
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -608,57 +246,10 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Categoria atualizada com sucesso",
+                        "description": "Categoria atualizada",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Categoria atualizada com sucesso"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Eletrônicos Atualizados"
-                                                },
-                                                "description": {
-                                                    "type": "string",
-                                                    "example": "Produtos eletrônicos atualizados"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Categoria não encontrada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Categoria não encontrada"
-                                        }
-                                    },
                                     "type": "object"
                                 }
                             }
@@ -673,16 +264,14 @@
             },
             "delete": {
                 "tags": [
-                    "Categories"
+                    "Categorias"
                 ],
-                "summary": "Excluir Categoria",
-                "description": "Exclui uma categoria existente",
-                "operationId": "510da1a537ace4507599e1c0a2b113e4",
+                "summary": "Excluir uma categoria",
+                "operationId": "198126e145163c3c4a6d3ada0a7c3f07",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID da categoria",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -690,41 +279,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Categoria excluída com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Categoria excluída com sucesso"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Categoria não encontrada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Categoria não encontrada"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                    "204": {
+                        "description": "Excluído com sucesso"
                     }
                 },
                 "security": [
@@ -737,75 +293,13 @@
         "/companies": {
             "get": {
                 "tags": [
-                    "Companies"
+                    "Empresa"
                 ],
-                "summary": "Listar Empresas",
-                "description": "Retorna uma lista de todas as empresas",
-                "operationId": "7bf30696ba1b60586ea4b63adba66ba8",
+                "summary": "Listar empresa(s) vinculada(s) ao usuário",
+                "operationId": "310e6d7efffb131e1980d53fdd3be6d6",
                 "responses": {
                     "200": {
-                        "description": "Lista de empresas",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "Empresa 1"
-                                                    },
-                                                    "email": {
-                                                        "type": "string",
-                                                        "example": "empresa1@example.com"
-                                                    },
-                                                    "phone": {
-                                                        "type": "string",
-                                                        "example": "1234567890"
-                                                    },
-                                                    "created_at": {
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    },
-                                                    "updated_at": {
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Não autorizado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Não autorizado"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Dados da empresa"
                     }
                 },
                 "security": [
@@ -816,27 +310,41 @@
             },
             "post": {
                 "tags": [
-                    "Companies"
+                    "Empresa"
                 ],
-                "summary": "Criar Empresa",
-                "description": "Cria uma nova empresa",
-                "operationId": "29ee9b6ab4343e1311c7a2a84619de8f",
+                "summary": "Criar nova empresa",
+                "operationId": "8fe07ac5bd7cbba83ee59b8633456a47",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "name",
+                                    "fantasy_name",
+                                    "cnpj",
+                                    "email",
+                                    "address",
+                                    "phone"
+                                ],
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Empresa 2"
+                                        "type": "string"
+                                    },
+                                    "fantasy_name": {
+                                        "type": "string"
+                                    },
+                                    "cnpj": {
+                                        "type": "string"
                                     },
                                     "email": {
-                                        "type": "string",
-                                        "example": "empresa2@example.com"
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
                                     },
                                     "phone": {
-                                        "type": "string",
-                                        "example": "1234567890"
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -846,72 +354,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Empresa criada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 201
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Empresa criada com sucesso"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 2
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Empresa 2"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "empresa2@example.com"
-                                                },
-                                                "phone": {
-                                                    "type": "string",
-                                                    "example": "1234567890"
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Erro de validação",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Os dados fornecidos são inválidos."
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Empresa criada"
                     }
                 },
                 "security": [
@@ -924,16 +367,14 @@
         "/companies/{id}": {
             "get": {
                 "tags": [
-                    "Companies"
+                    "Empresa"
                 ],
-                "summary": "Detalhes da Empresa",
-                "description": "Retorna os detalhes de uma empresa específica",
-                "operationId": "a295a34b985a5fa1fcab7659ae9122f1",
+                "summary": "Mostrar detalhes de uma empresa",
+                "operationId": "08558cb08bafe5457a9df6f0ebe1952c",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID da empresa",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -942,65 +383,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Detalhes da empresa",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Empresa 1"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "empresa1@example.com"
-                                                },
-                                                "phone": {
-                                                    "type": "string",
-                                                    "example": "1234567890"
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Empresa não encontrada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Empresa não encontrada"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Detalhes da empresa"
                     }
                 },
                 "security": [
@@ -1011,106 +394,23 @@
             },
             "put": {
                 "tags": [
-                    "Companies"
+                    "Empresa"
                 ],
-                "summary": "Atualizar Empresa",
-                "description": "Atualiza os dados de uma empresa existente",
-                "operationId": "b83a3e118a362310d4ae08ece79e1216",
+                "summary": "Atualizar dados da empresa",
+                "operationId": "e4fdbcd59c6629a36ffecf65110f030c",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID da empresa",
                         "required": true,
                         "schema": {
                             "type": "integer"
                         }
                     }
                 ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Empresa 1 Atualizada"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "empresa1@example.com"
-                                    },
-                                    "phone": {
-                                        "type": "string",
-                                        "example": "1234567890"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
-                        "description": "Empresa atualizada com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Empresa atualizada com sucesso"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Empresa 1 Atualizada"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "empresa1@example.com"
-                                                },
-                                                "phone": {
-                                                    "type": "string",
-                                                    "example": "1234567890"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Empresa não encontrada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Empresa não encontrada"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Empresa atualizada"
                     }
                 },
                 "security": [
@@ -1121,16 +421,14 @@
             },
             "delete": {
                 "tags": [
-                    "Companies"
+                    "Empresa"
                 ],
-                "summary": "Excluir Empresa",
-                "description": "Exclui uma empresa existente",
-                "operationId": "29a802c04675b7ade27fb0b9ce087162",
+                "summary": "Excluir uma empresa",
+                "operationId": "a33e783ef78d461955f75f31f963e574",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID da empresa",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1139,40 +437,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Empresa excluída com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Empresa excluída com sucesso"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Empresa não encontrada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Empresa não encontrada"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Empresa excluída"
                     }
                 },
                 "security": [
@@ -1185,59 +450,711 @@
         "/customers": {
             "get": {
                 "tags": [
-                    "Customers"
+                    "Clientes"
                 ],
-                "summary": "Listar Clientes",
-                "description": "Retorna uma lista de todos os clientes",
-                "operationId": "068b7d861cba28b7158d105075e944c3",
+                "summary": "Listar clientes da empresa (paginado)",
+                "operationId": "1171e97ffd82e321d87ada9c254f0324",
                 "responses": {
                     "200": {
-                        "description": "Lista de clientes",
+                        "description": "Lista paginada de clientes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Cadastrar novo cliente",
+                "operationId": "8601a26c46c986ca44d13b83a75103dd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "phone",
+                                    "address",
+                                    "neighborhood",
+                                    "city",
+                                    "state",
+                                    "zip_code"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "neighborhood": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "type": "string"
+                                    },
+                                    "zip_code": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cliente cadastrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/customers-all": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Listar todos os clientes (com ou sem paginação dependendo do cargo)",
+                "operationId": "d811cc9d22850449c3037521134a9ce7",
+                "responses": {
+                    "200": {
+                        "description": "Lista de clientes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/customers/{id}": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Mostrar detalhes de um cliente",
+                "operationId": "acd69b97ac8773db061a3dffd0ebad79",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do cliente"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Atualizar um cliente",
+                "operationId": "bd621281c1cc1d28fd326dcf8928565f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cliente atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Excluir um cliente",
+                "operationId": "d44a167f3af7c4b7fdbb753244006a1a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Cliente excluído"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/customers/search": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Pesquisar clientes por nome ou telefone",
+                "operationId": "00e2ec556ee4193c41c1ab830d5c0c32",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resultados da pesquisa"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/delivery-people": {
+            "get": {
+                "tags": [
+                    "Entregadores"
+                ],
+                "summary": "Listar entregadores da empresa (paginado)",
+                "operationId": "5bc270432ee12e541867725e87751481",
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de entregadores"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Entregadores"
+                ],
+                "summary": "Cadastrar novo entregador",
+                "operationId": "2d90da1cb7bf565230425fc8f003cf84",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "phone",
+                                    "vehicle"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "vehicle": {
+                                        "type": "string"
+                                    },
+                                    "is_whatsapp": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Entregador cadastrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/delivery-people/{id}": {
+            "get": {
+                "tags": [
+                    "Entregadores"
+                ],
+                "summary": "Mostrar detalhes de um entregador",
+                "operationId": "40e3f051e153b12247c96758f21d5eca",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do entregador"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Entregadores"
+                ],
+                "summary": "Atualizar um entregador",
+                "operationId": "0e7c5ff536aeca980eb48d09a2919bf0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entregador atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Entregadores"
+                ],
+                "summary": "Excluir um entregador",
+                "operationId": "9044c13f0f5a208dde8bc782ec11ebe6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Entregador excluído"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/items": {
+            "get": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Listar itens da empresa (paginado)",
+                "operationId": "34918d7fb0098f3716dac14cb8d062b6",
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de itens"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Criar novo item",
+                "operationId": "b2b04e10cbe29048140f5c124bfb7351",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "price",
+                                    "quantity",
+                                    "available",
+                                    "show_in_menu"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Item criado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/items-all": {
+            "get": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Listar todos os itens disponíveis (sem paginação)",
+                "operationId": "e015386ada3b8682e5a90e8875864535",
+                "responses": {
+                    "200": {
+                        "description": "Lista de itens"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/items/category/{categoryId}": {
+            "get": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Listar itens por categoria",
+                "operationId": "bb557e8e4bd5fb43829e29c56aeedb6c",
+                "parameters": [
+                    {
+                        "name": "categoryId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de itens"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/items-only-available/category/{categoryId}": {
+            "get": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Listar apenas itens disponíveis por categoria",
+                "operationId": "a10e8d4618ad2188739b74d7e15bf4b6",
+                "parameters": [
+                    {
+                        "name": "categoryId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de itens disponíveis"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/items/{id}": {
+            "get": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Mostrar detalhes de um item",
+                "operationId": "475eb5dbe98a05a303f952fd074f77a0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do item"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Atualizar um item",
+                "operationId": "57c65a5116e5b065a5ffcfe431ad5a8f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Excluir um item",
+                "operationId": "4cb13608dd4a8d9bfe141c144e66cc2c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item excluído"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/items/{item}/available": {
+            "patch": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Atualizar disponibilidade do item",
+                "operationId": "6b3c03d0242fc89cf72fee2fcff6ab91",
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "available"
+                                ],
+                                "properties": {
+                                    "available": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Disponibilidade atualizada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/items/{item}/show-in-menu": {
+            "patch": {
+                "tags": [
+                    "Itens"
+                ],
+                "summary": "Atualizar visibilidade no menu",
+                "operationId": "efd3c0eb314202f2447477cc40b27a86",
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "show_in_menu"
+                                ],
+                                "properties": {
+                                    "show_in_menu": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Visibilidade atualizada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Listar todos os pedidos da empresa",
+                "operationId": "9691efb584967abf6c4b060eda7c7c6a",
+                "responses": {
+                    "200": {
+                        "description": "Lista de pedidos e resumo por status",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": 1
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "example": "Cliente 1"
-                                                    },
-                                                    "email": {
-                                                        "type": "string",
-                                                        "example": "cliente1@example.com"
-                                                    },
-                                                    "phone": {
-                                                        "type": "string",
-                                                        "example": "1234567890"
-                                                    },
-                                                    "address": {
-                                                        "type": "string",
-                                                        "example": "Rua A, 123"
-                                                    },
-                                                    "created_at": {
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    },
-                                                    "updated_at": {
-                                                        "type": "string",
-                                                        "format": "date-time"
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        }
-                                    },
                                     "type": "object"
                                 }
                             }
@@ -1252,31 +1169,42 @@
             },
             "post": {
                 "tags": [
-                    "Customers"
+                    "Pedidos"
                 ],
-                "summary": "Criar Cliente",
-                "description": "Cria um novo cliente",
-                "operationId": "d7b72a3d816ebf5bdbdc057cbdb85452",
+                "summary": "Criar novo pedido",
+                "operationId": "9f58c73e1cae2c889dd4046ad810436c",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "total_price",
+                                    "status_id",
+                                    "payment_status",
+                                    "order_type_id"
+                                ],
                                 "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Cliente 2"
+                                    "customer_id": {
+                                        "type": "integer"
                                     },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "cliente2@example.com"
+                                    "total_price": {
+                                        "type": "number"
                                     },
-                                    "phone": {
-                                        "type": "string",
-                                        "example": "1234567890"
+                                    "status_id": {
+                                        "type": "integer"
                                     },
-                                    "address": {
-                                        "type": "string",
-                                        "example": "Rua B, 456"
+                                    "payment_status": {
+                                        "type": "string"
+                                    },
+                                    "order_type_id": {
+                                        "type": "integer"
+                                    },
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        }
                                     }
                                 },
                                 "type": "object"
@@ -1286,57 +1214,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Cliente criado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 201
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Cliente criado com sucesso"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 2
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Cliente 2"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "cliente2@example.com"
-                                                },
-                                                "phone": {
-                                                    "type": "string",
-                                                    "example": "1234567890"
-                                                },
-                                                "address": {
-                                                    "type": "string",
-                                                    "example": "Rua B, 456"
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Pedido criado"
                     }
                 },
                 "security": [
@@ -1346,19 +1224,17 @@
                 ]
             }
         },
-        "/customers/{id}": {
+        "/orders/{id}": {
             "get": {
                 "tags": [
-                    "Customers"
+                    "Pedidos"
                 ],
-                "summary": "Detalhes do Cliente",
-                "description": "Retorna os detalhes de um cliente específico",
-                "operationId": "e69d5bb9a0c2d29db41fc8c447d2b0fe",
+                "summary": "Mostrar detalhes de um pedido",
+                "operationId": "a909a59403e0ca162a40693233b45f42",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID do cliente",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1367,69 +1243,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Detalhes do cliente",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Cliente 1"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "cliente1@example.com"
-                                                },
-                                                "phone": {
-                                                    "type": "string",
-                                                    "example": "1234567890"
-                                                },
-                                                "address": {
-                                                    "type": "string",
-                                                    "example": "Rua A, 123"
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Cliente não encontrado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Cliente não encontrado"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Detalhes do pedido"
                     }
                 },
                 "security": [
@@ -1440,114 +1254,23 @@
             },
             "put": {
                 "tags": [
-                    "Customers"
+                    "Pedidos"
                 ],
-                "summary": "Atualizar Cliente",
-                "description": "Atualiza os dados de um cliente existente",
-                "operationId": "bbdb364e9ce65292fdf0a3a31bf57087",
+                "summary": "Atualizar um pedido",
+                "operationId": "295b5116ea8c587f594a701b4975e88e",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID do cliente",
                         "required": true,
                         "schema": {
                             "type": "integer"
                         }
                     }
                 ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Cliente 1 Atualizado"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "cliente1@example.com"
-                                    },
-                                    "phone": {
-                                        "type": "string",
-                                        "example": "1234567890"
-                                    },
-                                    "address": {
-                                        "type": "string",
-                                        "example": "Rua A, 123"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
-                        "description": "Cliente atualizado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Cliente atualizado com sucesso"
-                                        },
-                                        "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Cliente 1 Atualizado"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "cliente1@example.com"
-                                                },
-                                                "phone": {
-                                                    "type": "string",
-                                                    "example": "1234567890"
-                                                },
-                                                "address": {
-                                                    "type": "string",
-                                                    "example": "Rua A, 123"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Cliente não encontrado",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Cliente não encontrado"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Pedido atualizado"
                     }
                 },
                 "security": [
@@ -1558,16 +1281,519 @@
             },
             "delete": {
                 "tags": [
-                    "Customers"
+                    "Pedidos"
                 ],
-                "summary": "Excluir Cliente",
-                "description": "Exclui um cliente existente",
-                "operationId": "274db5c68c1628b66cd98a519c301d0d",
+                "summary": "Excluir um pedido",
+                "operationId": "19bc4db288931cea718fd2f71ddbd5da",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID do cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Excluído"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/update-status": {
+            "put": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Atualizar status do pedido",
+                "operationId": "843d44f2311c20e03e9314b676c69adf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status_id"
+                                ],
+                                "properties": {
+                                    "status_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/update-payment-status": {
+            "put": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Atualizar status de pagamento",
+                "operationId": "e4e355f48fc54ce8b59a2b6b98690c8b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "payment_status"
+                                ],
+                                "properties": {
+                                    "payment_status": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status de pagamento atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/get-last-status-and-reativate": {
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Recuperar último status e reativar pedido",
+                "operationId": "41773d1c4ae5ce2617a7bd39fd3aff84",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pedido reativado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/set-delivery-person": {
+            "put": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Atribuir entregador ao pedido",
+                "operationId": "3fe4e66ae75716c8ea55e038fe00d905",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "delivery_person_id"
+                                ],
+                                "properties": {
+                                    "delivery_person_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Entregador atribuído"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/add-item": {
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Adicionar item ao pedido",
+                "operationId": "ce5892a9dbe4a4d971ca619e4322bf75",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "item_id",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "item_id": {
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    },
+                                    "observation": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Item adicionado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/remove-item": {
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Remover item do pedido",
+                "operationId": "c2f58b8708d0eec4b86d695681428c7c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "item_id"
+                                ],
+                                "properties": {
+                                    "item_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Item removido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/update-item-quantity": {
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Atualizar quantidade de um item no pedido",
+                "operationId": "8710d3cf1e6b2eeea25ae021c576be97",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "item_id",
+                                    "quantity"
+                                ],
+                                "properties": {
+                                    "item_id": {
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Quantidade atualizada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/update-item": {
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Atualizar detalhes de um item no pedido",
+                "operationId": "629c6d1962ab58fdda760956dedc911c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "item_id",
+                                    "quantity",
+                                    "price"
+                                ],
+                                "properties": {
+                                    "item_id": {
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Item atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/{id}/update-item-price": {
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Atualizar preço de um item no pedido",
+                "operationId": "83bdcc0baac592a4e8e2d22fe3a08047",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "item_id",
+                                    "price"
+                                ],
+                                "properties": {
+                                    "item_id": {
+                                        "type": "integer"
+                                    },
+                                    "price": {
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Preço atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/orders/update-order-positions": {
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Atualizar posições dos pedidos",
+                "operationId": "e3ec0d4a549c868cd60410063b5516a7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "orders"
+                                ],
+                                "properties": {
+                                    "orders": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Posições atualizadas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/print-order-delivery/{id}": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Visualizar impressão do pedido de entrega",
+                "operationId": "4e428f7db5138e43db6286f31b5f9a6b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1576,7 +1802,234 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Cliente excluído com sucesso",
+                        "description": "HTML da impressão"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Listar todos os usuários do sistema",
+                "operationId": "9456f74ab995d6e45602d63373640651",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuários"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Criar novo usuário no sistema",
+                "operationId": "000960ec3e2da14dd66f6fa049997dbd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "phone",
+                                    "password",
+                                    "password_confirmation",
+                                    "role_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "role_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Mostrar detalhes de um usuário",
+                "operationId": "b3b212f44b59639f1e97b4062a304e15",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do usuário"
+                    },
+                    "404": {
+                        "description": "Não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Atualizar um usuário",
+                "operationId": "dd52c421f3fd3f921c282bb474f2907d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Excluir um usuário",
+                "operationId": "a619fa1592715307feb6a8e63780e227",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Usuário excluído"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/me": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Mostrar dados do usuário logado",
+                "operationId": "2e44f95860cf464d1eb9b77b0f964051",
+                "responses": {
+                    "200": {
+                        "description": "Dados do usuário logado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Login de Usuário (Admin)",
+                "operationId": "3e02ce1202147650082f27f189ccf07d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login bem-sucedido",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1587,7 +2040,13 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Cliente excluído com sucesso"
+                                            "example": "Authorized"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1595,15 +2054,133 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Cliente não encontrado",
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                }
+            }
+        },
+        "/customer/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Login de Cliente",
+                "operationId": "93067db3d786f99fbd7e688fa547071d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "customer@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login bem-sucedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Authorized"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                }
+            }
+        },
+        "/check-token-validity": {
+            "get": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Verificar validade do token",
+                "operationId": "88800c9736d459bfdacf36199e64b03c",
+                "responses": {
+                    "200": {
+                        "description": "Token válido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "authenticated": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token inválido ou ausente"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Logout de Usuário/Cliente",
+                "operationId": "68a6108af04af5e3bc1ea68a6c6f1299",
+                "responses": {
+                    "200": {
+                        "description": "Logout realizado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Cliente não encontrado"
+                                            "example": "Logout realizado com sucesso."
                                         }
                                     },
                                     "type": "object"
@@ -1618,24 +2195,149 @@
                     }
                 ]
             }
+        },
+        "/user/register": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Registrar nova empresa e usuário",
+                "operationId": "1f06d3130b898773356c61c7e17c857a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "company_name",
+                                    "company_fantasy_name",
+                                    "company_email",
+                                    "company_phone",
+                                    "user_name",
+                                    "user_email",
+                                    "user_phone",
+                                    "user_password",
+                                    "user_password_confirmation"
+                                ],
+                                "properties": {
+                                    "company_name": {
+                                        "type": "string",
+                                        "example": "Empresa Teste"
+                                    },
+                                    "company_fantasy_name": {
+                                        "type": "string",
+                                        "example": "Teste"
+                                    },
+                                    "company_email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "contato@empresa.com"
+                                    },
+                                    "company_phone": {
+                                        "type": "string",
+                                        "example": "11999999999"
+                                    },
+                                    "user_name": {
+                                        "type": "string",
+                                        "example": "João Silva"
+                                    },
+                                    "user_email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "joao@example.com"
+                                    },
+                                    "user_phone": {
+                                        "type": "string",
+                                        "example": "11999999999"
+                                    },
+                                    "user_password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "user_password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registro realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 201
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Company and user registered successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    },
+                    "500": {
+                        "description": "Erro interno"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
         }
     },
     "tags": [
         {
-            "name": "Authentication",
-            "description": "Authentication"
+            "name": "Categorias",
+            "description": "Categorias"
         },
         {
-            "name": "Categories",
-            "description": "Categories"
+            "name": "Empresa",
+            "description": "Empresa"
         },
         {
-            "name": "Companies",
-            "description": "Companies"
+            "name": "Clientes",
+            "description": "Clientes"
         },
         {
-            "name": "Customers",
-            "description": "Customers"
+            "name": "Entregadores",
+            "description": "Entregadores"
+        },
+        {
+            "name": "Itens",
+            "description": "Itens"
+        },
+        {
+            "name": "Pedidos",
+            "description": "Pedidos"
+        },
+        {
+            "name": "Usuários",
+            "description": "Usuários"
+        },
+        {
+            "name": "Autenticação",
+            "description": "Autenticação"
         }
     ]
 }
