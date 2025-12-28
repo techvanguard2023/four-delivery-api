@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
 
 
 class AuthController extends Controller
@@ -293,6 +296,215 @@ class AuthController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/user/forgot-password",
+     *     summary="Solicitar redefinição de senha (Usuário Admin)",
+     *     tags={"Autenticação"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Email de redefinição enviado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Link de redefinição de senha enviado para seu email")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Email não encontrado"),
+     *     @OA\Response(response=429, description="Muitas tentativas. Tente novamente mais tarde")
+     * )
+     */
+    public function forgotPasswordUser(Request $request)
+    {
+        return $this->forgotPassword($request, 'users');
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/customer/forgot-password",
+     *     summary="Solicitar redefinição de senha (Cliente)",
+     *     tags={"Autenticação"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", format="email", example="customer@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Email de redefinição enviado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Link de redefinição de senha enviado para seu email")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Email não encontrado"),
+     *     @OA\Response(response=429, description="Muitas tentativas. Tente novamente mais tarde")
+     * )
+     */
+    public function forgotPasswordCustomer(Request $request)
+    {
+        return $this->forgotPassword($request, 'customers');
+    }
+
+    /**
+     * Método privado para processar solicitação de redefinição de senha
+     */
+    private function forgotPassword(Request $request, string $broker)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        // Usar o sistema padrão do Laravel que agora vai usar nossa notificação customizada
+        $status = Password::broker($broker)->sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Link de redefinição de senha enviado para seu email'
+            ], 200);
+        }
+
+        if ($status === Password::INVALID_USER) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Email não encontrado em nosso sistema'
+            ], 404);
+        }
+
+        if ($status === Password::RESET_THROTTLED) {
+            return response()->json([
+                'status' => 429,
+                'message' => 'Muitas tentativas. Por favor, aguarde alguns minutos antes de tentar novamente'
+            ], 429);
+        }
+
+        return response()->json([
+            'status' => 500,
+            'message' => 'Erro ao processar solicitação. Tente novamente mais tarde'
+        ], 500);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/user/reset-password",
+     *     summary="Redefinir senha (Usuário Admin)",
+     *     tags={"Autenticação"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","token","password","password_confirmation"},
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *             @OA\Property(property="token", type="string", example="abc123..."),
+     *             @OA\Property(property="password", type="string", format="password", example="newpassword123"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="newpassword123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Senha redefinida com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Senha redefinida com sucesso")
+     *         )
+     *     ),
+     *     @OA\Response(response=400, description="Token inválido ou expirado"),
+     *     @OA\Response(response=422, description="Dados inválidos")
+     * )
+     */
+    public function resetPasswordUser(Request $request)
+    {
+        return $this->resetPassword($request, 'users');
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/customer/reset-password",
+     *     summary="Redefinir senha (Cliente)",
+     *     tags={"Autenticação"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","token","password","password_confirmation"},
+     *             @OA\Property(property="email", type="string", format="email", example="customer@example.com"),
+     *             @OA\Property(property="token", type="string", example="abc123..."),
+     *             @OA\Property(property="password", type="string", format="password", example="newpassword123"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="newpassword123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Senha redefinida com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Senha redefinida com sucesso")
+     *         )
+     *     ),
+     *     @OA\Response(response=400, description="Token inválido ou expirado"),
+     *     @OA\Response(response=422, description="Dados inválidos")
+     * )
+     */
+    public function resetPasswordCustomer(Request $request)
+    {
+        return $this->resetPassword($request, 'customers');
+    }
+
+    /**
+     * Método privado para processar redefinição de senha
+     */
+    private function resetPassword(Request $request, string $broker)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $status = Password::broker($broker)->reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->password = Hash::make($password);
+                $user->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Senha redefinida com sucesso'
+            ], 200);
+        }
+
+        if ($status === Password::INVALID_TOKEN) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Token inválido ou expirado. Solicite um novo link de redefinição'
+            ], 400);
+        }
+
+        if ($status === Password::INVALID_USER) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Email não encontrado em nosso sistema'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 500,
+            'message' => 'Erro ao redefinir senha. Tente novamente mais tarde'
+        ], 500);
     }
 
 }

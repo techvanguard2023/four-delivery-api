@@ -56,6 +56,8 @@ Route::prefix('admin-v1')->group(function () {
 
     Route::post('/user/login', [AuthController::class, 'loginUser']);
     Route::post('/user/register', [AuthController::class, 'register']);
+    Route::post('/user/forgot-password', [AuthController::class, 'forgotPasswordUser']);
+    Route::post('/user/reset-password', [AuthController::class, 'resetPasswordUser']);
     
     // Stripe Webhook (must be public for Stripe to call it)
     Route::post('/stripe/webhook', [StripeController::class, 'webhook']);
@@ -191,6 +193,8 @@ Route::prefix('digital-menu-v1')->group(function () {
     });
 
     Route::post('/customer/login', [AuthController::class, 'loginCustomer']);
+    Route::post('/customer/forgot-password', [AuthController::class, 'forgotPasswordCustomer']);
+    Route::post('/customer/reset-password', [AuthController::class, 'resetPasswordCustomer']);
 
     // Rotas para Categorias
     Route::apiResource('categories', AppCategoryController::class);
