@@ -28,7 +28,8 @@ class SettingSeeder extends Seeder
                 'stock_critical' => 5,
                 'reservation_cancellation_tolerance' => 5,
                 'reservation_cancellation_tolerance_type' => 'minutes',
-                'menu_address' => 'https://fourdelivery.com.br/digital-menu/'
+                'menu_address' => 'https://fourdelivery.com.br/digital-menu/',
+                'print_layout' => '80mm',
             ]),
             'created_at' => now(),
             'updated_at' => now(),
@@ -47,7 +48,8 @@ class SettingSeeder extends Seeder
                 'stock_critical' => 5,
                 'reservation_cancellation_tolerance' => 5,
                 'reservation_cancellation_tolerance_type' => 'minutes',
-                'menu_address' => 'https://fourdelivery.com.br/digital-menu/'
+                'menu_address' => 'https://fourdelivery.com.br/digital-menu/',
+                'print_layout' => '58mm',
             ]),
             'created_at' => now(),
             'updated_at' => now(),
@@ -70,7 +72,8 @@ class SettingSeeder extends Seeder
                 'stock_critical' => 5,
                 'reservation_cancellation_tolerance' => 5,
                 'reservation_cancellation_tolerance_type' => 'minutes',
-                'menu_address' => 'https://fourdelivery.com.br/digital-menu/'
+                'menu_address' => 'https://fourdelivery.com.br/digital-menu/',
+                'print_layout' => '80mm',
             ]),
             'created_at' => now(),
             'updated_at' => now(),

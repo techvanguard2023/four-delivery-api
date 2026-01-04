@@ -397,14 +397,21 @@ class OrderSlipController extends Controller
     public function printView($id)
     {
         $orderSlip = OrderSlip::with(['status', 'orderSlipItems.item', 'user', 'payments.paymentMethod'])->findOrFail($id);
-        //die($orderSlip);
-        return view('print.orderslip', compact('orderSlip'));
+        
+        $setting = \App\Models\Setting::where('company_id', $orderSlip->company_id)->first();
+        $printLayout = $setting->value['print_layout'] ?? '80mm';
+
+        return view('print.orderslip', compact('orderSlip', 'printLayout'));
     }
 
     public function printCloseView($id)
     {
         $orderSlip = OrderSlip::with(['orderSlipItems.item', 'user', 'status', 'adjustments'])->findOrFail($id);
-        return view('print.orderslip_close', compact('orderSlip'));
+
+        $setting = \App\Models\Setting::where('company_id', $orderSlip->company_id)->first();
+        $printLayout = $setting->value['print_layout'] ?? '80mm';
+
+        return view('print.orderslip_close', compact('orderSlip', 'printLayout'));
     }
 
     public function publicView($companyId, $slug, Request $request)

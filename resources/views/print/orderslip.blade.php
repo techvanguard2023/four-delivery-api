@@ -1,195 +1,251 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
     <meta charset="utf-8">
     <title>Comanda #{{ $orderSlip->id }}</title>
     <style>
+        @page {
+            size: {{ ($printLayout ?? '80mm') === '80mm' ? '80mm' : '58mm' }} auto;
+            margin: 0;
+        }
+
         body {
-            font-family: 'Courier New', Courier, monospace;1
-            font-size: 16px;
-            width: 58mm;
-            margin-bottom: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            width: {{ ($printLayout ?? '80mm') === '80mm' ? '72mm' : '48mm' }};
+            margin: 0;
+            padding: 5px;
+            color: #000;
         }
 
         .center {
             text-align: center;
         }
 
-        .line {
-            border-bottom: 1px dashed #000;
-            margin: 6px 0;
-        }
-
         .bold {
             font-weight: bold;
         }
 
-        .item_card {
-            margin-bottom: 4px;
+        .uppercase {
+            text-transform: uppercase;
         }
-        .item_list {
+
+        .line {
+            border-bottom: 1px solid #000;
+            margin: 4px 0;
+        }
+
+        .double-line {
+            border-bottom: 2px solid #000;
+            margin: 4px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        th {
+            text-align: left;
+            border-bottom: 1px solid #000;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .flex-between {
             display: flex;
-            flex-direction: row;
             justify-content: space-between;
-            gap: 2rem;
         }
-        .item_value {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+
+        .header {
+            margin-bottom: 10px;
         }
-        .session_values {
-            display: flex;
-            flex-direction: column;
-            gap: .5rem;
-            margin-bottom: 2rem;
-            margin-top: 2rem;
+
+        .header h1 {
+            font-size: 20px;
+            margin: 0;
         }
-        .container_items_values {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+
+        .info-row {
+            margin-bottom: 2px;
         }
-        .divider_list {
-            display: flex;
-            justify-content: center;
-            margin-bottom: .5rem;
-            margin-top: .5rem;
+
+        .items-table {
+            margin: 10px 0;
+        }
+
+        .totals {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .footer {
+            margin-top: 15px;
+            font-size: 11px;
+        }
+
+        .signature {
+            margin-top: 30px;
+            border-top: 1px dashed #000;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 2px;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="center">
-        @if ($orderSlip->position === 'counter-sale') 
-            <div class="bold">VENDA</div>
-            <div>Ordem número #{{ $orderSlip->id }}</div>
-            <div class="line"></div>
-        @else
-            <div class="bold">COMANDA</div>
-            <div>Pedido #{{ $orderSlip->id }}</div>
-            <div class="line"></div>
-        @endif
-    </div>
-
-    <div class="session_values">
-        @if ($orderSlip->position !== 'counter-sale') 
-            <div class="container_items_values">
-                <span><strong>Mesa:</strong></span>
-                <span>{{ $orderSlip->position ?? '—' }}</span>
-            </div>
-
-            <div class="container_items_values">
-                <span><strong>Cliente:</strong></span>
-                <span>{{ $orderSlip->customer_name ?? '—' }}</span>
-            </div>
-        @endif
-        <div class="container_items_values">
-            <span><strong>Atend.:</strong></span>
-            <span>{{ isset($orderSlip->user->name) ? Str::before($orderSlip->user->name, ' ') : '—' }}</span>
-        </div>
-        <div class="container_items_values">
-            <span><strong>Data:</strong></span>
-            <span>{{ $orderSlip->created_at->format('d/m/Y H:i') }}</span>
+    <div class="header center">
+        <h1 class="bold uppercase">{{ $orderSlip->company->fantasy_name ?? $orderSlip->company->name }}</h1>
+        <div class="uppercase">{{ $orderSlip->company->name }}</div>
+        <div>{{ $orderSlip->company->address }}, {{ $orderSlip->company->number }} - {{ $orderSlip->company->neighborhood }}</div>
+        <div>{{ $orderSlip->company->city }} - {{ $orderSlip->company->zip_code }} - {{ $orderSlip->company->state }}/{{ $orderSlip->company->country ?? 'BR' }}</div>
+        <div>({{ substr($orderSlip->company->phone, 0, 2) }}) {{ substr($orderSlip->company->phone, 2, 4) }}-{{ substr($orderSlip->company->phone, 6) }}</div>
+        <div class="flex-between">
+            <span>CNPJ : {{ $orderSlip->company->cnpj }}</span>
+            <span>IE : {{ $orderSlip->company->ie ?? 'ISENTO' }}</span>
         </div>
     </div>
-   
-    <div class="line"></div>
 
-    <div class="session_values">
-        @foreach ($orderSlip->orderSlipItems as $item)
-            <div class="item_card">
-                <div class='item_list'>
-                    <div>
-                        <span>{{ $item->item->name ?? 'Produto' }}</span>
-                        @if($item->is_complimentary)
-                            <small><strong>Cortesia</strong></small>
-                        @endif
-                        
-                        @if ($item->observation)
-                            <small><em>Obs: {{ $item->observation }}</em></small>
-                        @endif
-                    </div>
-                    
-                    <div class='item_value'>
-                        <span class="bold">{{ $item->quantity }}x</span>
-                        <span style="{{ $item->is_complimentary ? 'text-decoration: line-through;' : '' }}">
-                            R${{ $item->unit_price }}
-                        </span>
-                        <span class="bold" style="{{ $item->is_complimentary ? 'text-decoration: line-through;' : '' }}">
-                            R${{ $item->total_price }}
-                        </span>
-                    </div>
-                </div>
-                <div class='divider_list'><span>----//----</span></div>
-            </div>
-        @endforeach
-
+    <div class="info-row bold uppercase">
+        CLIENTE : {{ $orderSlip->customer_name ?? 'CONSUMIDOR FINAL' }}
     </div>
 
-    <div class="line"></div>
+    <div class="flex-between" style="align-items: flex-end;">
+        <div>
+            {{ $orderSlip->created_at->format('d/m/Y H:i') }}
+        </div>
+        <div class="center">
+            <div style="font-size: 8px;">COMPROVANTE DE VENDA</div>
+            <div class="bold" style="font-size: 18px;">Nº {{ str_pad($orderSlip->id, 6, '0', STR_PAD_LEFT) }}</div>
+        </div>
+    </div>
+
+    <div class="double-line"></div>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th width="20%">CODIGO</th>
+                <th width="55%">DESCRIÇÃO</th>
+                <th width="25%" class="right">VALOR</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>QTD x UNIT</th>
+                <th class="right">R$ VALOR</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($orderSlip->orderSlipItems as $item)
+                @php
+                    $itemCode = str_pad($item->item_id, 5, '0', STR_PAD_LEFT);
+                @endphp
+                <tr>
+                    <td class="bold">{{ $itemCode }}</td>
+                    <td class="bold uppercase">{{ $item->item->name }}</td>
+                    <td class="right bold">R$ {{ number_format($item->total_price, 2, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="right">{{ $item->quantity }} x {{ number_format($item->unit_price, 2, ',', '.') }}</td>
+                    <td class="right">{{ number_format($item->total_price, 2, ',', '.') }}</td>
+                </tr>
+                @if ($item->observation)
+                    <tr>
+                        <td></td>
+                        <td colspan="2" style="font-size: 10px;"><em>Obs: {{ $item->observation }}</em></td>
+                    </tr>
+                @endif
+            @endforeach
+        </tbody>
+    </table>
+
+    <div class="double-line"></div>
 
     @php
         $subtotal = $orderSlip->total_price;
         $desconto = $orderSlip->discount ?? 0;
-        $subtotalComDesconto = $subtotal - $desconto;
         $couvert = $orderSlip->couvert ?? 0;
         $taxaPercentual = $orderSlip->percentage_tax ?? 0;
-        $taxaServico = ($subtotalComDesconto * $taxaPercentual) / 100;
-        $total = $subtotalComDesconto + $taxaServico + $couvert;
+        $taxaServico = (($subtotal - $desconto) * $taxaPercentual) / 100;
+        $total = $subtotal - $desconto + $taxaServico + $couvert;
+        
+        $valorRecebido = $orderSlip->payments->sum('amount');
+        $troco = max(0, $valorRecebido - $total);
     @endphp
 
-
-
-    <div class="session_values">
-        <div class="container_items_values">
-            <span class="bold">Subtotal:</span>
-            <span>R${{ number_format($subtotal, 2, ',', '.') }}</span>
+    <div class="totals">
+        <div class="flex-between bold">
+            <span>Total da Nota R$</span>
+            <span>{{ number_format($total, 2, ',', '.') }}</span>
         </div>
-
-        @if ($desconto) 
-            <div class="container_items_values">
-                <span class="bold">Desconto:</span>
-                <span>R${{ number_format($desconto, 2, ',', '.') }}</span>
-            </div>
-            <div class="container_items_values">
-                <span class="bold">Sub. + Desc.:</span>
-                <span>R${{ number_format($subtotalComDesconto, 2, ',', '.') }}</span>
-            </div>
-
-            <div class="line"></div>
-        @endif
-
-        @if ($taxaPercentual) 
-            <div class="container_items_values">
-                <span class="bold">Tx. Serv. ({{ $taxaPercentual }}%):</span>
-                <span>R${{ number_format($taxaServico, 2, ',', '.') }}</span>
-            </div>
-        @endif
-
-        @if ($couvert) 
-            <div class="container_items_values">
-                <span class="bold">Couvert:</span>
-                <span>R${{ number_format($couvert, 2, ',', '.') }}</span>
-            </div>
-        @endif
-        
-        @if ($taxaPercentual || $couvert)
-            <div class="line"></div>
-        @endif
-        
-        <div class="container_items_values">
-            <span class="bold">Total:</span>
-            <span>R${{ number_format($total, 2, ',', '.') }}</span>
+        <div class="flex-between bold">
+            <span>Valor Recebido R$</span>
+            <span>{{ number_format($valorRecebido, 2, ',', '.') }}</span>
+        </div>
+        <div class="flex-between bold">
+            <span>Troco R$</span>
+            <span>{{ number_format($troco, 2, ',', '.') }}</span>
         </div>
     </div>
-    
 
-    <div class="center">
-        <p>Muito Obrigado</p>
-        <p>Volte Sempre!!!</p>
+    <div class="line"></div>
+
+    <div class="info-row bold uppercase">
+        FORMA DE PGTO. : {{ $orderSlip->payments->first()->paymentMethod->name ?? 'N/A' }}
+    </div>
+
+    <table style="margin-top: 5px;">
+        <thead>
+            <tr>
+                <th>DATA PGTO</th>
+                <th class="right">R$ VALOR</th>
+                <th class="right">TIPO PGTO</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($orderSlip->payments as $payment)
+                <tr>
+                    <td>{{ $payment->created_at->format('d/m/Y') }}</td>
+                    <td class="right">{{ number_format($payment->amount, 2, ',', '.') }}</td>
+                    <td class="right uppercase">{{ $payment->paymentMethod->name ?? 'DINHEIRO' }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <div class="line" style="margin-top: 10px;"></div>
+    <div class="info-row uppercase">
+        VENDEDOR(A) : {{ $orderSlip->user->name ?? 'SISTEMA' }}
+    </div>
+    <div class="line"></div>
+
+    <div class="footer">
+        @if($orderSlip->observations)
+            <div style="margin-bottom: 15px;">
+                Notas: {{ $orderSlip->observations }}
+            </div>
+        @endif
+
+        <div style="margin-bottom: 20px;">
+            Recebi a(s) mercadoria(s) acima descrita(s), concordando plenamente com os prazos e condições de garantia.
+        </div>
+
+        <!-- <div class="signature center">
+            ASSINATURA DO CLIENTE
+        </div> -->
+
+        <div class="line" style="margin-top: 20px;"></div>
+        <div class="center bold">
+            * OBRIGADO E VOLTE SEMPRE *
+        </div>
     </div>
 
     <script>
@@ -199,3 +255,4 @@
 </body>
 
 </html>
+
